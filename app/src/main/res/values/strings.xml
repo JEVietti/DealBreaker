@@ -1,4 +1,10 @@
 <resources>
-    <string name="app_name">DealBreaker</string>
+    <string name="app_name">Deal Breaker</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_initial_screen">InitialScreen</string>
+    <string name="login_button">"Login"</string>
+    <string name="register_button">"Register"</string>
+    <string name="facebook_login">"Login w/ Facebook"</string>
+    <string name="email_edit">"email"</string>
+    <string name="password_edit">"password"</string>
 </resources>
