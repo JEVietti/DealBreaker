@@ -1,13 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".RegisterActivity">
+    tools:context="roast.app.com.dealbreaker.RegisterActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <TextView
+        android:text="@string/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:textSize="50sp"
+        android:id="@+id/identity"
+        android:layout_marginTop="43dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/black"
+        android:ems="10"
+        android:id="@+id/editEmail"
+        android:layout_marginTop="51dp"
+        android:hint="@string/email_edit"
+        android:layout_below="@+id/identity"
+        android:textColorHint="@color/colorPrimary"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/confirmEmail"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/black"
+        android:ems="10"
+        android:hint="@string/email_confirm"
+        android:textColorHint="@color/colorPrimary"
+        android:layout_below="@+id/editEmail"
+        android:layout_alignStart="@+id/editEmail"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:id="@+id/editPassword"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:inputType="textPassword"
+        android:textColor="@color/black"
+        android:ems="10"
+        android:hint="@string/password_edit"
+        android:textColorHint="@color/colorPrimary"
+        android:layout_below="@+id/confirmEmail"
+        android:layout_alignStart="@+id/confirmEmail"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:inputType="textPassword"
+        android:textColor="@color/black"
+        android:ems="10"
+        android:id="@+id/confirmPassword"
+        android:hint="@string/password_confirm"
+        android:textColorHint="@color/colorPrimary"
+        android:layout_below="@+id/editPassword"
+        android:layout_alignStart="@+id/editPassword"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_button"
+        android:id="@+id/button"
+        android:layout_below="@+id/confirmPassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="43dp" />
 
 </RelativeLayout>
+

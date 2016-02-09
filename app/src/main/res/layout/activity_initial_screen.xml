@@ -9,15 +9,19 @@
     tools:context="roast.app.com.dealbreaker.InitialScreen"
     android:background="#ffffff">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <TextView
         android:text="@string/app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimary"
-        android:textSize="50dp"
+        android:textSize="50sp"
         android:id="@+id/identity"
-        android:layout_marginTop="56dp"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="39dp"
+        android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -49,11 +53,11 @@
         android:textColor="@color/black"
         android:ems="10"
         android:id="@+id/editEmail"
-        android:layout_marginTop="79dp"
-        android:layout_below="@+id/identity"
+        android:layout_marginTop="51dp"
         android:hint="@string/email_edit"
         android:textColorHint="@color/colorPrimary"
-        android:layout_alignStart="@+id/editPassword" />
+        android:layout_below="@+id/identity"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="200dp"
@@ -62,10 +66,11 @@
         android:textColor="@color/black"
         android:ems="10"
         android:id="@+id/editPassword"
-        android:layout_below="@+id/editEmail"
         android:hint="@string/password_edit"
         android:textColorHint="@color/colorPrimary"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/editEmail"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
 
    <!-- <com.facebook.login.widget.LoginButton
         android:id="@+id/facebook_login"
@@ -78,6 +83,7 @@
         android:layout_below="@+id/register_button"
         android:layout_centerHorizontal="true" />
 -->
+
 
 </RelativeLayout>
 
