@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
+import com.firebase.client.Firebase;
+
 public class InitialScreen extends AppCompatActivity {
     private Button registerButton,loginButton;
     @Override
@@ -24,6 +26,7 @@ public class InitialScreen extends AppCompatActivity {
         setContentView(R.layout.activity_initial_screen);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Firebase.setAndroidContext(this);
 
         //FacebookSdk.sdkInitialize();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,

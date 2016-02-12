@@ -8,9 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
-
 public class RegisterActivity extends AppCompatActivity {
 
     @Override

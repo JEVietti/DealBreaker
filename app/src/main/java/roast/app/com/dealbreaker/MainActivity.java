@@ -13,9 +13,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.parse.ParseUser;
-import com.parse.Parse;
-import com.parse.ParseObject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,13 +20,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-      /* Parse Test Object
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this);
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("Test", "DealBreakerv2");
-        testObject.saveInBackground();
-      */
+
     }
+
 
 }
