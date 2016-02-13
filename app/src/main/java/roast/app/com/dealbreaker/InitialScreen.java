@@ -26,7 +26,6 @@ public class InitialScreen extends AppCompatActivity {
         setContentView(R.layout.activity_initial_screen);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Firebase.setAndroidContext(this);
 
         //FacebookSdk.sdkInitialize();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
