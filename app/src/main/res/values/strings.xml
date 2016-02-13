@@ -11,5 +11,9 @@
     <string name="email_confirm">"confirm email"</string>
     <string name="password_confirm">"confirm password"</string>
     <string name="register_activity_title">Register</string>
+    <string name="user_fragment">User Info</string>
+    <string name="roaming_fragment">Desired Match Info</string>
 
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_world">Hello World</string>
 </resources>

@@ -38,6 +38,16 @@ public class User {
         this.badQualities = badQualities;
     }
 
+    //Roaming Attributes
+
+    public User(String sex, Long age, Long height, String sexualOrientation) {
+        this.sex = sex;
+        this.age = age;
+        this.height = height;
+        this.sexualOrientation = sexualOrientation;
+    }
+
+
     //Getter Statements for Class Variables
 
     public String getEmail() { return email; }
