@@ -13,7 +13,17 @@
     <string name="register_activity_title">Register</string>
     <string name="user_fragment">User Info</string>
     <string name="roaming_fragment">Desired Match Info</string>
+    <string name="height_attribute">Height:</string>
+    <string name="height_attribute_hint">height in inches</string>
+    <string name="age_attribute">Age:</string>
+    <string name="age_attribute_hint">age</string>
+    <string name="sexual_or_attribute">Sexual Orientation:</string>
+    <string name="sexual_or_attribute_hint">straight, gay, bisexual</string>
+    <string name="sex_attribute">Sex:</string>
+    <string name="sex_attribute_hint">sex (male/female)</string>
+    <string name="first_name">First Name:</string>
+    <string name="last_name">Last Name:</string>
+    <string name="finished_button">Done!</string>
+    <string name="next_button">Next!</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_world">Hello World</string>
 </resources>
