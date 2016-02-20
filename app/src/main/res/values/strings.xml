@@ -25,5 +25,6 @@
     <string name="last_name">Last Name:</string>
     <string name="finished_button">Done!</string>
     <string name="next_button">Next!</string>
+    <string name="key_UserEmail">userEmail</string>
 
 </resources>

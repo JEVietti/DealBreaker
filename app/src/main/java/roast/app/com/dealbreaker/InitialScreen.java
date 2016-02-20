@@ -2,24 +2,28 @@ package roast.app.com.dealbreaker;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+
+import roast.app.com.dealbreaker.util.Constants;
 
 public class InitialScreen extends AppCompatActivity {
     private Button registerButton,loginButton;
+    private EditText mEmailEditText, mPasswordEditText;
+    private TextView mLoginErrorMessage;
+    private String mUserEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +48,30 @@ public class InitialScreen extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(InitialScreen.this, LoginActivity.class);
-                startActivity(intent);
+                mEmailEditText = (EditText) findViewById(R.id.LoginEmail);
+                mPasswordEditText = (EditText) findViewById(R.id.LoginPassword);
+
+                String userEmail = mEmailEditText.getText().toString();
+                String userPassword = mPasswordEditText.getText().toString();
+
+                Firebase ref = new Firebase(Constants.FIREBASE_URL);
+                ref.authWithPassword(userEmail, userPassword, new Firebase.AuthResultHandler() {
+                    @Override
+                    public void onAuthenticated(AuthData authData) {
+                        System.out.println("User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
+                        mUserEmail = (String) authData.getProviderData().get("email");
+                        Intent intent = new Intent(InitialScreen.this, LoginActivity.class);
+                        intent.putExtra(getString(R.string.key_UserEmail), mUserEmail);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onAuthenticationError(FirebaseError firebaseError) {
+                        // there was an error
+                        mLoginErrorMessage = (TextView) findViewById(R.id.loginErrorMessage);
+                        mLoginErrorMessage.setVisibility(View.VISIBLE);
+                    }
+                });
             }
         });
     }

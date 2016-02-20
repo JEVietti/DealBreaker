@@ -17,6 +17,11 @@ public class User {
     }
 
     //For the basic Registration
+    public User(String userName, String email){
+        this.userName = userName;
+        this.email = email;
+        }
+
     public User(String email, String password,String userName, String firstName,String lastName, Long age, String sex) {
         this.email = email;
         this.password = password;
