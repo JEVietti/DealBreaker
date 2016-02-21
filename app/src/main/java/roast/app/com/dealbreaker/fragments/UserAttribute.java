@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.test.RenamingDelegatingContext;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,24 +17,30 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import roast.app.com.dealbreaker.util.Constants;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import roast.app.com.dealbreaker.R;
 import roast.app.com.dealbreaker.User;
 
 public class UserAttribute extends Fragment {
    //Class Variables
-    private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, sexUserValue, sexualOrientationUserValue, username = "cindy123";
+    private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, sexUserValue, sexualOrientationUserValue, username;
     private EditText firstNameUserText, lastNameUserText, ageUserText, heightUserText, sexUserText, sexualOrientationUserText;
     Button sendUserValues;
-    public static UserAttribute newInstance() {
+    public static UserAttribute newInstance(String userName) {
         UserAttribute fragment = new UserAttribute();
         Bundle args = new Bundle();
+        args.putString("username",userName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,13 +57,14 @@ public class UserAttribute extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            username = getArguments().getString("username");
+            Log.d("Username:",username);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
          // Initialize UI elements
 
         View rootView = inflater.inflate(R.layout.fragment_user_attribute, container, false);
@@ -66,30 +74,34 @@ public class UserAttribute extends Fragment {
                 // Perform action on click
                 grabEditText();
                 checkAndSendData();
+                Toast.makeText(getContext(),"Success!",Toast.LENGTH_SHORT).show();
+
             }
         });
 
         /**
          * Create Firebase references
          */
-        Firebase refName_Users = new Firebase(Constants.FIREBASE_URL_USERS).child(username);
+        //Creates a child node under the user so it can be independent of changes to the user's other info
+        //because when the user is first created in Register Activity it has to llok in a different location.
+        Firebase refName_Users = new Firebase(Constants.FIREBASE_URL_USERS).child(username).child(Constants.FIREBASE_LOC_USER_INFO);
 
         //Add the value Event Listener so if data has already been inputted by the user then it will
         //pre-populated with existing data
         refName_Users.addValueEventListener(new ValueEventListener() {
-            @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // You can use getValue to deserialize the data at dataSnapshot
                 User user = dataSnapshot.getValue(User.class);
                 // If there was no data at the location we added the listener, then
                 if (user != null) {
-                    ageUserText.setText(user.getAge().toString());
+                    ageUserText.setText(Long.toString(user.getAge()));
                     firstNameUserText.setText(user.getFirstName());
-                    heightUserText.setText(user.getHeight().toString());
+                    heightUserText.setText(Long.toString(user.getHeight()));
                     lastNameUserText.setText(user.getLastName());
                     sexUserText.setText(user.getSex());
                     sexualOrientationUserText.setText(user.getSexualOrientation());
                 }
+
             }
 
             @Override
@@ -97,6 +109,41 @@ public class UserAttribute extends Fragment {
 
             }
         });
+
+
+        /*
+        refName_Users.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                ageUserText.setText(dataSnapshot.child("age").getValue().toString());
+                firstNameUserText.setText(dataSnapshot.child("firstName").getValue().toString());
+                lastNameUserText.setText(dataSnapshot.child("lastName").getValue().toString());
+                heightUserText.setText(dataSnapshot.child("height").getValue().toString());
+                sexUserText.setText(dataSnapshot.child("sex").getValue().toString());
+                sexualOrientationUserText.setText(dataSnapshot.child("sexualOrientation").getValue().toString());
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        */
 
         return rootView;
     }
@@ -156,10 +203,16 @@ public class UserAttribute extends Fragment {
     }
 
     //Add the entered data to the database in the specified location
-    public void addUserAttributes(User user){
+    private void addUserAttributes(User user){
         //Set Reference to Firebase node
         Firebase ref = new Firebase(Constants.FIREBASE_URL_USERS);
-        ref.child(username).setValue(user);
+        HashMap<String, Object> updates = new HashMap<String, Object>();
+        Map<String,Object> map = new ObjectMapper().convertValue(user, Map.class);
+        updates.put(Constants.FIREBASE_LOC_USER_INFO, map);
+        ref.child(username).updateChildren(updates);
+        /*
+        * ref.child(username).child
+        * */
     }
 
 }

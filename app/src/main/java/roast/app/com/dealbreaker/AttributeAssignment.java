@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -23,11 +24,13 @@ import roast.app.com.dealbreaker.fragments.UserAttribute;
 
 public class AttributeAssignment extends AppCompatActivity{
     private static final String LOG_TAG = AttributeAssignment.class.getSimpleName();
-
+    private String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attribute_assignment);
+        Bundle arg = getIntent().getExtras();
+        username = arg.getString("username");
         initializeScreen();
 
     }
@@ -46,13 +49,13 @@ public class AttributeAssignment extends AppCompatActivity{
 
             switch (position) {
                 case 0:
-                    fragment = UserAttribute.newInstance();
+                    fragment = UserAttribute.newInstance(username);
                     break;
                 case 1:
-                    fragment = RoamingAttribute.newInstance();
+                    fragment = RoamingAttribute.newInstance(username);
                     break;
                 default:
-                    fragment = UserAttribute.newInstance();
+                    fragment = UserAttribute.newInstance(username);
                     break;
             }
 

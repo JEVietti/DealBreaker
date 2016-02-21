@@ -42,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
+/*         Commented out because it was causing some crashes and isn't really needed.
         userDatabase.addValueEventListener(new ValueEventListener() {
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
@@ -55,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
-        });
+        });*/
 
         mUserName = (EditText) findViewById(R.id.registerUserName);
         mEmail = (EditText) findViewById(R.id.registerEmail);
@@ -76,8 +76,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                 boolean inUseEmail = false;
                 boolean inUseUserName = false;
-
-                for (int i = 0; i < mUserEmailUsed.size(); i++) {
+                //Commented out due to causing crashes because of testing too many accounts on one emulator
+                /*for (int i = 0; i < mUserEmailUsed.size(); i++) {
                     if (mUserEmailUsed.get(i).equals(userEmail)) {
                         inUseEmail = true;
                     }
@@ -85,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (mUserNameUsed.get(i).equals(userName)) {
                         inUseUserName = true;
                     }
-                }
+                }*/
                 if(!userName.isEmpty()) {
                     if (isProperUserName(userName)) {
                         if (!inUseUserName) {
@@ -144,8 +144,6 @@ public class RegisterActivity extends AppCompatActivity {
                         User user = new User(userName, userEmail);
                         userDatabase.child(userName).setValue(user);
 
-                        Intent intent = new Intent(RegisterActivity.this, InitialScreen.class);
-                        startActivity(intent);
                     }
 
                     @Override
@@ -154,7 +152,8 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
 
-                Intent intent = new Intent(RegisterActivity.this, InitialScreen.class);
+                Intent intent = new Intent(RegisterActivity.this, AttributeAssignment.class);
+                intent.putExtra("username",userName);
                 startActivity(intent);
             }
         });

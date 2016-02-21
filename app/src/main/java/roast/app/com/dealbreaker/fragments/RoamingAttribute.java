@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -25,13 +27,15 @@ import roast.app.com.dealbreaker.User;
 public class RoamingAttribute extends Fragment {
     //Class Variables
    // private ListView mListView;
-    private String ageRoamingValue,heightRoamingValue,sexRoamingValue,sexualOrientationRoamingValue, username="cindy123";
+    private String ageRoamingValue,heightRoamingValue,sexRoamingValue,sexualOrientationRoamingValue, username;
     private EditText ageRoamingText, heightRoamingText, sexRoamingText, sexualOrientationRoamingText;
     private Button sendRoamingValues;
 
-    public static RoamingAttribute newInstance() {
+    public static RoamingAttribute newInstance(String userName) {
         RoamingAttribute fragment = new RoamingAttribute();
         Bundle args = new Bundle();
+        //Adding the userName to the Bundle in order to use it later on
+        args.putString("username",userName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,16 +51,15 @@ public class RoamingAttribute extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Getting Arguments from the Bundle in newInstance(String userName) above
         if (getArguments() != null) {
+            username = getArguments().getString("username");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Take in passed values
-
-
         /**
          * Initialize UI elements
          */
@@ -70,6 +73,8 @@ public class RoamingAttribute extends Fragment {
                 // Perform action on click
                 grabEditText();
                 checkAndSendData();
+                Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
+
             }
         });
             /**
@@ -153,7 +158,7 @@ public class RoamingAttribute extends Fragment {
         }
     }
         //add the Attributes of the User its seeking to the database
-    public void addRoamingAttributes(User user){
+    private void addRoamingAttributes(User user){
         //Set Reference to Firebase node
         Firebase ref = new Firebase(Constants.FIREBASE_URL_SEEKING);
         ref.child(username).setValue(user);
