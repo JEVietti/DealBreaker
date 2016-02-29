@@ -4,10 +4,6 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/app_bar"
-        layout="@layout/toolbar" />
-
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:background="@color/colorPrimary"

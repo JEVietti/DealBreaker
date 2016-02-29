@@ -27,5 +27,9 @@
     <string name="next_button">Next!</string>
     <string name="key_UserEmail">userEmail</string>
     <string name="key_UserName">userName</string>
+    <string name="title_activity_user_navigation">UserNavigation</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
 </resources>

@@ -60,8 +60,11 @@ public class InitialScreen extends AppCompatActivity {
                     public void onAuthenticated(AuthData authData) {
                         System.out.println("User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
                         mUserEmail = (String) authData.getProviderData().get("email");
-                        Intent intent = new Intent(InitialScreen.this, LoginActivity.class);
-                        intent.putExtra(getString(R.string.key_UserEmail), mUserEmail);
+                        //Intent intent = new Intent(InitialScreen.this, LoginActivity.class);
+                        //intent.putExtra(getString(R.string.key_UserEmail), mUserEmail);
+                        //startActivity(intent);
+                        Intent intent = new Intent(InitialScreen.this, UserNavigation.class);
+                        intent.putExtra("username","password");
                         startActivity(intent);
                     }
 
@@ -71,9 +74,11 @@ public class InitialScreen extends AppCompatActivity {
                         mLoginErrorMessage = (TextView) findViewById(R.id.loginErrorMessage);
                         mLoginErrorMessage.setVisibility(View.VISIBLE);
                     }
+
                 });
             }
         });
+
     }
 
          public boolean onCreateOptionsMenu(Menu menu) {

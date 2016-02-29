@@ -37,6 +37,11 @@
         </activity>
         <activity android:name=".AttributeAssignment" >
         </activity>
+        <activity
+            android:name=".UserNavigation"
+            android:label="@string/title_activity_user_navigation"
+            android:theme="@style/AppTheme" >
+        </activity>
     </application>
 
 </manifest>

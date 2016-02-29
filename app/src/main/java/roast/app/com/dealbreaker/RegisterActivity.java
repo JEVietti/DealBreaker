@@ -151,10 +151,10 @@ public class RegisterActivity extends AppCompatActivity {
                         // there was an error
                     }
                 });
-
+/*
                 Intent intent = new Intent(RegisterActivity.this, AttributeAssignment.class);
                 intent.putExtra("username",userName);
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
     }
@@ -204,8 +204,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(this,"Information that may help you",Toast.LENGTH_SHORT).show();
                 return true;
             case android.R.id.home:
-                Intent myIntent = new Intent(getApplicationContext(), InitialScreen.class);
-                startActivityForResult(myIntent, 0);
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
