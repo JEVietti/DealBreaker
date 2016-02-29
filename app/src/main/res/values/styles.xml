@@ -24,7 +24,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     <style name="AlertDialogTheme">
-        <item name="android:windowBackground">@color/transparent-red</item>
+        <item name="android:windowBackground">@color/transparentRed</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>

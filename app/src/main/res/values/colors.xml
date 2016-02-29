@@ -8,5 +8,5 @@
     <color name="red">#FF0000</color>
     <color name="yellow">#FFF000</color>
     <color name="orange">#ffa500</color>
-    <color name="transparent-red">#CCFF0000</color>
+    <color name="transparentRed">#CCFF0000</color>
 </resources>
