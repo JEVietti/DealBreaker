@@ -18,23 +18,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import roast.app.com.dealbreaker.fragments.RoamingAttribute;
 import roast.app.com.dealbreaker.fragments.UserAttribute;
 
-
+//Acts as a Fragment and Tab Manager, and is a fragment due to Navigation Drawer constraints
 public class AttributeAssignment extends Fragment{
     private static final String LOG_TAG = AttributeAssignment.class.getSimpleName();
     private SectionPagerAdapter mSectionPagerAdapter;
     private String username;
-    ViewPager mViewPager;
 
-    //Empty Constructor
-    public void AttributeAssignment(){}
-
-    public static AttributeAssignment newInstance(String userName) {
+    //Creates a new Instance of the Fragment class: Attribute Assignment
+    //Its purpose is to facilitate passing arguments into the Fragment
+    protected static AttributeAssignment newInstance(String userName) {
       AttributeAssignment fragment = new AttributeAssignment();
         Bundle args = new Bundle();
         //Adding the userName to the Bundle in order to use it later on
@@ -48,30 +44,25 @@ public class AttributeAssignment extends Fragment{
         if (getArguments() != null) {
             username = getArguments().getString("username");
         }
-
+        else {
+            getActivity().finish();
+            Toast.makeText(getContext(), "Failed to retrieve User's Data", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_attribute_assignment, container, false);
-        ViewPager viewPager = (ViewPager) v.findViewById(R.id.pager);
-        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tab_layout);
-        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
-
-        SectionPagerAdapter adapter;
-        adapter = new SectionPagerAdapter(getFragmentManager());
-        viewPager.setOffscreenPageLimit(2);
-        viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
+        initializeView(v);
         return v;
     }
 
-    public class SectionPagerAdapter extends FragmentStatePagerAdapter {
+    //This class is to control and manage the tabs which house the User and Roaming attribute Class
+    private class SectionPagerAdapter extends FragmentStatePagerAdapter {
 
-        public SectionPagerAdapter(FragmentManager fm) {
+        private SectionPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
 
         @Override
         public Fragment getItem(int position) {
@@ -111,48 +102,19 @@ public class AttributeAssignment extends Fragment{
             }
         }
     }
-    /*
-    public void initializeScreen() {
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
 
-        SectionPagerAdapter adapter = new SectionPagerAdapter(getSupportFragmentManager());
+    private void initializeView(View rootView) {
+        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+
+        SectionPagerAdapter adapter;
+        adapter = new SectionPagerAdapter(getFragmentManager());
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
     }
-    */
-    /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
 
-        getMenuInflater().inflate(R.menu.menu_attribute_assignment, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()) {
-            case R.id.action_help:
-                Toast.makeText(this, "Information that may help you", Toast.LENGTH_SHORT).show();
-                return true;
-            case android.R.id.home:
-                Intent myIntent = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivityForResult(myIntent, 0);
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-    }
-    */
 
 }

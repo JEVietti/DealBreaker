@@ -4,39 +4,38 @@ package roast.app.com.dealbreaker.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.test.RenamingDelegatingContext;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import roast.app.com.dealbreaker.util.Constants;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import roast.app.com.dealbreaker.R;
 import roast.app.com.dealbreaker.User;
 
+//The User Attribute Fragment is responsible for adding and viewing the user's info
+//this info will be used to find potential matches when roaming
 public class UserAttribute extends Fragment {
    //Class Variables
     private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, sexUserValue, sexualOrientationUserValue, username;
     private EditText firstNameUserText, lastNameUserText, ageUserText, heightUserText, sexUserText, sexualOrientationUserText;
     Button sendUserValues;
+    private boolean checkStateUserData;
+    private ValueEventListener connectedUserEventListener;
+    private Firebase refName_Users;
+
     public static UserAttribute newInstance(String userName) {
         UserAttribute fragment = new UserAttribute();
         Bundle args = new Bundle();
@@ -58,7 +57,7 @@ public class UserAttribute extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             username = getArguments().getString("username");
-            Log.d("Username:",username);
+            Log.d("Username:", username);
         }
     }
 
@@ -73,22 +72,53 @@ public class UserAttribute extends Fragment {
             public void onClick(View v) {
                 // Perform action on click
                 grabEditText();
-                checkAndSendData();
-                Toast.makeText(getContext(),"Success!",Toast.LENGTH_SHORT).show();
+                checkStateUserData = checkAndSendData();
+                if (checkStateUserData) {
+
+                    Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Unsuccessful", Toast.LENGTH_SHORT).show();
+
+                }
 
             }
         });
+        return rootView;
+    }
+    //Recreate the Listener if it had been removed due to Pause
+    @Override
+        public void onResume(){
+        super.onResume();
+        retrieveUserData();
+    }
+    //Destroy the Listener if the app is paused
+    @Override
+    public void onPause() {
+        super.onPause();
+        refName_Users.getRoot().removeEventListener(connectedUserEventListener);
+        Log.d("Event Listener Gone: ", "In UserAttribute Fragment!");
+    }
 
+    //Destroy the Listener if the app is destroyed or exited
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        refName_Users.getRoot().removeEventListener(connectedUserEventListener);
+        Log.d("Event Listener Gone: ", "In UserAttribute Fragment!");
+    }
+
+    //Retrieves the User's info in the firebase database
+    private void retrieveUserData(){
         /**
          * Create Firebase references
          */
         //Creates a child node under the user so it can be independent of changes to the user's other info
         //because when the user is first created in Register Activity it has to llok in a different location.
-        Firebase refName_Users = new Firebase(Constants.FIREBASE_URL_USERS).child(username).child(Constants.FIREBASE_LOC_USER_INFO);
+        refName_Users = new Firebase(Constants.FIREBASE_URL_USERS).child(username).child(Constants.FIREBASE_LOC_USER_INFO);
 
         //Add the value Event Listener so if data has already been inputted by the user then it will
         //pre-populated with existing data
-        refName_Users.addValueEventListener(new ValueEventListener() {
+        connectedUserEventListener = refName_Users.addValueEventListener(new ValueEventListener() {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // You can use getValue to deserialize the data at dataSnapshot
                 User user = dataSnapshot.getValue(User.class);
@@ -101,7 +131,9 @@ public class UserAttribute extends Fragment {
                     sexUserText.setText(user.getSex());
                     sexualOrientationUserText.setText(user.getSexualOrientation());
                 }
-
+                else {
+                        Toast.makeText(getContext(), "Failed to retrieve User's info Data", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -111,48 +143,7 @@ public class UserAttribute extends Fragment {
         });
 
 
-        /*
-        refName_Users.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                ageUserText.setText(dataSnapshot.child("age").getValue().toString());
-                firstNameUserText.setText(dataSnapshot.child("firstName").getValue().toString());
-                lastNameUserText.setText(dataSnapshot.child("lastName").getValue().toString());
-                heightUserText.setText(dataSnapshot.child("height").getValue().toString());
-                sexUserText.setText(dataSnapshot.child("sex").getValue().toString());
-                sexualOrientationUserText.setText(dataSnapshot.child("sexualOrientation").getValue().toString());
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-        */
-
-        return rootView;
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     //Link the XML to the Activity
     private void initializeScreen(View rootView) {
         firstNameUserText=(EditText)rootView.findViewById(R.id.et_user_first_name);
@@ -174,39 +165,47 @@ public class UserAttribute extends Fragment {
     }
 
     //Check to see if the data entered is in the set of inputs needed or that it is not empty
-    private void checkAndSendData(){
+    private boolean checkAndSendData(){
         if(TextUtils.isEmpty(firstNameUserValue)){
             firstNameUserText.setError("This field cannot be empty!");
+            return false;
         }
         else if(TextUtils.isEmpty(lastNameUserValue)){
             lastNameUserText.setError("This field cannot be empty!");
+            return false;
         }
         else if (TextUtils.isEmpty(ageUserValue)) {
             ageUserText.setError("This field cannot be empty!");
+            return false;
         }
         else if(TextUtils.isEmpty(sexualOrientationUserValue)||((!sexualOrientationUserValue.equals("straight")&&(!sexualOrientationUserValue.equals("bisexual"))&&(!sexualOrientationUserValue.equals("gay"))))){
             sexualOrientationUserText.setError("Invalid!, Inputs can be straight, gay, or bisexual");
+            return false;
         }
         else if(TextUtils.isEmpty(sexUserValue)||((!sexUserValue.equals("male")&&(!sexUserValue.equals("female"))))){
             sexUserText.setError("Invalid!, Inputs can be wither male or female");
+            return false;
         } else {
             String firstName = firstNameUserValue;
             String lastName = lastNameUserValue;
             Long age = Long.valueOf(ageUserValue);
             Long height = Long.valueOf(heightUserValue);
             String sex = sexUserValue;
-            String sexual_orientation = sexualOrientationUserValue;
-            User user = new User(username, firstName, lastName, sex, age, sexual_orientation, height);
+            String sexualOrientation = sexualOrientationUserValue;
+            User user = new User(username, firstName, lastName, sex, age, sexualOrientation, height);
             addUserAttributes(user);
+            return true;
         }
 
     }
 
     //Add the entered data to the database in the specified location
+    //Using a hash map and Object Mapper to prevent overwriting data that already is initialized on registering
+    //by the Register Activity
     private void addUserAttributes(User user){
         //Set Reference to Firebase node
         Firebase ref = new Firebase(Constants.FIREBASE_URL_USERS);
-        HashMap<String, Object> updates = new HashMap<String, Object>();
+        HashMap<String, Object> updates = new HashMap<>();
         Map<String,Object> map = new ObjectMapper().convertValue(user, Map.class);
         updates.put(Constants.FIREBASE_LOC_USER_INFO, map);
         ref.child(username).updateChildren(updates);

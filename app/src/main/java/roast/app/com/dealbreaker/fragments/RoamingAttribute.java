@@ -17,9 +17,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import roast.app.com.dealbreaker.util.Constants;
-import java.util.Date;
 
+import roast.app.com.dealbreaker.util.Constants;
 import roast.app.com.dealbreaker.R;
 import roast.app.com.dealbreaker.User;
 
@@ -30,7 +29,12 @@ public class RoamingAttribute extends Fragment {
     private String ageRoamingValue,heightRoamingValue,sexRoamingValue,sexualOrientationRoamingValue, username;
     private EditText ageRoamingText, heightRoamingText, sexRoamingText, sexualOrientationRoamingText;
     private Button sendRoamingValues;
+    private ValueEventListener connectedListener;
+    private Firebase refName_Roaming;
+    private boolean checkStateRoamingData;
 
+    //Class is responsible for adding and retrieving the data the users are seeking
+    //with potential matches
     public static RoamingAttribute newInstance(String userName) {
         RoamingAttribute fragment = new RoamingAttribute();
         Bundle args = new Bundle();
@@ -60,34 +64,58 @@ public class RoamingAttribute extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        /**
-         * Initialize UI elements
-         */
+       //Initialize where the view is
         final View rootView = inflater.inflate(R.layout.fragment_roaming_attribute, container, false);
-        /**EditTexts
-         *   Getting and storing their value by id
-         */
+       //Call the initialization of XML file
         initializeScreen(rootView);
         sendRoamingValues.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 grabEditText();
-                checkAndSendData();
-                Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
-
+                checkStateRoamingData = checkAndSendData();
+                if (checkStateRoamingData) {
+                    Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Unsuccessful", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-            /**
+        return rootView;
+    }
+    //Recreate the Listener if it had been removed due to Pause
+    @Override
+    public void onResume(){
+            super.onResume();
+            retrieveRoamingData();
+    }
+    //Destroy the Listener if the App is paused
+    @Override
+    public void onPause(){
+        super.onPause();
+        refName_Roaming.removeEventListener(connectedListener);
+        Log.d("Event Listener Gone: ", "In Roaming Fragment!");
+    }
+
+    //Destroy the Listener if the App is destroyed/exited
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        refName_Roaming.removeEventListener(connectedListener);
+        Log.d("Event Listener Gone: ", "In Roaming Fragment!");
+    }
+
+    //Retrieve the Roaming Data of the User
+    private void retrieveRoamingData(){
+        /**
          * Create Firebase references
          */
-
-        Firebase refName_Roaming = new Firebase(Constants.FIREBASE_URL_SEEKING).child(username);
+        refName_Roaming = new Firebase(Constants.FIREBASE_URL_ROAMING).child(username);
 
         /**
          * Add ValueEventListeners to Firebase references
          * to control get data and control behavior and visibility of elements
          */
-        refName_Roaming.addValueEventListener(new ValueEventListener() {
+        connectedListener = refName_Roaming.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // You can use getValue to deserialize the data at dataSnapshot
@@ -99,6 +127,9 @@ public class RoamingAttribute extends Fragment {
                     sexRoamingText.setText(user.getSex());
                     sexualOrientationRoamingText.setText(user.getSexualOrientation());
                 }
+                else {
+                    Toast.makeText(getContext(), "Failed to retrieve User's Desired Match Data", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -106,15 +137,7 @@ public class RoamingAttribute extends Fragment {
 
             }
         });
-
-        return rootView;
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
 
     /**
      * Link layout elements from XML
@@ -135,18 +158,23 @@ public class RoamingAttribute extends Fragment {
         sexualOrientationRoamingValue = sexualOrientationRoamingText.getText().toString().trim();
     }
 
-    private void checkAndSendData(){
+    //Check that the Data is infact valid for the database schema
+    private boolean checkAndSendData(){
         if (TextUtils.isEmpty(ageRoamingValue)) {
             ageRoamingText.setError("Don't leave field empty!");
+            return false;
         }
         else if(TextUtils.isEmpty(sexualOrientationRoamingValue)||((!sexualOrientationRoamingValue.equals("straight")&&(!sexualOrientationRoamingValue.equals("bisexual"))&&(!sexualOrientationRoamingValue.equals("gay"))))){
             sexualOrientationRoamingText.setError("Invalid!, Inputs can be straight, gay, or bisexual");
+            return false;
         }
         else if(TextUtils.isEmpty(sexRoamingValue)||((!sexRoamingValue.equals("male")&&(!sexRoamingValue.equals("female"))))) {
             sexRoamingText.setError("Invalid!, Inputs can be wither male or female");
+            return false;
         }
         else if(TextUtils.isEmpty(heightRoamingValue)){
             heightRoamingText.setError("Invalid!,Don't leave field Empty!");
+            return false;
         }
         else{
             Long age = Long.valueOf(ageRoamingValue);
@@ -155,12 +183,13 @@ public class RoamingAttribute extends Fragment {
             String sexual_orientation = sexualOrientationRoamingValue;
             User seekingUser = new User(sex,age,height,sexual_orientation);
             addRoamingAttributes(seekingUser);
+            return true;
         }
     }
-        //add the Attributes of the User its seeking to the database
+    //Add the Attributes of the User its seeking to the database and store it
     private void addRoamingAttributes(User user){
         //Set Reference to Firebase node
-        Firebase ref = new Firebase(Constants.FIREBASE_URL_SEEKING);
+        Firebase ref = new Firebase(Constants.FIREBASE_URL_ROAMING);
         ref.child(username).setValue(user);
     }
 
