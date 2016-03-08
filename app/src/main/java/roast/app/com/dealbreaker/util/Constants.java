@@ -9,7 +9,7 @@ public final class Constants {
     // Constants related to locations in Firebase, such as the name of the node
      // Constants for Firebase object properties
         public static final String FIREBASE_LOC_USERS = "users";
-        public static final String FIREBASE_LOC_SEEKING = "seeking";
+        public static final String FIREBASE_LOC_SEEKING = "roaming";
         public static final String FIREBASE_LOC_USER_INFO = "user_info";
     // Constants for Firebase URL
 
@@ -18,7 +18,7 @@ public final class Constants {
     public static final String FIREBASE_TIMESTAMP = "timestamp";
     //May need to concat a "/"
     public static final String FIREBASE_URL_USERS = FIREBASE_URL + FIREBASE_LOC_USERS;
-    public static final String FIREBASE_URL_SEEKING = FIREBASE_URL + FIREBASE_LOC_SEEKING;
+    public static final String FIREBASE_URL_ROAMING = FIREBASE_URL + FIREBASE_LOC_SEEKING;
     public static final String FIREBASE_URL_USER_INFO = FIREBASE_URL + FIREBASE_LOC_USER_INFO;
     // Constants for bundles, extras and shared preferences keys
 

@@ -85,7 +85,6 @@ public class UserNavigation extends AppCompatActivity{
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        setTitle(menuItem.getTitle());
                         NavItemSelected(menuItem);
                         return true;
                     }
@@ -103,10 +102,10 @@ public class UserNavigation extends AppCompatActivity{
                 fragment = AttributeAssignment.newInstance("password");
                 break;
             case R.id.nav_send:
-                fragment = ProfileActivity.newInstance("password");
+                fragment = UserAttribute.newInstance("password");
                 break;
             default:
-                fragment = ProfileActivity.newInstance("password");
+                fragment = AttributeAssignment.newInstance("password");
                 break;
         }
 
@@ -117,7 +116,7 @@ public class UserNavigation extends AppCompatActivity{
         }
         // Highlight the selected item, update the title, and close the drawer
         item.setChecked(true);
-
+        setTitle(item.getTitle());
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
