@@ -11,6 +11,7 @@ public final class Constants {
         public static final String FIREBASE_LOC_USERS = "users";
         public static final String FIREBASE_LOC_SEEKING = "roaming";
         public static final String FIREBASE_LOC_USER_INFO = "user_info";
+        public static final String FIREBASE_LOC_USER_QUALITIES = "qualities";
     // Constants for Firebase URL
 
     public static final String FIREBASE_URL = BuildConfig.UNIQUE_FIREBASE_ROOT_URL;
