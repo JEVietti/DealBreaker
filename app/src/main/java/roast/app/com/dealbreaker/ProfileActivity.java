@@ -1,5 +1,7 @@
 package roast.app.com.dealbreaker;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.support.v7.widget.Toolbar;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.DataSnapshot;
@@ -25,9 +29,9 @@ import roast.app.com.dealbreaker.util.Constants;
 
 public class ProfileActivity extends Fragment {
     private Button profile_button;
-    private TextView profile_info, firstName1, lastName2;
+    private TextView bio_info,goodQualitiesInfo,badQualitiesInfo, personalName;
     private ImageButton imageButton;
-    private String userName;
+    private String userName="password";
 
     private GoogleApiClient client;
     public static ProfileActivity newInstance(String userName) {
@@ -70,10 +74,9 @@ public class ProfileActivity extends Fragment {
                 User user = dataSnapshot.getValue(User.class);
                 // If there was no data at the location we added the listener, then
                 if (user != null) {
-                    //displays first name of user to profile page
-                    firstName1.setText(user.getFirstName()); //user.getFirstName()
-                    //displays last name of user to profile page
-                    lastName2.setText(user.getLastName());
+                    //displays first and last name of user to profile page
+                    String firstAndLastName = user.getFirstName()+" "+user.getLastName();
+                    personalName.setText(firstAndLastName);
                 }
 
             }
@@ -84,52 +87,30 @@ public class ProfileActivity extends Fragment {
             }
         });
 
-/*
-        //Image view
-
-        //Firebase section
+        //Firebase section for Qualities
         final Firebase user_ref = new Firebase(Constants.FIREBASE_URL_USERS).child(userName).child(Constants.FIREBASE_LOC_USER_QUALITIES);
         //******************setTitle(user_ref.getKey());       //sets title(name of the user) on the action bar
 
-        //sets up textview for name
-        //sets the value to key, name
-
-        user_ref.addValueEventListener(new ValueEventListener() {                    //event listener for firebase data
+        user_ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {           //on data change, will do these tasks
-                Log.e("ProfileActivity.java", "Data has been Modified");    //log that data has been modified
-                User user = dataSnapshot.getValue(User.class);
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if (user != null)//checks if user is null
-                {
-
+                UserQualities userQualities = dataSnapshot.getValue(UserQualities.class);
+                if (userQualities != null) {
+                    bio_info.setText(userQualities.getBiography());
+                    badQualitiesInfo.setText(userQualities.getBadQualities());
+                    goodQualitiesInfo.setText(userQualities.getGoodQualities());
+                } else {
+                    //Will send a toast message that will pop up notifying user that there was an error
+                    Toast.makeText(getContext(), "Failed to Retrieve Info!!", Toast.LENGTH_LONG).show();
                 }
-                else
-                {   //will send a toast message that will pop up notifying user that there was an error
-                    Toast.makeText(getContext(),"Failed to Retrieve Info!!",Toast.LENGTH_LONG).show();
-                }
-
-                //user_ref.child(userName).getKey();
-                //String last_name;
-
-                //last_name = hashmap.get(userName).toString();
-
-                //lastname.setText(last_name);
-
-
-
-//fix here      String user = dataSnapshot.child("user_info").child("lastName").getValue().toString();  //last name retrieved from firebase
-                //profile_info.setText(user_ref.getKey());
-                //lastname = (TextView) view.findViewById(R.id.textView2);                  //creates textview widget
-                //lastname.setText(user_ref.child(userName).getKey());                                              //sets text to be displayed via widget
             }
-
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-        */
+
         //Image Button section
        /* imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,21 +123,29 @@ public class ProfileActivity extends Fragment {
         return view;
     }
 
-   private void initializeScreen(View rootView) {
-       //profile_info = (TextView) rootView.findViewById(R.id.textView);
-       firstName1 = (TextView) rootView.findViewById(R.id.textView);
-       lastName2 = (TextView) rootView.findViewById(R.id.textView2);
-       //imageButton = (ImageButton) rootView.findViewById(R.id.imageButton);
-       Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-   }
+    private void initializeScreen(View rootView) {
+        //profile_info = (TextView) rootView.findViewById(R.id.textView);
+        personalName = (TextView) rootView.findViewById(R.id.nameTextView);
+        bio_info = (TextView) rootView.findViewById(R.id.bioText);
+        badQualitiesInfo = (TextView) rootView.findViewById(R.id.badQualitiesText);
+        goodQualitiesInfo = (TextView) rootView.findViewById(R.id.goodQualitiesText);
+        imageButton = (ImageButton) rootView.findViewById(R.id.imageButton);
+        Bitmap defaultUserImage = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.defaultuser);
+        imageButton.setImageBitmap(defaultUserImage);
+        //Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+    }
 
-   private void addElements(User user){
-       //Set Reference to Firebase node
-       Firebase ref = new Firebase(Constants.FIREBASE_URL_USERS);
-       HashMap<String, Object> updates = new HashMap<String, Object>();
-       Map<String,Object> map = new ObjectMapper().convertValue(user, Map.class);
-       updates.put(Constants.FIREBASE_LOC_USER_QUALITIES, map);
-       ref.child(userName).updateChildren(updates);
-   }
+    private boolean checkAndSendData(User user){
+        return true;
+    }
+
+    private void addElements(User user){
+        //Set Reference to Firebase node
+        Firebase ref = new Firebase(Constants.FIREBASE_URL_USERS);
+        HashMap<String, Object> updates = new HashMap<String, Object>();
+        Map<String,Object> map = new ObjectMapper().convertValue(user, Map.class);
+        updates.put(Constants.FIREBASE_LOC_USER_QUALITIES, map);
+        ref.child(userName).updateChildren(updates);
+    }
 
 }

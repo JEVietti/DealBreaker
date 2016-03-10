@@ -38,7 +38,7 @@ public class UserNavigation extends AppCompatActivity{
         //Get UserName data passed from the Login
         if(getIntent().getExtras() != null) {
             Bundle arg = getIntent().getExtras();
-            userName = arg.getString("username");
+            userName = arg.getString("userName");
             //Initialize the View of the Fragment
             initializeView();
             //Set the first Fragment to be loaded

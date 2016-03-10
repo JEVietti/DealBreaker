@@ -95,7 +95,7 @@ public class InitialScreen extends AppCompatActivity {
                                     @Override
                                     public void onAuthenticated(AuthData authData) {
 
-                                        Intent intent = new Intent(InitialScreen.this, LoginActivity.class);
+                                        Intent intent = new Intent(InitialScreen.this, UserNavigation.class);
                                         intent.putExtra(getString(R.string.key_UserName), username);
                                         startActivity(intent);
                                     }

@@ -79,4 +79,12 @@ public class User {
     public String getGoodQualities() { return goodQualities; }
 
     public String getBadQualities() { return badQualities; }
+
+    public HashMap<String, Object> getTimeStampLastChanged() {
+        return timeStampLastChanged;
+    }
+
+    public void setTimeStampLastChanged(HashMap<String, Object> timeStampLastChanged) {
+        this.timeStampLastChanged = timeStampLastChanged;
+    }
 }

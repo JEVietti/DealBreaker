@@ -32,5 +32,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_menu_image_gallery_title">User Images</string>
+    <string name="biography_label">Bio:</string>
+    <string name="bad_qualities_label">Bad Qualities:</string>
+    <string name="good_qualities_label">Good Qualities:</string>
+
 
 </resources>
