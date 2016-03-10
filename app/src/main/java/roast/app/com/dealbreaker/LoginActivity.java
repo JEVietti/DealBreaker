@@ -20,8 +20,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         Intent intent = getIntent();
-        String userEmail = intent.getStringExtra(getString(R.string.key_UserName));
+        String userName = intent.getStringExtra(getString(R.string.key_UserName));
 
-        Toast.makeText(this, "Login successful for " + userEmail, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Login successful for " + userName, Toast.LENGTH_LONG).show();
     }
 }

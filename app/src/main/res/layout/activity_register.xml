@@ -23,6 +23,7 @@
     <EditText
         android:layout_width="200dp"
         android:layout_height="40dp"
+        android:inputType="textPersonName"
         android:textColor="@color/black"
         android:ems="10"
         android:id="@+id/registerUserName"
@@ -40,7 +41,7 @@
         android:ems="10"
         android:id="@+id/registerEmail"
         android:layout_marginTop="10dp"
-        android:hint="@string/email_edit"
+        android:hint="email"
         android:layout_below="@+id/registerUserName"
         android:textColorHint="@color/colorPrimary"
         android:layout_centerHorizontal="true" />
@@ -89,20 +90,21 @@
         android:layout_height="wrap_content"
         android:text="@string/register_button"
         android:id="@+id/register_act_button"
-        android:layout_below="@+id/confirmPassword"
-        android:layout_centerHorizontal="true"
         android:background="@drawable/register_button"
         android:textColor="@color/white"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="34dp"
+        android:layout_below="@+id/registerErrorMessage"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:text="Error Message"
+        android:textAlignment="center"
         android:id="@+id/registerErrorMessage"
+        android:visibility="invisible"
         android:layout_below="@+id/confirmPassword"
-        android:layout_alignStart="@+id/confirmPassword"
-        android:visibility="invisible"/>
+        android:layout_centerHorizontal="true"/>
 
 
 </RelativeLayout>

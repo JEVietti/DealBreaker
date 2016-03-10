@@ -54,9 +54,9 @@
         android:inputType="textEmailAddress"
         android:textColor="@color/black"
         android:ems="10"
-        android:id="@+id/LoginEmail"
+        android:id="@+id/LoginUsername"
         android:layout_marginTop="51dp"
-        android:hint="@string/email_edit"
+        android:hint="@string/username_edit"
         android:textColorHint="@color/colorPrimaryDark"
         android:layout_below="@+id/identity"
         android:layout_centerHorizontal="true" />
@@ -70,7 +70,7 @@
         android:id="@+id/LoginPassword"
         android:hint="@string/password_edit"
         android:textColorHint="@color/colorPrimaryDark"
-        android:layout_below="@+id/LoginEmail"
+        android:layout_below="@+id/LoginUsername"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp" />
 

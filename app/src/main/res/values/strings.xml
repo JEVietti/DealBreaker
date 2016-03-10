@@ -6,7 +6,7 @@
     <string name="login_button">"Login"</string>
     <string name="register_button">"Register"</string>
     <string name="facebook_login">"Login w/ Facebook"</string>
-    <string name="email_edit">"email"</string>
+    <string name="username_edit">"username"</string>
     <string name="password_edit">"password"</string>
     <string name="email_confirm">"confirm email"</string>
     <string name="password_confirm">"confirm password"</string>
