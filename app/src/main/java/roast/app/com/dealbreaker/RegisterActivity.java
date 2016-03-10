@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +18,6 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.Vector;
 
@@ -28,7 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText mUserName, mEmail, mConfirmEmail, mPassword, mConfirmPassword;
     private TextView mErrorMessage;
     private Vector<String> mUserEmailUsed = new Vector<>();
-    private Vector<String> mUserNameUsed = new Vector<>();
+    private boolean mUserNameUsed = false;
 
     Firebase userDatabase = new Firebase(Constants.FIREBASE_URL_USERS);
 
@@ -42,20 +42,20 @@ public class RegisterActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-/*         Commented out because it was causing some crashes and isn't really needed.
+
         userDatabase.addValueEventListener(new ValueEventListener() {
             public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    User user = postSnapshot.getValue(User.class);
-                    mUserEmailUsed.addElement(user.getEmail());
-                    mUserNameUsed.addElement(user.getUserName());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    String userEmail = postSnapshot.child("email").getValue().toString();
+                    mUserEmailUsed.addElement(userEmail);;
                 }
+
             }
 
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
-        });*/
+        });
 
         mUserName = (EditText) findViewById(R.id.registerUserName);
         mEmail = (EditText) findViewById(R.id.registerEmail);
@@ -68,34 +68,44 @@ public class RegisterActivity extends AppCompatActivity {
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userName = mUserName.getText().toString();
+                String username = mUserName.getText().toString();
                 String userEmail = mEmail.getText().toString();
                 String userConfirmEmail = mConfirmEmail.getText().toString();
                 String userPassword = mPassword.getText().toString();
                 String userConfirmPassword = mConfirmPassword.getText().toString();
 
                 boolean inUseEmail = false;
-                boolean inUseUserName = false;
+                mErrorMessage.setVisibility(View.INVISIBLE);
+
+
+                userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        mUserNameUsed = snapshot.exists();
+                        boolean result = snapshot.exists();
+                    }
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+                    }
+                });
+
+
                 //Commented out due to causing crashes because of testing too many accounts on one emulator
-                /*for (int i = 0; i < mUserEmailUsed.size(); i++) {
+                for (int i = 0; i < mUserEmailUsed.size(); i++) {
                     if (mUserEmailUsed.get(i).equals(userEmail)) {
                         inUseEmail = true;
                     }
-
-                    if (mUserNameUsed.get(i).equals(userName)) {
-                        inUseUserName = true;
-                    }
-                }*/
-                if(!userName.isEmpty()) {
-                    if (isProperUserName(userName)) {
-                        if (!inUseUserName) {
+                }
+                if(!TextUtils.isEmpty(username)) {
+                    if (!mUserNameUsed) {
+                        if (isProperUserName(username)) {
                             if (!userEmail.isEmpty()) {
                                 if (isProperEmail(userEmail)) {
                                     if (!inUseEmail) {
                                         if (userEmail.equals(userConfirmEmail)) {
                                             if (userPassword.length() >= 8) {
                                                 if (userPassword.equals(userConfirmPassword)) {
-                                                    registerUser(userName, userEmail, userPassword);
+                                                    registerUser(username, userEmail, userPassword);
                                                 } else {
                                                     mErrorMessage.setText("Passwords do not match.");
                                                     mErrorMessage.setVisibility(View.VISIBLE);
@@ -111,6 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     } else {
                                         mErrorMessage.setText("Email is already being used.");
                                         mErrorMessage.setVisibility(View.VISIBLE);
+                                        mUserEmailUsed.removeAllElements();
                                     }
                                 } else {
                                     mErrorMessage.setText("Email is not proper.");
@@ -121,11 +132,11 @@ public class RegisterActivity extends AppCompatActivity {
                                 mErrorMessage.setVisibility(View.VISIBLE);
                             }
                         } else {
-                            mErrorMessage.setText("Username is already being used.");
+                            mErrorMessage.setText("Username can only have letters, numbers, _, and !.");
                             mErrorMessage.setVisibility(View.VISIBLE);
                         }
                     } else {
-                        mErrorMessage.setText("Username cannot be an email address.");
+                        mErrorMessage.setText("Username is already being used.");
                         mErrorMessage.setVisibility(View.VISIBLE);
                     }
                 } else {
@@ -144,6 +155,9 @@ public class RegisterActivity extends AppCompatActivity {
                         User user = new User(userName, userEmail);
                         userDatabase.child(userName).setValue(user);
 
+                        Intent intent = new Intent(RegisterActivity.this, InitialScreen.class);
+                        startActivity(intent);
+
                     }
 
                     @Override
@@ -151,21 +165,18 @@ public class RegisterActivity extends AppCompatActivity {
                         // there was an error
                     }
                 });
-/*
-                Intent intent = new Intent(RegisterActivity.this, AttributeAssignment.class);
-                intent.putExtra("username",userName);
-                startActivity(intent);*/
             }
         });
     }
 
     public Boolean isProperUserName(String username){
-        for(int i=0; i < username.length(); i++){
-            if((username.charAt(i) == '@') ||
-                    (username.charAt(username.length()-4) == '.' &&
-                     username.charAt(username.length()-3) == 'c' &&
-                     username.charAt(username.length()-2) == 'o' &&
-                     username.charAt(username.length()-1) == 'm')){
+        for(int i = 0; i < username.length(); i++) {
+            if( (Character.isLetter(username.charAt(i)))
+                    || (Character.isDigit(username.charAt(i)))
+                    ||  ((username.charAt(i)) == '_')
+                    ||  ((username.charAt(i)) == '!') ){
+                continue;
+            } else {
                 return false;
             }
         }
@@ -173,21 +184,12 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-    public Boolean isProperEmail(String email){
-        for(int i=0; i < email.length(); i++){
-            if(email.charAt(i) == '@'){
-                if ((email.charAt(email.length()-4) == '.') &&
-                        email.charAt(email.length()-3) == 'c' &&
-                        email.charAt(email.length()-2) == 'o' &&
-                        email.charAt(email.length()-1) == 'm'){
-                    return true;
-                }
-
-                return false;
-            }
+    public final static boolean isProperEmail(String email){
+        if (TextUtils.isEmpty(email)) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
         }
-
-        return false;
     }
 
     @Override
@@ -204,14 +206,12 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(this,"Information that may help you",Toast.LENGTH_SHORT).show();
                 return true;
             case android.R.id.home:
-                onBackPressed();
+                Intent myIntent = new Intent(getApplicationContext(), InitialScreen.class);
+                startActivityForResult(myIntent, 0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    //public void createUser(){
-
-    //}
 }
