@@ -1,15 +1,11 @@
-package roast.app.com.dealbreaker;
+package roast.app.com.dealbreaker.fragments;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.support.v7.widget.Toolbar;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,24 +17,33 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.lang.String;
 
+import roast.app.com.dealbreaker.R;
+import roast.app.com.dealbreaker.User;
+import roast.app.com.dealbreaker.UserQualities;
 import roast.app.com.dealbreaker.util.Constants;
+import roast.app.com.dealbreaker.util.DownloadImages;
 
 public class ProfileActivity extends Fragment {
-    private Button profile_button;
     private TextView bio_info,goodQualitiesInfo,badQualitiesInfo, personalName;
     private ImageButton imageButton;
-    private String userName="password";
+    private String userName;
+    private String key, profilePicURL;
+    private DownloadImages downloadImages;
+
 
     private GoogleApiClient client;
     public static ProfileActivity newInstance(String userName) {
         ProfileActivity fragment = new ProfileActivity();
         Bundle args = new Bundle();
         //Adding the userName to the Bundle in order to use it later on
-        args.putString("username",userName);
+        args.putString("userName",userName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,7 +56,8 @@ public class ProfileActivity extends Fragment {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_profile);
         if (getArguments() != null) {
-            userName = getArguments().getString("username");
+            key = getString(R.string.key_UserName);
+            userName = getArguments().getString(key);
         }
     }
     @Override
@@ -105,21 +111,17 @@ public class ProfileActivity extends Fragment {
                     Toast.makeText(getContext(), "Failed to Retrieve Info!!", Toast.LENGTH_LONG).show();
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
 
-        //Image Button section
-       /* imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //on click fetch image and set as the profile picture
-
-            }
-        });
-        */
+        //FireBase Reference for User Profile Images will go here
+        //for now static URL
+        profilePicURL = "http://assets3.thrillist.com/v1/image/1299823/size/tl-horizontal_main/7-weird-stock-images-of-people-struggling-with-basic-cooking";
+        downloadImages.execute(profilePicURL);
         return view;
     }
 
@@ -130,8 +132,7 @@ public class ProfileActivity extends Fragment {
         badQualitiesInfo = (TextView) rootView.findViewById(R.id.badQualitiesText);
         goodQualitiesInfo = (TextView) rootView.findViewById(R.id.goodQualitiesText);
         imageButton = (ImageButton) rootView.findViewById(R.id.imageButton);
-        Bitmap defaultUserImage = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.defaultuser);
-        imageButton.setImageBitmap(defaultUserImage);
+        downloadImages = new DownloadImages(imageButton,getActivity());
         //Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
     }
 
@@ -148,4 +149,27 @@ public class ProfileActivity extends Fragment {
         ref.child(userName).updateChildren(updates);
     }
 
+    static class FlushedInputStream extends FilterInputStream {
+        public FlushedInputStream(InputStream inputStream) {
+            super(inputStream);
+        }
+
+        @Override
+        public long skip(long n) throws IOException {
+            long totalBytesSkipped = 0L;
+            while (totalBytesSkipped < n) {
+                long bytesSkipped = in.skip(n - totalBytesSkipped);
+                if (bytesSkipped == 0L) {
+                    int b = read();
+                    if (b < 0) {
+                        break; // we reached EOF
+                    } else {
+                        bytesSkipped = 1; // we read one byte
+                    }
+                }
+                totalBytesSkipped += bytesSkipped;
+            }
+            return totalBytesSkipped;
+        }
+    }
 }

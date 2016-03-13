@@ -2,13 +2,9 @@ package roast.app.com.dealbreaker;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,10 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
-import roast.app.com.dealbreaker.fragments.UserAttribute;
+import roast.app.com.dealbreaker.fragments.AttributeAssignment;
+import roast.app.com.dealbreaker.fragments.ProfileActivity;
 
 /* The UserNavigation class is meant as the base means of navigation during the app states
 * of which include the User's Home page, Images, Preferences and User Information Tasks (Fragments)
@@ -38,7 +34,7 @@ public class UserNavigation extends AppCompatActivity{
         //Get UserName data passed from the Login
         if(getIntent().getExtras() != null) {
             Bundle arg = getIntent().getExtras();
-            userName = arg.getString("userName");
+            userName = arg.getString(getString(R.string.key_UserName));
             //Initialize the View of the Fragment
             initializeView();
             //Set the first Fragment to be loaded

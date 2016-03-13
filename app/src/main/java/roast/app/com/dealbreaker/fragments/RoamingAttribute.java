@@ -26,7 +26,7 @@ import roast.app.com.dealbreaker.User;
 public class RoamingAttribute extends Fragment {
     //Class Variables
    // private ListView mListView;
-    private String ageRoamingValue,heightRoamingValue,sexRoamingValue,sexualOrientationRoamingValue, username;
+    private String ageRoamingValue,heightRoamingValue,sexRoamingValue,sexualOrientationRoamingValue, username, key;
     private EditText ageRoamingText, heightRoamingText, sexRoamingText, sexualOrientationRoamingText;
     private Button sendRoamingValues;
     private ValueEventListener connectedListener;
@@ -39,7 +39,7 @@ public class RoamingAttribute extends Fragment {
         RoamingAttribute fragment = new RoamingAttribute();
         Bundle args = new Bundle();
         //Adding the userName to the Bundle in order to use it later on
-        args.putString("username",userName);
+        args.putString("userName",userName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,7 +57,8 @@ public class RoamingAttribute extends Fragment {
         super.onCreate(savedInstanceState);
         //Getting Arguments from the Bundle in newInstance(String userName) above
         if (getArguments() != null) {
-            username = getArguments().getString("username");
+            key = getString(R.string.key_UserName);
+            username = getArguments().getString(key);
         }
     }
 

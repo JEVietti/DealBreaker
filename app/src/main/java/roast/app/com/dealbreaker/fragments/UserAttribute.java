@@ -34,13 +34,13 @@ import roast.app.com.dealbreaker.User;
 
 public class UserAttribute extends Fragment {
    //Class Variables
-    private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, sexUserValue, sexualOrientationUserValue, username;
+    private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, sexUserValue, sexualOrientationUserValue, username, key;
     private EditText firstNameUserText, lastNameUserText, ageUserText, heightUserText, sexUserText, sexualOrientationUserText;
     Button sendUserValues;
     public static UserAttribute newInstance(String userName) {
         UserAttribute fragment = new UserAttribute();
         Bundle args = new Bundle();
-        args.putString("username",userName);
+        args.putString("userName",userName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,7 +57,8 @@ public class UserAttribute extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            username = getArguments().getString("username");
+           key = getString(R.string.key_UserName);
+            username = getArguments().getString(key);
             Log.d("Username:",username);
         }
     }

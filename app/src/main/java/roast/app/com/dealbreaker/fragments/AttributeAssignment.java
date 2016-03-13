@@ -1,40 +1,34 @@
-package roast.app.com.dealbreaker;
+package roast.app.com.dealbreaker.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 
-import roast.app.com.dealbreaker.fragments.RoamingAttribute;
-import roast.app.com.dealbreaker.fragments.UserAttribute;
+import roast.app.com.dealbreaker.R;
 
 //Acts as a Fragment and Tab Manager, and is a fragment due to Navigation Drawer constraints
 public class AttributeAssignment extends Fragment{
     private static final String LOG_TAG = AttributeAssignment.class.getSimpleName();
     private SectionPagerAdapter mSectionPagerAdapter;
     private String username;
-
+    private String key;
     //Creates a new Instance of the Fragment class: Attribute Assignment
     //Its purpose is to facilitate passing arguments into the Fragment
-    protected static AttributeAssignment newInstance(String userName) {
+    public static AttributeAssignment newInstance(String userName) {
       AttributeAssignment fragment = new AttributeAssignment();
         Bundle args = new Bundle();
         //Adding the userName to the Bundle in order to use it later on
-        args.putString("username",userName);
+
+        args.putString("userName",userName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -42,7 +36,8 @@ public class AttributeAssignment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            username = getArguments().getString("username");
+            key = getString(R.string.key_UserName);
+            username = getArguments().getString(key);
         }
         else {
             getActivity().finish();
