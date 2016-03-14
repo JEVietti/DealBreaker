@@ -20,7 +20,7 @@ import com.firebase.client.ValueEventListener;
 
 import roast.app.com.dealbreaker.util.Constants;
 import roast.app.com.dealbreaker.R;
-import roast.app.com.dealbreaker.User;
+import roast.app.com.dealbreaker.models.User;
 
 
 public class RoamingAttribute extends Fragment {

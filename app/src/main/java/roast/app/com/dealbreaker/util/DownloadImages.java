@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.webkit.URLUtil;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -15,24 +17,33 @@ import java.net.URLConnection;
 
 import roast.app.com.dealbreaker.R;
 //Class in charge of downloading and displaying an image through a passed url
-//and passed imageview hopefully this will scale with list and grid views but it may need some tweaking
+//and passed imageView hopefully this will scale with list and grid views but it may need some tweaking
 //I think it might work however with an adapter
 public class DownloadImages extends AsyncTask<String, Void, Bitmap> {
     public ImageView imageView;
     private Bitmap defaultImage;
     private Activity source;
+
+    //Empty Constructor
+    public DownloadImages(){}
+    //Constructor for Initializing a view
     public DownloadImages(ImageButton imageView, Activity source){
         super();
         this.source = source;
         this.imageView = imageView;
     }
+
     //Do the main tasks in the background to save UI thread
         @Override
         protected Bitmap doInBackground(String... urls) {
-            defaultImage = BitmapFactory.decodeResource(source.getResources(),R.drawable.defaultuser);
-            Bitmap map = null;
+               defaultImage = BitmapFactory.decodeResource(source.getResources(), R.drawable.defaultuser);
+               Bitmap map = null;
             for (String url : urls) {
-                map = downloadImage(url);
+                if(URLUtil.isValidUrl(url)) {
+                    map = downloadImage(url);
+                }
+                else
+                    return defaultImage;
             }
             return map;
         }
@@ -62,7 +73,6 @@ public class DownloadImages extends AsyncTask<String, Void, Bitmap> {
                 scale*=2;
             }
             bmOptions.inSampleSize =scale;
-            if(URLUtil.isValidUrl(url)){
                 try {
                     URL imageURL = new URL(url);
                     //establish connection
@@ -71,11 +81,11 @@ public class DownloadImages extends AsyncTask<String, Void, Bitmap> {
                     bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
                     if(bitmap==null||stream==null){
                         return defaultImage;}
+                    else{defaultImage = null;}
                     stream.close();
                 } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
+                    e1.printStackTrace();}
+
                 return bitmap;
         }
 
@@ -100,5 +110,7 @@ public class DownloadImages extends AsyncTask<String, Void, Bitmap> {
             }
             return stream;
         }
+
 }
+
 

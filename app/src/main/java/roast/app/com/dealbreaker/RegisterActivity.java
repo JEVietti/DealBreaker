@@ -21,6 +21,7 @@ import com.firebase.client.ValueEventListener;
 import java.util.Map;
 import java.util.Vector;
 
+import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.util.Constants;
 
 public class RegisterActivity extends AppCompatActivity {

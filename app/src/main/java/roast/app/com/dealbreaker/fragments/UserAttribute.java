@@ -4,33 +4,27 @@ package roast.app.com.dealbreaker.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.test.RenamingDelegatingContext;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import roast.app.com.dealbreaker.util.Constants;
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import roast.app.com.dealbreaker.R;
-import roast.app.com.dealbreaker.User;
+import roast.app.com.dealbreaker.models.User;
 
 public class UserAttribute extends Fragment {
    //Class Variables
@@ -110,41 +104,6 @@ public class UserAttribute extends Fragment {
 
             }
         });
-
-
-        /*
-        refName_Users.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                ageUserText.setText(dataSnapshot.child("age").getValue().toString());
-                firstNameUserText.setText(dataSnapshot.child("firstName").getValue().toString());
-                lastNameUserText.setText(dataSnapshot.child("lastName").getValue().toString());
-                heightUserText.setText(dataSnapshot.child("height").getValue().toString());
-                sexUserText.setText(dataSnapshot.child("sex").getValue().toString());
-                sexualOrientationUserText.setText(dataSnapshot.child("sexualOrientation").getValue().toString());
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-        */
 
         return rootView;
     }

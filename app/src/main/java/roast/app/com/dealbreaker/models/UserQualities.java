@@ -1,19 +1,30 @@
-package roast.app.com.dealbreaker;
+package roast.app.com.dealbreaker.models;
 
 public class UserQualities extends User{
     //Class Variables
-    private String biography, goodQualities, badQualities;
+    private String biography, goodQualities, badQualities, profilePic;
 
     //Empty Constructor
     public UserQualities(){}
 
+
     //Constructor for Bio, and Qualities (good/bad)
-
-
     public UserQualities(String biography, String goodQualities, String badQualities) {
         this.biography = biography;
         this.goodQualities = goodQualities;
         this.badQualities = badQualities;
+    }
+    //Constructor for getting image from Firebase
+    public UserQualities(String profilePic){
+        this.profilePic = profilePic;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
     }
 
     //Setters and Getters

@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import roast.app.com.dealbreaker.fragments.AttributeAssignment;
@@ -26,6 +27,7 @@ public class UserNavigation extends AppCompatActivity{
     private String userName;
     private DrawerLayout mDrawer;
     private NavigationView nvDrawer;
+    private ImageView headerImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,11 +110,11 @@ public class UserNavigation extends AppCompatActivity{
             case R.id.nav_manage:
                 fragment = AttributeAssignment.newInstance(userName);
                 break;
-            case R.id.nav_send:
+            case R.id.nav_home:
                 fragment = ProfileActivity.newInstance(userName);
                 break;
             default:
-                fragment = ProfileActivity.newInstance(userName);
+                fragment = AttributeAssignment.newInstance(userName);
                 break;
         }
 
@@ -139,15 +141,16 @@ public class UserNavigation extends AppCompatActivity{
         mDrawer.setDrawerListener(toggle);
         toggle.syncState();
         nvDrawer = (NavigationView) findViewById(R.id.nav_view);
+        headerImageView = (ImageView) findViewById(R.id.nav_header_imageView);
         setupDrawerContent(nvDrawer);
     }
 
     //Sets the Fragment that will be loaded up implicitly
     //by calling the setCheckedItem Helper function and using this function in onCreate
     private void setFirstItemNavigationView() {
-        nvDrawer.setCheckedItem(R.id.nav_send);
-        nvDrawer.getMenu().performIdentifierAction(R.id.nav_send, 0);
-        nvDrawer.setCheckedItem(R.id.nav_send);
+        nvDrawer.setCheckedItem(R.id.nav_home);
+        nvDrawer.getMenu().performIdentifierAction(R.id.nav_home, 0);
+        nvDrawer.setCheckedItem(R.id.nav_home);
     }
 
 }

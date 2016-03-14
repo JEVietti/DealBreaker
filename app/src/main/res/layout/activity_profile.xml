@@ -16,12 +16,11 @@
             layout="@layout/toolbar" />
         -->
         <ImageButton
-            android:layout_width="125dp"
-            android:layout_height="120dp"
+            android:layout_width="200dp"
+            android:layout_height="180dp"
             android:id="@+id/imageButton"
             android:adjustViewBounds="true"
             android:layout_marginTop="15dp"
-            android:layout_below="@+id/toolbar"
             android:layout_centerHorizontal="true" />
         <TextView
             android:layout_width="wrap_content"
@@ -32,7 +31,7 @@
             android:id="@+id/bioLabel"
             android:layout_below="@+id/nameTextView"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="7dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,7 +44,7 @@
             android:id="@+id/nameTextView"
             android:layout_below="@+id/imageButton"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="8dp" />
 
         <TextView
             android:layout_width="205dp"
@@ -54,7 +53,7 @@
             android:ems="10"
             android:textAlignment="center"
             android:id="@+id/bioText"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/black"
             android:layout_below="@+id/bioLabel"
             android:layout_centerHorizontal="true" />
 

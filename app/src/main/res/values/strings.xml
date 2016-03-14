@@ -35,6 +35,7 @@
     <string name="biography_label">Bio:</string>
     <string name="bad_qualities_label">Bad Qualities:</string>
     <string name="good_qualities_label">Good Qualities:</string>
+    <string name="userProfilePicTag">User Profile Picture</string>
 
 
 </resources>

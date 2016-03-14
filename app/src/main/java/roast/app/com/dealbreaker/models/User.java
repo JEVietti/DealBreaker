@@ -1,4 +1,4 @@
-package roast.app.com.dealbreaker;
+package roast.app.com.dealbreaker.models;
 
 //Data Struct for User Objects
 
