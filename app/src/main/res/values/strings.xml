@@ -31,11 +31,18 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_menu_image_gallery_title">User Images</string>
     <string name="biography_label">Bio:</string>
     <string name="bad_qualities_label">Bad Qualities:</string>
     <string name="good_qualities_label">Good Qualities:</string>
     <string name="userProfilePicTag">User Profile Picture</string>
+    <string name="nav_userGallery">Images</string>
+    <string name="nav_userPreferences">Preferences</string>
+    <string name="nav_userAdded">Relationships</string>
+    <string name="nav_userHome">Profile</string>
+    <string name="nav_commTitle">Communicate</string>
+    <string name="nav_Share">Share</string>
+    <string name="user_profilePicDescription">user\'s profile picture</string>
+    <string name="userNamesDefault">FirstName LastName</string>
 
 
 </resources>

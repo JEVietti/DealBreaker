@@ -107,7 +107,7 @@ public class UserNavigation extends AppCompatActivity{
         //Switches to different fragments based on the id in the Navigation Drawer Mennu
         //which can be found in the DealBreaker\app\src\main\res\menu\activity_user_navigation_drawer.xml file
         switch (item.getItemId()) {
-            case R.id.nav_manage:
+            case R.id.nav_preferences:
                 fragment = AttributeAssignment.newInstance(userName);
                 break;
             case R.id.nav_home:

@@ -21,7 +21,8 @@
             android:id="@+id/imageButton"
             android:adjustViewBounds="true"
             android:layout_marginTop="15dp"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/user_profilePicDescription" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="FirstName LastName"
+            android:text="@string/userNamesDefault"
             android:textAlignment="center"
             android:textColorHighlight="@color/colorAccent"
             android:textColor="@color/colorPrimary"
@@ -78,6 +79,7 @@
             android:id="@+id/goodQualitiesLabel"
             android:textAlignment="center"
             android:paddingTop="8dp"
+            android:layout_alignTop="@+id/badQualitiesLabel"
             android:textColor="@color/colorPrimaryDark"
             android:layout_marginRight="0dp"
             android:layout_below="@+id/bioText"
