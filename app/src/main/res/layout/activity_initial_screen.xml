@@ -30,8 +30,9 @@
         android:text="@string/login_button"
         android:textColor="@color/white"
         android:id="@+id/login_button"
+        android:textStyle="bold"
         android:background="@drawable/login_button"
-        android:layout_below="@+id/editPassword"
+        android:layout_below="@+id/LoginPassword"
         android:layout_alignStart="@+id/register_button"
         android:layout_marginTop="50dp" />
 
@@ -40,6 +41,7 @@
         android:layout_height="wrap_content"
         android:text="@string/register_button"
         android:textColor="@color/white"
+        android:textStyle="bold"
         android:background="@drawable/register_button"
         android:id="@+id/register_button"
         android:layout_alignTop="@+id/login_button"
@@ -52,10 +54,10 @@
         android:inputType="textEmailAddress"
         android:textColor="@color/black"
         android:ems="10"
-        android:id="@+id/editEmail"
+        android:id="@+id/LoginUsername"
         android:layout_marginTop="51dp"
-        android:hint="@string/email_edit"
-        android:textColorHint="@color/colorPrimary"
+        android:hint="@string/username_edit"
+        android:textColorHint="@color/colorPrimaryDark"
         android:layout_below="@+id/identity"
         android:layout_centerHorizontal="true" />
 
@@ -65,24 +67,35 @@
         android:inputType="textPassword"
         android:textColor="@color/black"
         android:ems="10"
-        android:id="@+id/editPassword"
+        android:id="@+id/LoginPassword"
         android:hint="@string/password_edit"
-        android:textColorHint="@color/colorPrimary"
-        android:layout_below="@+id/editEmail"
+        android:textColorHint="@color/colorPrimaryDark"
+        android:layout_below="@+id/LoginUsername"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp" />
 
-   <!-- <com.facebook.login.widget.LoginButton
-        android:id="@+id/facebook_login"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/facebook_login"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="43dp"
-        android:layout_below="@+id/register_button"
-        android:layout_centerHorizontal="true" />
--->
+        android:text="Email and password combination do not match. Please try again."
+        android:id="@+id/loginErrorMessage"
+        android:layout_below="@+id/LoginPassword"
+        android:layout_alignEnd="@+id/identity"
+        android:layout_alignStart="@+id/identity"
+        android:textAlignment="center"
+        android:visibility="invisible"/>
+
+    <!-- <com.facebook.login.widget.LoginButton
+         android:id="@+id/facebook_login"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center_horizontal"
+         android:text="@string/facebook_login"
+         android:layout_marginLeft="10dp"
+         android:layout_marginTop="43dp"
+         android:layout_below="@+id/register_button"
+         android:layout_centerHorizontal="true" />
+ -->
 
 
 </RelativeLayout>

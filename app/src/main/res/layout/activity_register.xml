@@ -16,8 +16,21 @@
         android:textColor="@color/colorPrimary"
         android:textSize="50sp"
         android:id="@+id/identity"
-        android:layout_marginTop="43dp"
         android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp" />
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:inputType="textPersonName"
+        android:textColor="@color/black"
+        android:ems="10"
+        android:id="@+id/registerUserName"
+        android:layout_marginTop="20dp"
+        android:hint="username"
+        android:layout_below="@+id/identity"
+        android:textColorHint="@color/colorPrimary"
         android:layout_centerHorizontal="true" />
 
     <EditText
@@ -26,10 +39,10 @@
         android:inputType="textEmailAddress"
         android:textColor="@color/black"
         android:ems="10"
-        android:id="@+id/editEmail"
-        android:layout_marginTop="51dp"
-        android:hint="@string/email_edit"
-        android:layout_below="@+id/identity"
+        android:id="@+id/registerEmail"
+        android:layout_marginTop="10dp"
+        android:hint="email"
+        android:layout_below="@+id/registerUserName"
         android:textColorHint="@color/colorPrimary"
         android:layout_centerHorizontal="true" />
 
@@ -42,12 +55,12 @@
         android:ems="10"
         android:hint="@string/email_confirm"
         android:textColorHint="@color/colorPrimary"
-        android:layout_below="@+id/editEmail"
-        android:layout_alignStart="@+id/editEmail"
+        android:layout_below="@+id/registerEmail"
+        android:layout_alignStart="@+id/registerEmail"
         android:layout_marginTop="10dp" />
 
     <EditText
-        android:id="@+id/editPassword"
+        android:id="@+id/registerPassword"
         android:layout_width="200dp"
         android:layout_height="40dp"
         android:inputType="textPassword"
@@ -68,18 +81,31 @@
         android:id="@+id/confirmPassword"
         android:hint="@string/password_confirm"
         android:textColorHint="@color/colorPrimary"
-        android:layout_below="@+id/editPassword"
-        android:layout_alignStart="@+id/editPassword"
+        android:layout_below="@+id/registerPassword"
+        android:layout_alignStart="@+id/registerPassword"
         android:layout_marginTop="10dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/register_button"
-        android:id="@+id/button"
+        android:id="@+id/register_act_button"
+        android:background="@drawable/register_button"
+        android:textColor="@color/white"
+        android:layout_marginTop="34dp"
+        android:layout_below="@+id/registerErrorMessage"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Error Message"
+        android:textAlignment="center"
+        android:id="@+id/registerErrorMessage"
+        android:visibility="invisible"
         android:layout_below="@+id/confirmPassword"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp" />
+        android:layout_centerHorizontal="true"/>
+
 
 </RelativeLayout>
 

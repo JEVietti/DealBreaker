@@ -6,10 +6,43 @@
     <string name="login_button">"Login"</string>
     <string name="register_button">"Register"</string>
     <string name="facebook_login">"Login w/ Facebook"</string>
-    <string name="email_edit">"email"</string>
+    <string name="username_edit">"username"</string>
     <string name="password_edit">"password"</string>
     <string name="email_confirm">"confirm email"</string>
     <string name="password_confirm">"confirm password"</string>
     <string name="register_activity_title">Register</string>
+    <string name="user_fragment">User Info</string>
+    <string name="roaming_fragment">Desired Match Info</string>
+    <string name="height_attribute">Height:</string>
+    <string name="height_attribute_hint">height in inches</string>
+    <string name="age_attribute">Age:</string>
+    <string name="age_attribute_hint">age</string>
+    <string name="sexual_or_attribute">Sexual Orientation:</string>
+    <string name="sexual_or_attribute_hint">straight, gay, bisexual</string>
+    <string name="sex_attribute">Sex:</string>
+    <string name="sex_attribute_hint">sex (male/female)</string>
+    <string name="first_name">First Name:</string>
+    <string name="last_name">Last Name:</string>
+    <string name="finished_button">Done!</string>
+    <string name="next_button">Next!</string>
+    <string name="key_UserEmail">userEmail</string>
+    <string name="key_UserName">userName</string>
+    <string name="title_activity_user_navigation">UserNavigation</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="biography_label">Bio:</string>
+    <string name="bad_qualities_label">Bad Qualities:</string>
+    <string name="good_qualities_label">Good Qualities:</string>
+    <string name="userProfilePicTag">User Profile Picture</string>
+    <string name="nav_userGallery">Images</string>
+    <string name="nav_userPreferences">Preferences</string>
+    <string name="nav_userAdded">Relationships</string>
+    <string name="nav_userHome">Profile</string>
+    <string name="nav_commTitle">Communicate</string>
+    <string name="nav_Share">Share</string>
+    <string name="user_profilePicDescription">user\'s profile picture</string>
+    <string name="userNamesDefault">FirstName LastName</string>
+
 
 </resources>
