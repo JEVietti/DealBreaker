@@ -31,6 +31,8 @@ public class UserAttribute extends Fragment {
     private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, sexUserValue, sexualOrientationUserValue, username, key;
     private EditText firstNameUserText, lastNameUserText, ageUserText, heightUserText, sexUserText, sexualOrientationUserText;
     Button sendUserValues;
+    private Firebase refUserInfo;
+    private ValueEventListener userInfoListener;
     public static UserAttribute newInstance(String userName) {
         UserAttribute fragment = new UserAttribute();
         Bundle args = new Bundle();
@@ -64,53 +66,37 @@ public class UserAttribute extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_user_attribute, container, false);
         initializeScreen(rootView);
+        //retrieveUserInfo();
         sendUserValues.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 grabEditText();
                 checkAndSendData();
-                Toast.makeText(getContext(),"Success!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
 
             }
         });
 
-        /**
-         * Create Firebase references
-         */
-        //Creates a child node under the user so it can be independent of changes to the user's other info
-        //because when the user is first created in Register Activity it has to llok in a different location.
-        Firebase refName_Users = new Firebase(Constants.FIREBASE_URL_USERS).child(username).child(Constants.FIREBASE_LOC_USER_INFO);
-
-        //Add the value Event Listener so if data has already been inputted by the user then it will
-        //pre-populated with existing data
-        refName_Users.addValueEventListener(new ValueEventListener() {
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // You can use getValue to deserialize the data at dataSnapshot
-                User user = dataSnapshot.getValue(User.class);
-                // If there was no data at the location we added the listener, then
-                if (user != null) {
-                    ageUserText.setText(Long.toString(user.getAge()));
-                    firstNameUserText.setText(user.getFirstName());
-                    heightUserText.setText(Long.toString(user.getHeight()));
-                    lastNameUserText.setText(user.getLastName());
-                    sexUserText.setText(user.getSex());
-                    sexualOrientationUserText.setText(user.getSexualOrientation());
-                }
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
 
         return rootView;
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        retrieveUserInfo();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        refUserInfo.removeEventListener(userInfoListener);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        refUserInfo.removeEventListener(userInfoListener);
     }
 
     //Link the XML to the Activity
@@ -131,6 +117,42 @@ public class UserAttribute extends Fragment {
         heightUserValue = heightUserText.getText().toString().trim();
         sexUserValue = sexUserText.getText().toString().trim();
         sexualOrientationUserValue = sexualOrientationUserText.getText().toString().trim();
+    }
+
+    private void retrieveUserInfo(){
+        /**
+         * Create Firebase references
+         */
+        //Creates a child node under the user so it can be independent of changes to the user's other info
+        //because when the user is first created in Register Activity it has to llok in a different location.
+        refUserInfo = new Firebase(Constants.FIREBASE_URL_USERS).child(username).child(Constants.FIREBASE_LOC_USER_INFO);
+
+        //Add the value Event Listener so if data has already been inputted by the user then it will
+        //pre-populated with existing data
+        userInfoListener = refUserInfo.addValueEventListener(new ValueEventListener() {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // You can use getValue to deserialize the data at dataSnapshot
+                User user = dataSnapshot.getValue(User.class);
+                // If there was no data at the location we added the listener, then
+                if (user != null) {
+                    ageUserText.setText(Long.toString(user.getAge()));
+                    firstNameUserText.setText(user.getFirstName());
+                    heightUserText.setText(Long.toString(user.getHeight()));
+                    lastNameUserText.setText(user.getLastName());
+                    sexUserText.setText(user.getSex());
+                    sexualOrientationUserText.setText(user.getSexualOrientation());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.e(getString(R.string.LogTagUserInfo),
+                        getString(R.string.FirebaseOnCancelledError) +
+                                firebaseError.getMessage());
+            }
+        });
+
     }
 
     //Check to see if the data entered is in the set of inputs needed or that it is not empty

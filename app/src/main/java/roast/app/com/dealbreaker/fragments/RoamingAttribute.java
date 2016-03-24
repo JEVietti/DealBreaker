@@ -69,6 +69,7 @@ public class RoamingAttribute extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_roaming_attribute, container, false);
        //Call the initialization of XML file
         initializeScreen(rootView);
+        //retrieveRoamingData();
         sendRoamingValues.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
@@ -135,7 +136,9 @@ public class RoamingAttribute extends Fragment {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                Log.e(getString(R.string.LogTagRoaming),
+                        getString(R.string.FirebaseOnCancelledError) +
+                                firebaseError.getMessage());
             }
         });
     }

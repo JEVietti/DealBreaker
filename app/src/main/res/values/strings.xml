@@ -43,6 +43,12 @@
     <string name="nav_Share">Share</string>
     <string name="user_profilePicDescription">user\'s profile picture</string>
     <string name="userNamesDefault">FirstName LastName</string>
+    <string name="FirebaseOnCancelledError">Firebase Read Failed! </string>
+    <string name="LogTagUserProfile">UserProfile: </string>
+    <string name="LogTagRoaming">RoamingFragment: </string>
+    <string name="LogTagUserInfo">UserInfoFragment: </string>
+    <string name="LogTagDownload">DownloadImage: </string>
+    <string name="LogTagUpload">UploadFile: </string>
 
 
 </resources>
