@@ -34,11 +34,13 @@
         <activity
             android:name=".RegisterActivity"
             android:label="@string/register_activity_title"
+            android:configChanges="orientation"
             android:theme="@style/AppTheme.ActionBar" >
         </activity>
         <activity
             android:name=".UserNavigation"
             android:label="@string/title_activity_user_navigation"
+            android:configChanges="orientation"
             android:theme="@style/AppTheme" >
         </activity>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for

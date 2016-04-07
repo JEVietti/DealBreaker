@@ -2,6 +2,8 @@ package roast.app.com.dealbreaker;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -50,6 +52,15 @@ public class UserNavigation extends AppCompatActivity{
         }
     }
 
+    //Need to handle Orientation changes in the app runtime
+    //as of now if orientation changes in certain fragments it can cause
+    //a restart of the app or worse a crash
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+
+
+    }
+
     //Changes the default onBackPressed so that the User can get a warning to whether they would like to exit or not
     @Override
     public void onBackPressed() {
@@ -62,7 +73,8 @@ public class UserNavigation extends AppCompatActivity{
             dlg.setNegativeButton(android.R.string.no, null);
             dlg.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface arg0, int arg1) {
-                    UserNavigation.super.onBackPressed();
+                    Intent intent = new Intent(UserNavigation.this,InitialScreen.class);
+                    startActivity(intent);
                 }
             }).create().show();
         }

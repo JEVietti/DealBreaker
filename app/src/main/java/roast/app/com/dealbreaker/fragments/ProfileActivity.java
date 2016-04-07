@@ -1,7 +1,10 @@
 package roast.app.com.dealbreaker.fragments;
 
+import android.support.v4.app.FragmentManager;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +25,12 @@ import java.util.Map;
 import java.lang.String;
 
 import roast.app.com.dealbreaker.R;
+
 import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.models.UserQualities;
 import roast.app.com.dealbreaker.util.Constants;
 import roast.app.com.dealbreaker.util.DownloadImages;
-
+import roast.app.com.dealbreaker.fragments.UpdateImage;
 public class ProfileActivity extends Fragment {
     private TextView bio_info,goodQualitiesInfo,badQualitiesInfo, personalName;
     private ImageButton imageButton;
@@ -46,10 +50,12 @@ public class ProfileActivity extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,20 +65,32 @@ public class ProfileActivity extends Fragment {
             userName = getArguments().getString(key);
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         // Initialize UI elements
         final View view = inflater.inflate(R.layout.activity_profile, container, false);
         initializeScreen(view);
         //setSupportActionBar(toolbar);
         //super.getView().setLabelFor(R.id.toolbar);
-
-
         //Set an on click listener that switches to another activity or fragment in which a user can
         //change their bio, good and bad qualities as well as select to upload a different image
         // as their profile picture
-
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment f = null;
+                f = UpdateImage.newInstance(userName);
+                if(f != null && savedInstanceState == null) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.Content, f);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
+            }
+        });
         return view;
     }
 
@@ -111,22 +129,27 @@ public class ProfileActivity extends Fragment {
 
     //Destroy the Listener if the App is paused
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
-        userInfoREF.removeEventListener(userInfoListener);
-        profilePicREF.removeEventListener(profilePicListener);
-        userQualitiesREF.removeEventListener(userQualitiesListener);
-        Log.d("Event Listeners Gone: ", "In User Profile Fragment!");
+        //if statement due to onDestroy being called in a the UpdateImage after replacing due to Orientation Change
+        if (userInfoListener != null && userQualitiesListener != null && profilePicListener != null) {
+            userInfoREF.removeEventListener(userInfoListener);
+            profilePicREF.removeEventListener(profilePicListener);
+            userQualitiesREF.removeEventListener(userQualitiesListener);
+            Log.d("Event Listeners Gone: ", "In User Profile Fragment!");
+        }
     }
-
     //Destroy the Listener if the App is destroyed/exited
     @Override
     public void onDestroy(){
         super.onDestroy();
-        userInfoREF.removeEventListener(userInfoListener);
-        profilePicREF.removeEventListener(profilePicListener);
-        userQualitiesREF.removeEventListener(userQualitiesListener);
-        Log.d("Event Listeners Gone: ", "In User Profile Fragment!");
+        //if statement due to onDestroy being called in a the UpdateImage after replacing due to Orientation Change
+        if(userInfoListener != null && userQualitiesListener != null && profilePicListener != null) {
+            userInfoREF.removeEventListener(userInfoListener);
+            profilePicREF.removeEventListener(profilePicListener);
+            userQualitiesREF.removeEventListener(userQualitiesListener);
+            Log.d("Event Listeners Gone: ", "In User Profile Fragment!");
+        }
     }
 
 

@@ -27,7 +27,7 @@ public class DownloadImages extends AsyncTask<String, Void, Bitmap> {
     //Empty Constructor
     public DownloadImages(){}
     //Constructor for Initializing a view
-    public DownloadImages(ImageButton imageView, Activity source){
+    public DownloadImages(ImageView imageView, Activity source){
         super();
         this.source = source;
         this.imageView = imageView;
