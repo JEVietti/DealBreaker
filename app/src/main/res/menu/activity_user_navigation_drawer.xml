@@ -13,6 +13,10 @@
 
         <item android:id="@+id/nav_preferences" android:icon="@drawable/db_menu_preferences"
             android:title="@string/nav_userPreferences" />
+
+        <item android:id="@+id/profile_edit" android:icon="@drawable/db_menu_profile_edit"
+            android:title="EditProfile" />
+
     </group>
 
     <item android:title="@string/nav_commTitle">

@@ -1,6 +1,7 @@
 package roast.app.com.dealbreaker;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import roast.app.com.dealbreaker.fragments.AttributeAssignment;
 import roast.app.com.dealbreaker.fragments.ProfileActivity;
+import roast.app.com.dealbreaker.fragments.editProfile;
 
 /* The UserNavigation class is meant as the base means of navigation during the app states
 * of which include the User's Home page, Images, Preferences and User Information Tasks (Fragments)
@@ -124,6 +126,9 @@ public class UserNavigation extends AppCompatActivity{
                 break;
             case R.id.nav_home:
                 fragment = ProfileActivity.newInstance(userName);
+                break;
+            case R.id.profile_edit:
+                fragment = editProfile.newInstance(userName);
                 break;
             default:
                 fragment = AttributeAssignment.newInstance(userName);
