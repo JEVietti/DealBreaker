@@ -27,8 +27,7 @@ public class InitialScreen extends AppCompatActivity {
     private Button registerButton,loginButton;
     private EditText mEmailEditText, mPasswordEditText;
     private TextView mLoginErrorMessage;
-    private Vector<String> mUserEmailUsed = new Vector<>();
-    private Vector<String> mUserNameUsed = new Vector<>();
+    private TextView mForgotPassword;
 
     Firebase userDatabase = new Firebase(Constants.FIREBASE_URL_USERS);
 
@@ -45,6 +44,8 @@ public class InitialScreen extends AppCompatActivity {
 
         registerButton = (Button) findViewById(R.id.register_button);
         loginButton = (Button) findViewById(R.id.login_button);
+        mForgotPassword = (TextView) findViewById(R.id.forgotPasswordLink);
+
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +62,7 @@ public class InitialScreen extends AppCompatActivity {
                 mLoginErrorMessage = (TextView) findViewById(R.id.loginErrorMessage);
 
                 mLoginErrorMessage.setVisibility(View.INVISIBLE);
+                mLoginErrorMessage.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
                 final String username = mEmailEditText.getText().toString();
                 final String userPassword = mPasswordEditText.getText().toString();
@@ -71,6 +73,7 @@ public class InitialScreen extends AppCompatActivity {
                 if(username.isEmpty()){
                     mLoginErrorMessage.setText("Username cannot be empty");
                     mLoginErrorMessage.setVisibility(View.VISIBLE);
+
                 }
                 else if(android.util.Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
                     mLoginErrorMessage.setText("Please enter username, not email.");
@@ -94,7 +97,6 @@ public class InitialScreen extends AppCompatActivity {
                                 ref.authWithPassword(userEmail, userPassword, new Firebase.AuthResultHandler() {
                                     @Override
                                     public void onAuthenticated(AuthData authData) {
-
                                         Intent intent = new Intent(InitialScreen.this, UserNavigation.class);
                                         intent.putExtra(getString(R.string.key_UserName), username);
                                         startActivity(intent);
@@ -103,12 +105,12 @@ public class InitialScreen extends AppCompatActivity {
                                     @Override
                                     public void onAuthenticationError(FirebaseError firebaseError) {
                                         // there was an error
-                                        mLoginErrorMessage.setText("Email and password combination do not match. Please try again.");
+                                        mLoginErrorMessage.setText("Username and password combination do not match. Please try again.");
                                         mLoginErrorMessage.setVisibility(View.VISIBLE);
                                     }
                                 });
                             } else {
-                                mLoginErrorMessage.setText("Email and password combination do not match. Please try again.");
+                                mLoginErrorMessage.setText("Username and password combination do not match. Please try again.");
                                 mLoginErrorMessage.setVisibility(View.VISIBLE);
                             }
                         }
@@ -119,6 +121,15 @@ public class InitialScreen extends AppCompatActivity {
                         }
                     });
                 }
+            }
+        });
+
+        mForgotPassword.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(InitialScreen.this, LoginActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -157,8 +168,12 @@ public class InitialScreen extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //mEmailEditText.setText("");
-        //mPasswordEditText.setText("");
+        System.out.println("Resume");
+        mEmailEditText = (EditText) findViewById(R.id.LoginUsername);
+        mPasswordEditText = (EditText) findViewById(R.id.LoginPassword);
+
+        mEmailEditText.getText().clear();
+        mPasswordEditText.getText().clear();
     }
 }
 
