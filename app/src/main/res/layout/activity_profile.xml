@@ -30,9 +30,8 @@
             android:textColor="@color/colorPrimaryDark"
             android:text="@string/biography_label"
             android:id="@+id/bioLabel"
-            android:layout_below="@+id/nameTextView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="7dp" />
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -67,6 +66,7 @@
             android:id="@+id/badQualitiesLabel"
             android:textAlignment="center"
             android:paddingTop="8dp"
+            android:layout_marginTop="50dp"
             android:layout_below="@+id/bioText"
             android:layout_alignStart="@+id/badQualitiesText"
             android:layout_alignEnd="@+id/badQualitiesText" />
@@ -108,6 +108,37 @@
             android:id="@+id/badQualitiesText"
             android:layout_alignTop="@+id/goodQualitiesText"
             android:layout_toStartOf="@+id/bioLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/age"
+            android:textColor="#db1b1b"
+            android:layout_above="@+id/gender"
+            android:layout_toEndOf="@+id/ageLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Age:"
+            android:id="@+id/ageLabel"
+            android:textColor="#db1b1b"
+            android:paddingStart="10dp"
+            android:layout_alignTop="@+id/age"
+            android:layout_alignEnd="@+id/badQualitiesLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/gender"
+            android:textColor="#db1b1b"
+            android:layout_above="@+id/goodQualitiesLabel"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 </ScrollView>

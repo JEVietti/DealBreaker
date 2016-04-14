@@ -20,6 +20,8 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.lang.String;
@@ -32,7 +34,7 @@ import roast.app.com.dealbreaker.util.Constants;
 import roast.app.com.dealbreaker.util.DownloadImages;
 import roast.app.com.dealbreaker.fragments.UpdateImage;
 public class ProfileActivity extends Fragment {
-    private TextView bio_info,goodQualitiesInfo,badQualitiesInfo, personalName;
+    private TextView bio_info,goodQualitiesInfo,badQualitiesInfo, personalName,age,gender;
     private ImageButton imageButton;
     private String userName;
     private String key, profilePicURL;
@@ -101,6 +103,8 @@ public class ProfileActivity extends Fragment {
         badQualitiesInfo = (TextView) rootView.findViewById(R.id.badQualitiesText);
         goodQualitiesInfo = (TextView) rootView.findViewById(R.id.goodQualitiesText);
         imageButton = (ImageButton) rootView.findViewById(R.id.imageButton);
+        age = (TextView) rootView.findViewById(R.id.age);
+        gender = (TextView) rootView.findViewById(R.id.gender);
         //Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
     }
 
@@ -152,7 +156,6 @@ public class ProfileActivity extends Fragment {
         }
     }
 
-
     private void listenUSER_INFO(){
         userInfoREF = new Firebase(Constants.FIREBASE_URL_USERS).child(userName).child(Constants.FIREBASE_LOC_USER_INFO);
         //Add the value Event Listener so if data has already been inputted by the user then it will
@@ -166,6 +169,9 @@ public class ProfileActivity extends Fragment {
                     //displays first and last name of user to profile page
                     String firstAndLastName = user.getFirstName() + " " + user.getLastName();
                     personalName.setText(firstAndLastName);
+                    //displays the age of the user
+                    age.setText(user.getAge().toString());
+                    gender.setText(user.getSex().toString());
                 }
 
             }
