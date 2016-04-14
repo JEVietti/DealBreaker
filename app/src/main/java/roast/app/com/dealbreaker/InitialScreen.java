@@ -19,8 +19,6 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import java.util.Vector;
-
 import roast.app.com.dealbreaker.util.Constants;
 
 public class InitialScreen extends AppCompatActivity {
@@ -128,7 +126,7 @@ public class InitialScreen extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(InitialScreen.this, LoginActivity.class);
+                Intent intent = new Intent(InitialScreen.this, ResetPassword.class);
                 startActivity(intent);
             }
         });

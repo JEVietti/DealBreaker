@@ -78,7 +78,6 @@ public class RegisterActivity extends AppCompatActivity {
                 boolean inUseEmail = false;
                 mErrorMessage.setVisibility(View.INVISIBLE);
 
-
                 userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {

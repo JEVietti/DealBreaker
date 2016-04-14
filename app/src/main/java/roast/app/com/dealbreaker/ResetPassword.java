@@ -14,12 +14,9 @@ import android.widget.Toast;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import roast.app.com.dealbreaker.util.Constants;
 
-public class LoginActivity extends AppCompatActivity {
+public class ResetPassword extends AppCompatActivity {
 
     private EditText mUserEmail;
     private TextView mErrorMessage;
@@ -49,9 +46,9 @@ public class LoginActivity extends AppCompatActivity {
                 database.resetPassword(userEmail, new Firebase.ResultHandler() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(LoginActivity.this, "Email sent.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResetPassword.this, "Email sent.", Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(LoginActivity.this, InitialScreen.class);
+                        Intent intent = new Intent(ResetPassword.this, InitialScreen.class);
                         startActivity(intent);
                     }
 
