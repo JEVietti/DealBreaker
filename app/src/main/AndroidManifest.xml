@@ -37,6 +37,8 @@
             android:configChanges="orientation"
             android:theme="@style/AppTheme.ActionBar" >
         </activity>
+        <activity android:name=".RoamingActivity" >
+        </activity>
         <activity
             android:name=".UserNavigation"
             android:label="@string/title_activity_user_navigation"

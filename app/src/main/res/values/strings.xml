@@ -44,13 +44,16 @@
     <string name="user_profilePicDescription">user\'s profile picture</string>
     <string name="userNamesDefault">FirstName LastName</string>
     <string name="FirebaseOnCancelledError">Firebase Read Failed! </string>
+
     <string name="LogTagUserProfile">UserProfile: </string>
     <string name="LogTagRoaming">RoamingFragment: </string>
     <string name="LogTagUserInfo">UserInfoFragment: </string>
     <string name="LogTagDownload">DownloadImage: </string>
     <string name="LogTagUpload">UploadFile: </string>
+
     <string name="ChooseImageButtonLabel">Choose Image</string>
     <string name="UploadImageButtonLabel">Upload Image</string>
 
-
+    <string name="ConfirmedRelationshipLabel">Relationships</string>
+    <string name="PendingRelationshipLabel">Pending</string>
 </resources>

@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import roast.app.com.dealbreaker.fragments.AttributeAssignment;
 import roast.app.com.dealbreaker.fragments.ProfileActivity;
+import roast.app.com.dealbreaker.fragments.UserRelationships;
 import roast.app.com.dealbreaker.fragments.editProfile;
 
 /* The UserNavigation class is meant as the base means of navigation during the app states
@@ -129,6 +130,9 @@ public class UserNavigation extends AppCompatActivity{
                 break;
             case R.id.profile_edit:
                 fragment = editProfile.newInstance(userName);
+                break;
+            case R.id.nav_relationship:
+                fragment = UserRelationships.newInstance(userName);
                 break;
             default:
                 fragment = AttributeAssignment.newInstance(userName);
