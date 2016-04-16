@@ -2,6 +2,9 @@
 
 package roast.app.com.dealbreaker.fragments;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -10,7 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,16 +26,22 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import roast.app.com.dealbreaker.util.Constants;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 import roast.app.com.dealbreaker.R;
 import roast.app.com.dealbreaker.models.User;
+import roast.app.com.dealbreaker.util.DatePickerFragment;
 
-public class UserAttribute extends Fragment {
+public class UserAttribute extends Fragment implements DatePickerFragment.DateListener{
    //Class Variables
-    private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, sexUserValue, sexualOrientationUserValue, username, key;
-    private EditText firstNameUserText, lastNameUserText, ageUserText, heightUserText, sexUserText, sexualOrientationUserText;
+    private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, birthDate, sexUserValue, sexualOrientationUserValue, username, key;
+    private EditText firstNameUserText, lastNameUserText, ageUserText, heightUserText, sexualOrientationUserText;
+    private EditText birthDateText;
+    private RadioButton setMale, setFemale;
+    RadioGroup maleFemaleGroup;
     Button sendUserValues;
     private Firebase refUserInfo;
     private ValueEventListener userInfoListener;
@@ -67,16 +79,26 @@ public class UserAttribute extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_user_attribute, container, false);
         initializeScreen(rootView);
         //retrieveUserInfo();
+
+        /*birthDateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment picker = new DatePickerFragment();
+                picker.show(getFragmentManager(),"datePicker");
+            }
+        });
+        */
+
         sendUserValues.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 grabEditText();
+                grabButtonValues();
                 checkAndSendData();
                 Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
 
             }
         });
-
 
         return rootView;
     }
@@ -104,9 +126,12 @@ public class UserAttribute extends Fragment {
         firstNameUserText=(EditText)rootView.findViewById(R.id.et_user_first_name);
         lastNameUserText=(EditText)rootView.findViewById(R.id.et_user_last_name);
         ageUserText=(EditText) rootView.findViewById(R.id.et_user_age);
+        maleFemaleGroup = (RadioGroup) rootView.findViewById(R.id.radioGroupSex);
+        setMale = (RadioButton) rootView.findViewById(R.id.radioButtonMale);
+        setFemale = (RadioButton) rootView.findViewById(R.id.radioButtonFemale);
         heightUserText=(EditText) rootView.findViewById(R.id.et_user_height);
-        sexUserText=(EditText)rootView.findViewById(R.id.et_user_sex);
         sexualOrientationUserText=(EditText)rootView.findViewById(R.id.et_user_sexual_or);
+        birthDateText = (EditText)rootView.findViewById(R.id.birthDateText);
         sendUserValues = (Button) rootView.findViewById(R.id.user_attribute_finished_button);
     }
     //Grab all of the Edit Text Values
@@ -114,9 +139,21 @@ public class UserAttribute extends Fragment {
         firstNameUserValue = firstNameUserText.getText().toString().trim();
         lastNameUserValue = lastNameUserText.getText().toString().trim();
         ageUserValue = ageUserText.getText().toString().trim();
+        birthDate = birthDateText.getText().toString().trim();
         heightUserValue = heightUserText.getText().toString().trim();
-        sexUserValue = sexUserText.getText().toString().trim();
         sexualOrientationUserValue = sexualOrientationUserText.getText().toString().trim();
+    }
+
+    private void grabButtonValues(){
+        int checked = maleFemaleGroup.getCheckedRadioButtonId();
+        switch(checked){
+            case R.id.radioButtonMale:
+                sexUserValue = "male";
+                break;
+            case R.id.radioButtonFemale:
+                sexUserValue = "female";
+                break;
+        }
     }
 
     private void retrieveUserInfo(){
@@ -138,9 +175,16 @@ public class UserAttribute extends Fragment {
                     ageUserText.setText(Long.toString(user.getAge()));
                     firstNameUserText.setText(user.getFirstName());
                     heightUserText.setText(Long.toString(user.getHeight()));
+                    String sex = user.getSex();
+                    if(sex.equals("male")) {
+                        maleFemaleGroup.check(R.id.radioButtonMale);
+                    }
+                    else if(sex.equals("female")){
+                        maleFemaleGroup.check(R.id.radioButtonFemale);
+                    }
                     lastNameUserText.setText(user.getLastName());
-                    sexUserText.setText(user.getSex());
                     sexualOrientationUserText.setText(user.getSexualOrientation());
+                    birthDateText.setText(user.getBirthDate());
                 }
 
             }
@@ -157,11 +201,16 @@ public class UserAttribute extends Fragment {
 
     //Check to see if the data entered is in the set of inputs needed or that it is not empty
     private void checkAndSendData(){
+
         if(TextUtils.isEmpty(firstNameUserValue)){
             firstNameUserText.setError("This field cannot be empty!");
         }
         else if(TextUtils.isEmpty(lastNameUserValue)){
             lastNameUserText.setError("This field cannot be empty!");
+        }
+        //need to add more handling for checking if the date is entered in a proper format
+        else if(birthDate == null ){
+            birthDateText.setError("Invalid!");
         }
         else if (TextUtils.isEmpty(ageUserValue)) {
             ageUserText.setError("This field cannot be empty!");
@@ -169,16 +218,17 @@ public class UserAttribute extends Fragment {
         else if(TextUtils.isEmpty(sexualOrientationUserValue)||((!sexualOrientationUserValue.equals("straight")&&(!sexualOrientationUserValue.equals("bisexual"))&&(!sexualOrientationUserValue.equals("gay"))))){
             sexualOrientationUserText.setError("Invalid!, Inputs can be straight, gay, or bisexual");
         }
-        else if(TextUtils.isEmpty(sexUserValue)||((!sexUserValue.equals("male")&&(!sexUserValue.equals("female"))))){
-            sexUserText.setError("Invalid!, Inputs can be wither male or female");
+        else if(sexUserValue == null || (!sexUserValue.equals("male") && !sexUserValue.equals("female"))){
+            setFemale.setError("Invalid!, Inputs can be either male or female");
         } else {
             String firstName = firstNameUserValue;
             String lastName = lastNameUserValue;
             Long age = Long.valueOf(ageUserValue);
             Long height = Long.valueOf(heightUserValue);
             String sex = sexUserValue;
+            String birthday = birthDate;
             String sexual_orientation = sexualOrientationUserValue;
-            User user = new User(username, firstName, lastName, sex, age, sexual_orientation, height);
+            User user = new User(username, firstName, lastName, sex, birthday ,age, sexual_orientation, height);
             addUserAttributes(user);
         }
 
@@ -196,5 +246,9 @@ public class UserAttribute extends Fragment {
         * ref.child(username).child
         * */
     }
-
+    //This is for the Date Dialog Picker not in use as of now...
+    @Override
+    public void returnDate(String date) {
+        birthDate = date;
+    }
 }

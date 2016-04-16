@@ -30,8 +30,9 @@
             android:textColor="@color/colorPrimaryDark"
             android:text="@string/biography_label"
             android:id="@+id/bioLabel"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_below="@+id/locationTextLabel"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -54,8 +55,9 @@
             android:textAlignment="center"
             android:id="@+id/bioText"
             android:textColor="@color/black"
-            android:layout_below="@+id/bioLabel"
-            android:layout_centerHorizontal="true" />
+            android:layout_below="@id/bioLabel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -65,11 +67,11 @@
             android:textColor="@color/colorPrimaryDark"
             android:id="@+id/badQualitiesLabel"
             android:textAlignment="center"
-            android:paddingTop="8dp"
-            android:layout_marginTop="50dp"
-            android:layout_below="@+id/bioText"
+            android:paddingTop="5dp"
+            android:layout_centerVertical="true"
+            android:layout_below="@id/bioText"
             android:layout_alignStart="@+id/badQualitiesText"
-            android:layout_alignEnd="@+id/badQualitiesText" />
+            android:layout_alignEnd="@+id/badQualitiesText"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -112,33 +114,43 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/age"
-            android:textColor="#db1b1b"
-            android:layout_above="@+id/gender"
-            android:layout_toEndOf="@+id/ageLabel" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Age:"
-            android:id="@+id/ageLabel"
-            android:textColor="#db1b1b"
-            android:paddingStart="10dp"
-            android:layout_alignTop="@+id/age"
-            android:layout_alignEnd="@+id/badQualitiesLabel" />
+            android:id="@+id/ageTextLabel"
+            android:layout_below="@+id/nameTextView"
+            android:layout_alignStart="@+id/nameTextView" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/gender"
-            android:textColor="#db1b1b"
-            android:layout_above="@+id/goodQualitiesLabel"
-            android:layout_centerHorizontal="true" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/ageContent"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/nameTextView"
+            android:layout_toEndOf="@+id/ageTextLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Location:"
+            android:id="@+id/locationTextLabel"
+            android:paddingRight="0dp"
+            android:paddingLeft="0dp"
+            android:layout_below="@+id/nameTextView"
+            android:layout_toEndOf="@+id/bioLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/locationContent"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/nameTextView"
+            android:layout_toEndOf="@+id/locationTextLabel" />
+
 
     </RelativeLayout>
 </ScrollView>

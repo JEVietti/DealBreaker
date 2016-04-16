@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class User {
 
     //Class Variables for the base registration
-    private String userName,email, password, firstName, lastName, sex;
+    private String userName,email, password, firstName, lastName, sex, birthDate;
     //Class Variables for attribute assignment
     private Long age, height;
     private String goodQualities, badQualities, sexualOrientation;
@@ -32,18 +32,18 @@ public class User {
         this.sex = sex;
     }
     //For the User's attribute Registrations
-    public User(String userName, String firstName, String lastName, String sex, Long age, String sexualOrientation , Long height) {
+    public User(String userName, String firstName, String lastName, String sex, String birthDate, Long age, String sexualOrientation , Long height) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.sex = sex;
+        this.birthDate = birthDate;
         this.age = age;
         this.sexualOrientation = sexualOrientation;
         this.height = height;
     }
 
     //Roaming Attributes
-
     public User(String sex, Long age, Long height, String sexualOrientation) {
         this.sex = sex;
         this.age = age;
@@ -79,6 +79,8 @@ public class User {
     public String getGoodQualities() { return goodQualities; }
 
     public String getBadQualities() { return badQualities; }
+
+    public String getBirthDate() {return birthDate;}
 
     public HashMap<String, Object> getTimeStampLastChanged() {
         return timeStampLastChanged;

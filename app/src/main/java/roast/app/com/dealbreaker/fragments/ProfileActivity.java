@@ -1,7 +1,6 @@
 package roast.app.com.dealbreaker.fragments;
 
 import android.support.v4.app.FragmentManager;
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -13,17 +12,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import org.w3c.dom.Text;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.lang.String;
 
 import roast.app.com.dealbreaker.R;
@@ -32,9 +26,9 @@ import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.models.UserQualities;
 import roast.app.com.dealbreaker.util.Constants;
 import roast.app.com.dealbreaker.util.DownloadImages;
-import roast.app.com.dealbreaker.fragments.UpdateImage;
+
 public class ProfileActivity extends Fragment {
-    private TextView bio_info,goodQualitiesInfo,badQualitiesInfo, personalName,age,gender;
+    private TextView bio_info,goodQualitiesInfo,badQualitiesInfo, personalName,age, location;
     private ImageButton imageButton;
     private String userName;
     private String key, profilePicURL;
@@ -103,8 +97,8 @@ public class ProfileActivity extends Fragment {
         badQualitiesInfo = (TextView) rootView.findViewById(R.id.badQualitiesText);
         goodQualitiesInfo = (TextView) rootView.findViewById(R.id.goodQualitiesText);
         imageButton = (ImageButton) rootView.findViewById(R.id.imageButton);
-        age = (TextView) rootView.findViewById(R.id.age);
-        gender = (TextView) rootView.findViewById(R.id.gender);
+        age = (TextView) rootView.findViewById(R.id.ageContent);
+        location = (TextView) rootView.findViewById(R.id.locationContent);
         //Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
     }
 
@@ -171,7 +165,7 @@ public class ProfileActivity extends Fragment {
                     personalName.setText(firstAndLastName);
                     //displays the age of the user
                     age.setText(user.getAge().toString());
-                    gender.setText(user.getSex().toString());
+                    location.setText(user.getSex().toString());
                 }
 
             }
