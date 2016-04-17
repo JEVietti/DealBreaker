@@ -5,10 +5,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.firebase.ui.FirebaseRecyclerAdapter;
-import com.firebase.ui.FirebaseListAdapter;
 
 import roast.app.com.dealbreaker.R;
+import roast.app.com.dealbreaker.models.ConfirmedRelationshipViewHolder;
+import roast.app.com.dealbreaker.models.User;
 
 //This class will show all of the users that have been accepted by both parties
 //From their they can do other things hopefully in the future like chat and
@@ -18,11 +20,12 @@ import roast.app.com.dealbreaker.R;
 //luckily one is supplied by the Firebase UI that has been added to the build.gradle
 //see an example: https://github.com/firebase/FirebaseUI-Android
 //                http://stackoverflow.com/questions/36143837/firebase-recyclerview-not-able-to-query
-
+//https://www.learn2crack.com/2016/02/custom-swipe-recyclerview.html
+// http://stackoverflow.com/questions/24885223/why-doesnt-recyclerview-have-onitemclicklistener-and-how-recyclerview-is-dif/24933117#24933117
 
 public class ConfirmedRelationships extends Fragment {
     private static final String USER_NAME = "userName";
-
+    private FirebaseRecyclerAdapter<User, ConfirmedRelationshipViewHolder> recyclerAdapter;
     private String userName;
     public ConfirmedRelationships() {
         // Required empty public constructor

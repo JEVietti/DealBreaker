@@ -6,7 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.firebase.ui.FirebaseListAdapter;
+import com.firebase.ui.FirebaseRecyclerAdapter;
+
 import roast.app.com.dealbreaker.R;
+import roast.app.com.dealbreaker.models.PendingRelationshipViewHolder;
+import roast.app.com.dealbreaker.models.User;
 
 //This class will be used to Show the status of the Pending Relationships
 // so it will show other users that have added the current user , allowing
@@ -14,8 +19,10 @@ import roast.app.com.dealbreaker.R;
 //It may also be used to track if your requests have been denied or not sure yet
 
 //May also be using a List or Recycler view from the Firebase-UI: https://github.com/firebase/FirebaseUI-Android
-
+//https://www.learn2crack.com/2016/02/custom-swipe-recyclerview.html
+// http://stackoverflow.com/questions/24885223/why-doesnt-recyclerview-have-onitemclicklistener-and-how-recyclerview-is-dif/24933117#24933117
 public class PendingRelationships extends Fragment {
+    FirebaseRecyclerAdapter<User,PendingRelationshipViewHolder> pendingRecyclerAdapter;
 
     public PendingRelationships() {
         // Required empty public constructor
