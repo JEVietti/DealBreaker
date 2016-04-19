@@ -24,10 +24,13 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import roast.app.com.dealbreaker.models.Age;
 import roast.app.com.dealbreaker.util.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -176,10 +179,9 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
                     firstNameUserText.setText(user.getFirstName());
                     heightUserText.setText(Long.toString(user.getHeight()));
                     String sex = user.getSex();
-                    if(sex.equals("male")) {
+                    if (sex.equals("male")) {
                         maleFemaleGroup.check(R.id.radioButtonMale);
-                    }
-                    else if(sex.equals("female")){
+                    } else if (sex.equals("female")) {
                         maleFemaleGroup.check(R.id.radioButtonFemale);
                     }
                     lastNameUserText.setText(user.getLastName());
@@ -221,9 +223,13 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
         else if(sexUserValue == null || (!sexUserValue.equals("male") && !sexUserValue.equals("female"))){
             setFemale.setError("Invalid!, Inputs can be either male or female");
         } else {
+            Age a = new Age();
+
+            Date birth = a.ConvertToDate(birthDate);
+            Long age = Long.valueOf(a.calculateAge(birth));
+            Log.d("Age of User", age.toString());
             String firstName = firstNameUserValue;
             String lastName = lastNameUserValue;
-            Long age = Long.valueOf(ageUserValue);
             Long height = Long.valueOf(heightUserValue);
             String sex = sexUserValue;
             String birthday = birthDate;

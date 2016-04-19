@@ -178,4 +178,4 @@ public class myLocation extends AppCompatActivity {
         );
         AppIndex.AppIndexApi.end(mClient, viewAction);
         mClient.disconnect();
-    }
+    }}
