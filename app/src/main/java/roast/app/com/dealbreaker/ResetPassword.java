@@ -22,6 +22,7 @@ public class ResetPassword extends AppCompatActivity {
     private TextView mErrorMessage;
     private Button mResetButton;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password_screen);
@@ -66,6 +67,11 @@ public class ResetPassword extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public void onBackPressed(){
+        finish();
     }
 
     public final static boolean isProperEmail(String email){

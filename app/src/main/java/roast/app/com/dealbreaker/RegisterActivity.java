@@ -169,6 +169,11 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed(){
+        finish();
+    }
+
     public Boolean isProperUserName(String username){
         for(int i = 0; i < username.length(); i++) {
             if( (Character.isLetter(username.charAt(i)))
