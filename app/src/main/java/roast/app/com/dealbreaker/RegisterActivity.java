@@ -29,7 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText mUserName, mEmail, mConfirmEmail, mPassword, mConfirmPassword;
     private TextView mErrorMessage;
     private Vector<String> mUserEmailUsed = new Vector<>();
-    private boolean mUserNameUsed = false;
+    private Vector<String> mUserNameUsed = new Vector<>();
 
     Firebase userDatabase = new Firebase(Constants.FIREBASE_URL_USERS);
 
@@ -44,11 +44,15 @@ public class RegisterActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        userDatabase.addValueEventListener(new ValueEventListener() {
+
+        userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+
             public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     String userEmail = postSnapshot.child("email").getValue().toString();
-                    mUserEmailUsed.addElement(userEmail);;
+                    String userName = postSnapshot.child("userName").getValue().toString();
+                    mUserEmailUsed.addElement(userEmail);
+                    mUserNameUsed.addElement(userName);
                 }
 
             }
@@ -66,9 +70,12 @@ public class RegisterActivity extends AppCompatActivity {
         mErrorMessage = (TextView) findViewById(R.id.registerErrorMessage);
 
         mRegisterButton = (Button) findViewById(R.id.register_act_button);
+
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("Inside the register button");
+
                 String username = mUserName.getText().toString();
                 String userEmail = mEmail.getText().toString();
                 String userConfirmEmail = mConfirmEmail.getText().toString();
@@ -76,28 +83,25 @@ public class RegisterActivity extends AppCompatActivity {
                 String userConfirmPassword = mConfirmPassword.getText().toString();
 
                 boolean inUseEmail = false;
+                boolean inUseUserName = false;
+
                 mErrorMessage.setVisibility(View.INVISIBLE);
 
-                userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        mUserNameUsed = snapshot.exists();
-                        boolean result = snapshot.exists();
-                    }
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-                    }
-                });
-
-
-                //Commented out due to causing crashes because of testing too many accounts on one emulator
                 for (int i = 0; i < mUserEmailUsed.size(); i++) {
                     if (mUserEmailUsed.get(i).equals(userEmail)) {
                         inUseEmail = true;
                     }
                 }
+
+                for (int i = 0; i < mUserNameUsed.size(); i++) {
+                    if (mUserNameUsed.get(i).equals(username)) {
+                        inUseUserName = true;
+                    }
+                }
+
+                System.out.println("If statements");
                 if(!TextUtils.isEmpty(username)) {
-                    if (!mUserNameUsed) {
+                    if (!inUseUserName) {
                         if (isProperUserName(username)) {
                             if (!userEmail.isEmpty()) {
                                 if (isProperEmail(userEmail)) {
@@ -162,16 +166,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(FirebaseError firebaseError) {
-                        // there was an error
                     }
                 });
             }
         });
-    }
-
-    @Override
-    public void onBackPressed(){
-        finish();
     }
 
     public Boolean isProperUserName(String username){
