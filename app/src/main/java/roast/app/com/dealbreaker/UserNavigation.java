@@ -76,8 +76,10 @@ public class UserNavigation extends AppCompatActivity{
             dlg.setNegativeButton(android.R.string.no, null);
             dlg.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface arg0, int arg1) {
-                    Intent intent = new Intent(UserNavigation.this,InitialScreen.class);
-                    startActivity(intent);
+                    /**We want to end the activity, not move on to a new one.**/
+                    //Intent intent = new Intent(UserNavigation.this,InitialScreen.class);
+                    //startActivity(intent);
+                    finish();
                 }
             }).create().show();
         }

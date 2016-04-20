@@ -1,5 +1,7 @@
 package roast.app.com.dealbreaker;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,7 @@ public class InitialScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("test");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial_screen);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -132,6 +135,27 @@ public class InitialScreen extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed(){
+        AlertDialog.Builder exitAlertWindow = new AlertDialog.Builder(InitialScreen.this, R.style.AlertDialogTheme);
+        exitAlertWindow.setTitle("Leave application?");
+        exitAlertWindow.setMessage("Do you want to exit " + getString(R.string.app_name));
+        exitAlertWindow.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //finish();
+                System.exit(0);
+            }
+        });
+        exitAlertWindow.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        exitAlertWindow.show();
+    }
+
     public Boolean isProperUserName(String username){
         for(int i = 0; i < username.length(); i++) {
             if( (Character.isLetter(username.charAt(i)))
@@ -163,10 +187,11 @@ public class InitialScreen extends AppCompatActivity {
         }
     }
 
+
+
     @Override
     protected void onResume() {
         super.onResume();
-        System.out.println("Resume");
         mEmailEditText = (EditText) findViewById(R.id.LoginUsername);
         mPasswordEditText = (EditText) findViewById(R.id.LoginPassword);
 

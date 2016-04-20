@@ -23,7 +23,6 @@ public class ResetPassword extends AppCompatActivity {
     private Button mResetButton;
 
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("it runs!");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password_screen);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -40,6 +39,7 @@ public class ResetPassword extends AppCompatActivity {
         mResetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 final String userEmail = mUserEmail.getText().toString();
 
                 Firebase database = new Firebase(Constants.FIREBASE_URL_USER_INFO);
