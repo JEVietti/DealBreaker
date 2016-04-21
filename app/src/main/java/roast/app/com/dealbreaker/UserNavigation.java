@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -71,17 +72,20 @@ public class UserNavigation extends AppCompatActivity{
             mDrawer.closeDrawer(GravityCompat.START);
         } else {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+            AlertDialog dialog = dlg.create();
             dlg.setTitle("Really Exit!");
             dlg.setMessage("Are you Sure you want to Exit?");
             dlg.setNegativeButton(android.R.string.no, null);
             dlg.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface arg0, int arg1) {
+
                     /**We want to end the activity, not move on to a new one.**/
                     //Intent intent = new Intent(UserNavigation.this,InitialScreen.class);
                     //startActivity(intent);
                     finish();
                 }
-            }).create().show();
+            }).create();
+            dlg.show();
         }
     }
 

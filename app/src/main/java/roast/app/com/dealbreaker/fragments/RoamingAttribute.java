@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
@@ -25,9 +27,11 @@ import roast.app.com.dealbreaker.models.User;
 
 public class RoamingAttribute extends Fragment {
     //Class Variables
-   // private ListView mListView;
+
     private String ageRoamingValue,heightRoamingValue,sexRoamingValue,sexualOrientationRoamingValue, username, key;
     private EditText ageRoamingText, heightRoamingText, sexRoamingText, sexualOrientationRoamingText;
+     private RadioGroup maleFemaleGroupRoaming;
+    private RadioButton maleButton, femaleButton;
     private Button sendRoamingValues;
     private ValueEventListener connectedListener;
     private Firebase refName_Roaming;
@@ -74,6 +78,7 @@ public class RoamingAttribute extends Fragment {
             public void onClick(View v) {
                 // Perform action on click
                 grabEditText();
+                grabRoamingButtonValues();
                 checkStateRoamingData = checkAndSendData();
                 if (checkStateRoamingData) {
                     Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
@@ -126,7 +131,12 @@ public class RoamingAttribute extends Fragment {
                 if (user != null) {
                     ageRoamingText.setText(user.getAge().toString());
                     heightRoamingText.setText(user.getHeight().toString());
-                    sexRoamingText.setText(user.getSex());
+                    String sex = user.getSex();
+                    if (sex.equals("male")) {
+                        maleFemaleGroupRoaming.check(R.id.radioButtonMaleRoaming);
+                    } else if (sex.equals("female")) {
+                        maleFemaleGroupRoaming.check(R.id.radioButtonFemaleRoaming);
+                    }
                     sexualOrientationRoamingText.setText(user.getSexualOrientation());
                 }
                 else {
@@ -149,7 +159,10 @@ public class RoamingAttribute extends Fragment {
     private void initializeScreen(View rootView) {
         ageRoamingText=(EditText) rootView.findViewById(R.id.et_roaming_age);
         heightRoamingText=(EditText) rootView.findViewById(R.id.et_roaming_height);
-        sexRoamingText=(EditText)rootView.findViewById(R.id.et_roaming_sex);
+        //sexRoamingText=(EditText)rootView.findViewById(R.id.et_roaming_sex);
+        maleFemaleGroupRoaming = (RadioGroup) rootView.findViewById(R.id.radioGroupSexRoaming);
+        maleButton = (RadioButton) rootView.findViewById(R.id.radioButtonMaleRoaming);
+        femaleButton = (RadioButton) rootView.findViewById(R.id.radioButtonFemaleRoaming);
         sexualOrientationRoamingText=(EditText)rootView.findViewById(R.id.et_roaming_sexual_or);
         sendRoamingValues = (Button) rootView.findViewById(R.id.finished_roaming_attribute_button);
     }
@@ -158,8 +171,18 @@ public class RoamingAttribute extends Fragment {
     private void grabEditText() {
         ageRoamingValue = ageRoamingText.getText().toString().trim();
         heightRoamingValue = heightRoamingText.getText().toString().trim();
-        sexRoamingValue = sexRoamingText.getText().toString().trim();
         sexualOrientationRoamingValue = sexualOrientationRoamingText.getText().toString().trim();
+    }
+
+    //Grab the Radio Button corresponding values
+    private void grabRoamingButtonValues(){
+        //int checked = maleFemaleGroupRoaming.getCheckedRadioButtonId();
+        if(maleButton.isChecked()){
+            sexRoamingValue = "male";
+        }
+        else if(femaleButton.isChecked()){
+            sexRoamingValue = "female";
+        }
     }
 
     //Check that the Data is infact valid for the database schema
@@ -172,15 +195,14 @@ public class RoamingAttribute extends Fragment {
             sexualOrientationRoamingText.setError("Invalid!, Inputs can be straight, gay, or bisexual");
             return false;
         }
-        else if(TextUtils.isEmpty(sexRoamingValue)||((!sexRoamingValue.equals("male")&&(!sexRoamingValue.equals("female"))))) {
-            sexRoamingText.setError("Invalid!, Inputs can be wither male or female");
-            return false;
-        }
         else if(TextUtils.isEmpty(heightRoamingValue)){
             heightRoamingText.setError("Invalid!,Don't leave field Empty!");
             return false;
         }
-        else{
+        else if(sexRoamingValue == null || (!sexRoamingValue.equals("male") && !sexRoamingValue.equals("female"))){
+            femaleButton.setError("Invalid!, Inputs can be either male or female");
+            return false;
+        } else{
             Long age = Long.valueOf(ageRoamingValue);
             Long height = Long.valueOf(heightRoamingValue);
             String sex = sexRoamingValue;
@@ -190,6 +212,7 @@ public class RoamingAttribute extends Fragment {
             return true;
         }
     }
+
     //Add the Attributes of the User its seeking to the database and store it
     private void addRoamingAttributes(User user){
         //Set Reference to Firebase node

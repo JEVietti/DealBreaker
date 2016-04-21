@@ -48,6 +48,8 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
     Button sendUserValues;
     private Firebase refUserInfo;
     private ValueEventListener userInfoListener;
+    boolean checkSendStatus;
+
     public static UserAttribute newInstance(String userName) {
         UserAttribute fragment = new UserAttribute();
         Bundle args = new Bundle();
@@ -81,6 +83,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
 
         View rootView = inflater.inflate(R.layout.fragment_user_attribute, container, false);
         initializeScreen(rootView);
+
         //retrieveUserInfo();
 
         /*birthDateText.setOnClickListener(new View.OnClickListener() {
@@ -97,9 +100,12 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
                 // Perform action on click
                 grabEditText();
                 grabButtonValues();
-                checkAndSendData();
-                Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
-
+                checkSendStatus = checkAndSendData();
+                if (checkAndSendData()) {
+                    Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "UnSuccessful!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -137,7 +143,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
         birthDateText = (EditText)rootView.findViewById(R.id.birthDateText);
         sendUserValues = (Button) rootView.findViewById(R.id.user_attribute_finished_button);
     }
-    //Grab all of the Edit Text Values
+    // all of the Edit Text Values
     private void grabEditText() {
         firstNameUserValue = firstNameUserText.getText().toString().trim();
         lastNameUserValue = lastNameUserText.getText().toString().trim();
@@ -147,15 +153,14 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
         sexualOrientationUserValue = sexualOrientationUserText.getText().toString().trim();
     }
 
+    //Grab the Radio Button corresponding values
     private void grabButtonValues(){
-        int checked = maleFemaleGroup.getCheckedRadioButtonId();
-        switch(checked){
-            case R.id.radioButtonMale:
-                sexUserValue = "male";
-                break;
-            case R.id.radioButtonFemale:
-                sexUserValue = "female";
-                break;
+        //int checked = maleFemaleGroup.getCheckedRadioButtonId();
+        if(setMale.isChecked()) {
+            sexUserValue = "male";
+        }
+        else if(setFemale.isChecked()){
+            sexUserValue = "female";
         }
     }
 
@@ -202,29 +207,34 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
     }
 
     //Check to see if the data entered is in the set of inputs needed or that it is not empty
-    private void checkAndSendData(){
+    private boolean checkAndSendData(){
 
         if(TextUtils.isEmpty(firstNameUserValue)){
             firstNameUserText.setError("This field cannot be empty!");
+            return false;
         }
         else if(TextUtils.isEmpty(lastNameUserValue)){
             lastNameUserText.setError("This field cannot be empty!");
+            return false;
         }
         //need to add more handling for checking if the date is entered in a proper format
         else if(birthDate == null ){
             birthDateText.setError("Invalid!");
+            return false;
         }
         else if (TextUtils.isEmpty(ageUserValue)) {
             ageUserText.setError("This field cannot be empty!");
+            return false;
         }
         else if(TextUtils.isEmpty(sexualOrientationUserValue)||((!sexualOrientationUserValue.equals("straight")&&(!sexualOrientationUserValue.equals("bisexual"))&&(!sexualOrientationUserValue.equals("gay"))))){
             sexualOrientationUserText.setError("Invalid!, Inputs can be straight, gay, or bisexual");
+            return false;
         }
         else if(sexUserValue == null || (!sexUserValue.equals("male") && !sexUserValue.equals("female"))){
             setFemale.setError("Invalid!, Inputs can be either male or female");
+            return false;
         } else {
             Age a = new Age();
-
             Date birth = a.ConvertToDate(birthDate);
             Long age = Long.valueOf(a.calculateAge(birth));
             Log.d("Age of User", age.toString());
@@ -236,6 +246,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             String sexual_orientation = sexualOrientationUserValue;
             User user = new User(username, firstName, lastName, sex, birthday ,age, sexual_orientation, height);
             addUserAttributes(user);
+            return true;
         }
 
     }

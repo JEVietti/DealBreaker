@@ -156,7 +156,8 @@
             android:orientation="horizontal"
             android:id="@+id/radioGroupSex"
             android:layout_alignBottom="@+id/sex_label"
-            android:layout_alignStart="@+id/et_user_age">
+            android:layout_alignStart="@+id/et_user_age"
+            android:layout_marginBottom="-10dp">
 
         <RadioButton
             android:layout_width="wrap_content"
