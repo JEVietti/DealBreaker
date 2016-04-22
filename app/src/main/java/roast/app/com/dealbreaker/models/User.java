@@ -10,7 +10,7 @@ public class User {
     private String userName,email, password, firstName, lastName, sex, birthDate;
     //Class Variables for attribute assignment
     private Long age, height;
-    private String goodQualities, badQualities, sexualOrientation;
+    private String goodQualities, badQualities, sexualOrientation, location;
     HashMap<String, Object> timeStampLastChanged;
 
     public User() {
@@ -32,7 +32,7 @@ public class User {
         this.sex = sex;
     }
     //For the User's attribute Registrations
-    public User(String userName, String firstName, String lastName, String sex, String birthDate, Long age, String sexualOrientation , Long height) {
+    public User(String userName, String firstName, String lastName, String sex, String birthDate, Long age, String sexualOrientation , Long height, String location) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -41,6 +41,7 @@ public class User {
         this.age = age;
         this.sexualOrientation = sexualOrientation;
         this.height = height;
+        this.location = location;
     }
 
     //Roaming Attributes
@@ -80,7 +81,9 @@ public class User {
 
     public String getBadQualities() { return badQualities; }
 
-    public String getBirthDate() {return birthDate;}
+    public String getBirthDate() { return birthDate; }
+
+    public String getLocation() { return location; }
 
     public HashMap<String, Object> getTimeStampLastChanged() {
         return timeStampLastChanged;

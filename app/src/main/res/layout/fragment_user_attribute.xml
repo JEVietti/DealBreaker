@@ -15,7 +15,7 @@
         android:text="@string/first_name"
         android:textSize="20sp"
         android:id="@+id/first_name_label"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="25dp"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="15dp" />
 
@@ -146,8 +146,8 @@
         android:background="@color/red"
         android:textStyle="bold"
         android:textColor="@color/white"
-        android:layout_marginTop="93dp"
-            android:layout_below="@+id/et_user_height"
+        android:layout_marginTop="25dp"
+            android:layout_below="@+id/locationTextValue"
             android:layout_centerHorizontal="true" />
 
         <RadioGroup
@@ -200,6 +200,37 @@
             android:layout_alignBottom="@id/birthDateLabel"
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="-10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Location"
+            android:id="@+id/locationTextLabel"
+            android:layout_marginTop="25dp"
+            android:layout_below="@+id/birthDateText"
+            android:layout_alignStart="@+id/birthDateLabel" />
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:hint="Your Location ->"
+            android:textColorHint="@color/red"
+            android:id="@+id/locationTextValue"
+            android:layout_alignTop="@+id/locationTextLabel"
+            android:layout_alignStart="@+id/birthDateText" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_location"
+            android:id="@+id/locationButton"
+            android:layout_alignTop="@+id/locationTextValue"
+            android:layout_toEndOf="@+id/locationTextValue"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="-12dp" />
 
     </RelativeLayout>
 </ScrollView>

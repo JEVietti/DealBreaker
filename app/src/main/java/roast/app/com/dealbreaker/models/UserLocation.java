@@ -1,28 +1,32 @@
 package roast.app.com.dealbreaker.models;
 
-import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Service;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
+
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import roast.app.com.dealbreaker.R;
 import roast.app.com.dealbreaker.util.PermissionsHelper;
 
-public class UserLocation extends AppCompatActivity implements LocationListener {
+public class UserLocation extends Service implements LocationListener {
 
     /* GPS Constant Permission */
     //This permission actually accounts for both Coarse and Fine Permissions
@@ -36,117 +40,77 @@ public class UserLocation extends AppCompatActivity implements LocationListener 
     private static final int MINIMUM_DISTANCE = 50; // 50m
 
     /* GPS */
+    private Context mContext;
     private String mProviderName;
     private LocationManager mLocationManager;
     private LocationListener mLocationListener;
     private String userLocation; // Location should be city, country
-    private Location lastLocation, currentLocation;
-    private String cityName, countryName;
+    private Location lastLocation, currentLocation, location;
+    private String cityName, adminName,countryName;
     private Geocoder gcd;
     private List<Address> addresses;
-
+    private Activity rootActivity;
+    private boolean isGPSEnabled, isNetworkEnabled, locationPossible = false;
     private PermissionsHelper permissionsHelper;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    //private GoogleApiClient mClient;
+    private GoogleApiClient mClient;
 
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mLocationListener = new UserLocation();
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Get the best provider between gps, network and passive
-        Criteria criteria = new Criteria();
-        mProviderName = mLocationManager.getBestProvider(criteria, true);
-        //mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-        getProviderName();
+    public UserLocation(Context context, Activity activity){
+        mContext = context;
+        rootActivity = activity;
+        mLocationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+        getLocation();
     }
 
-    @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
-        permissionsHelper.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        permissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private void getProviderName(){
-            mProviderName = LocationManager.NETWORK_PROVIDER;
+    private String getProviderName(){
+            return LocationManager.NETWORK_PROVIDER;
     }
 
-    //may not be needed
-    private void askPermissions(){
-        //With API>=23, you have to ask the user for permission to view their location.
-        if(Build.VERSION.SDK_INT >= 23){
-            int accessFinePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-
-            if(accessFinePermission !=PackageManager.PERMISSION_GRANTED){
-
-                String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-
-                ActivityCompat.requestPermissions(this, permissions, MY_PERMISSION_ACCESS_FINE_LOCATION);
-            }
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        //check GPS availability
-        /*
-        boolean isGPSAvailable = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if (isGPSAvailable) {
+    //Get the Location for the User Attributes right now the return statement is not being used instead
+    //the helper get statement is being used to retrieve the produced name of the location by city potentially adminarea  and country
+    private Location getLocation() {
+        mLocationListener = this;
+        isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        isNetworkEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        mProviderName = getProviderName();
+        if (isGPSEnabled) {
             //get run time permission
-            permissionsHelper = new PermissionsHelper(this, new PermissionsHelper.OnPermissionListener() {
+            permissionsHelper = new PermissionsHelper(rootActivity, new PermissionsHelper.OnPermissionListener() {
                 @Override
                 public void OnPermissionChanged(boolean permissionGranted) {
                     Log.d("GPS Permission: ", "permissionGranted: " + permissionGranted);
                     if (permissionGranted) {
-                        gcd = new Geocoder(getBaseContext(), Locale.getDefault());
+                        gcd = new Geocoder(mContext, Locale.getDefault());
                         try{ //updates
-                            lastLocation = mLocationManager.getLastKnownLocation(mProviderName);
-                            addresses = gcd.getFromLocation(loc)
-                            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MINIMUM_TIME, MINIMUM_DISTANCE, mLocationListener);
-                        } catch (SecurityException e) {   }
-                    }
-
-                }
-            });
-
-        }
-        */
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-    }
-
-    @Override
-    public void onLocationChanged(final Location location) {
-        boolean isGPSAvailable = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if (isGPSAvailable) {
-            //get run time permission
-            permissionsHelper = new PermissionsHelper(this, new PermissionsHelper.OnPermissionListener() {
-                @Override
-                public void OnPermissionChanged(boolean permissionGranted) {
-                    Log.d("GPS Permission: ", "permissionGranted: " + permissionGranted);
-                    if (permissionGranted) {
-                        gcd = new Geocoder(getBaseContext(), Locale.getDefault());
-                        try{ //updates
-                            lastLocation = mLocationManager.getLastKnownLocation(mProviderName);
+                            locationPossible = true;
+                            location = mLocationManager.getLastKnownLocation(mProviderName);
                             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MINIMUM_TIME, MINIMUM_DISTANCE, mLocationListener);
                             try{
-                                addresses = gcd.getFromLocation(location.getLatitude(),location.getLongitude(), 1);
-                                if(addresses.size() > 0){
-                                    cityName = addresses.get(0).getLocality();
-                                    countryName = addresses.get(0).getCountryName();
-                                    userLocation = cityName +","+ countryName;
+                                if(location != null) {
+                                    addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                                    if (addresses.size() > 0) {
+                                        //set the user Location by city admin name and the country
+                                        cityName = addresses.get(0).getLocality();
+                                        adminName = addresses.get(0).getAdminArea();
+                                        countryName = addresses.get(0).getCountryName();
+                                        //some locations do not have an admin area, this is mostly for different states
+                                        //with the same city names
+                                        if (adminName != null) {
+                                            userLocation = cityName + ", " + adminName + ", " + countryName;
+                                        } else {
+                                            userLocation = cityName + ", " + countryName;
+                                        }
+                                        Log.e("Location", userLocation);
+                                    }
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -161,6 +125,53 @@ public class UserLocation extends AppCompatActivity implements LocationListener 
             });
 
         }
+        else{
+            //show the settings alert dialog to prompt the user
+            //to enable their GPS
+            showSettingsAlert();
+        }
+
+        return location;
+    }
+
+    //For the Api <=22 it gets the user to enable their location if they wish to use the grab location button
+    //Sends them directly to enable screen in settings
+    private void showSettingsAlert(){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(rootActivity, R.style.AlertDialogTheme);
+
+        // Setting Dialog Title
+        alertDialog.setTitle("GPS is settings");
+
+        // Setting Dialog Message
+        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+
+        // On pressing Settings button send them to their respective settings menu for location
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                rootActivity.startActivity(intent);
+            }
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+            alertDialog.show();
+    }
+
+
+    public boolean isLocationPossible(){
+        return this.locationPossible;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
     }
 
     @Override
@@ -179,7 +190,13 @@ public class UserLocation extends AppCompatActivity implements LocationListener 
     }
 
     //Get the Location String of the City and Country
-    public String getLocation(){
+    public String getUserLocation(){
         return userLocation;
     }
+
+    @Override
+    public IBinder onBind(Intent arg0) {
+        return null;
+    }
+
 }

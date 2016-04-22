@@ -4,6 +4,10 @@ package roast.app.com.dealbreaker.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +21,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,8 +29,10 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import roast.app.com.dealbreaker.models.Age;
+import roast.app.com.dealbreaker.models.UserLocation;
 import roast.app.com.dealbreaker.util.Constants;
 
 import java.text.SimpleDateFormat;
@@ -40,16 +47,18 @@ import roast.app.com.dealbreaker.util.DatePickerFragment;
 
 public class UserAttribute extends Fragment implements DatePickerFragment.DateListener{
    //Class Variables
-    private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, birthDate, sexUserValue, sexualOrientationUserValue, username, key;
+    private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, birthDate, sexUserValue, sexualOrientationUserValue, locationUserValue, username, key;
     private EditText firstNameUserText, lastNameUserText, ageUserText, heightUserText, sexualOrientationUserText;
     private EditText birthDateText;
+    private TextView locationText;
     private RadioButton setMale, setFemale;
     RadioGroup maleFemaleGroup;
-    Button sendUserValues;
+    Button sendUserValues, retrieveLocationButton;
     private Firebase refUserInfo;
     private ValueEventListener userInfoListener;
     boolean checkSendStatus;
-
+    Location userLocation;
+    Context context;
     public static UserAttribute newInstance(String userName) {
         UserAttribute fragment = new UserAttribute();
         Bundle args = new Bundle();
@@ -74,6 +83,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             username = getArguments().getString(key);
             Log.d("Username:",username);
         }
+        context = getActivity().getApplicationContext();
     }
 
     @Override
@@ -94,6 +104,14 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             }
         });
         */
+
+        retrieveLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getUserLocation();
+                locationText.setText(locationUserValue);
+            }
+        });
 
         sendUserValues.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -141,8 +159,11 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
         heightUserText=(EditText) rootView.findViewById(R.id.et_user_height);
         sexualOrientationUserText=(EditText)rootView.findViewById(R.id.et_user_sexual_or);
         birthDateText = (EditText)rootView.findViewById(R.id.birthDateText);
+        locationText = (TextView) rootView.findViewById(R.id.locationTextValue);
         sendUserValues = (Button) rootView.findViewById(R.id.user_attribute_finished_button);
+        retrieveLocationButton = (Button) rootView.findViewById(R.id.locationButton);
     }
+
     // all of the Edit Text Values
     private void grabEditText() {
         firstNameUserValue = firstNameUserText.getText().toString().trim();
@@ -161,6 +182,17 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
         }
         else if(setFemale.isChecked()){
             sexUserValue = "female";
+        }
+    }
+
+    //Get the Users Location to Store and Display in the UserInfo of the app and Database
+    private void getUserLocation(){
+        UserLocation mUserLocation = new UserLocation(context, getActivity());
+        if(mUserLocation.isLocationPossible()){
+            locationUserValue = mUserLocation.getUserLocation();
+            if(locationUserValue != null){
+            Log.d("Location in USER", locationUserValue);
+            }
         }
     }
 
@@ -184,12 +216,14 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
                     firstNameUserText.setText(user.getFirstName());
                     heightUserText.setText(Long.toString(user.getHeight()));
                     String sex = user.getSex();
+                    //check the corresponding button of the radio group based on database value
                     if (sex.equals("male")) {
                         maleFemaleGroup.check(R.id.radioButtonMale);
                     } else if (sex.equals("female")) {
                         maleFemaleGroup.check(R.id.radioButtonFemale);
                     }
                     lastNameUserText.setText(user.getLastName());
+                    locationText.setText(user.getLocation());
                     sexualOrientationUserText.setText(user.getSexualOrientation());
                     birthDateText.setText(user.getBirthDate());
                 }
@@ -222,6 +256,10 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             birthDateText.setError("Invalid!");
             return false;
         }
+        else if(locationUserValue == null){
+            locationText.setError("Location Invalid");
+            return false;
+        }
         else if (TextUtils.isEmpty(ageUserValue)) {
             ageUserText.setError("This field cannot be empty!");
             return false;
@@ -244,7 +282,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             String sex = sexUserValue;
             String birthday = birthDate;
             String sexual_orientation = sexualOrientationUserValue;
-            User user = new User(username, firstName, lastName, sex, birthday ,age, sexual_orientation, height);
+            User user = new User(username, firstName, lastName, sex, birthday ,age, sexual_orientation, height, locationUserValue);
             addUserAttributes(user);
             return true;
         }

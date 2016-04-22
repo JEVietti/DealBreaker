@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 
+import roast.app.com.dealbreaker.models.UserLocation;
+
 //Helper Class that Distributes Permissions for the Users due to API 23 (Marshmallow) new way
 // in handling permissions for location by requiring users to confirm GPS/Location based Permissions
 //directly, not just through the Manifest
