@@ -8,9 +8,7 @@ import android.view.View;
 
 public class ConfirmedRelationshipViewHolder extends RecyclerView.ViewHolder{
 
-
     public ConfirmedRelationshipViewHolder(View itemView){
         super(itemView);
-
     }
 }

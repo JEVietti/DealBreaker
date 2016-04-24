@@ -49,7 +49,6 @@ public class UserRelationships extends Fragment {
         initializeView(root);
         return root;
     }
-
     //This class is to control and manage the tabs which house the User and Roaming attribute Class
     private class SectionPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -61,7 +60,6 @@ public class UserRelationships extends Fragment {
         public Fragment getItem(int position) {
 
             Fragment fragment = null;
-
             switch (position) {
                 case 0:
                     fragment = ConfirmedRelationships.newInstance(userName);
@@ -70,7 +68,7 @@ public class UserRelationships extends Fragment {
                     fragment = PendingRelationships.newInstance(userName);
                     break;
                 default:
-                    fragment = ConfirmedRelationships.newInstance(userName);
+                    fragment = PendingRelationships.newInstance(userName);
                     break;
             }
 
@@ -98,13 +96,11 @@ public class UserRelationships extends Fragment {
         ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.relationships_pager);
         TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout_relationships);
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-
         SectionPagerAdapter adapter;
         adapter = new SectionPagerAdapter(getFragmentManager());
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
-
     }
 }
 
