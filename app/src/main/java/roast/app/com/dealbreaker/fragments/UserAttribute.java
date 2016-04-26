@@ -171,6 +171,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
         ageUserValue = ageUserText.getText().toString().trim();
         birthDate = birthDateText.getText().toString().trim();
         heightUserValue = heightUserText.getText().toString().trim();
+        //locationUserValue = locationText.getText().toString();
         sexualOrientationUserValue = sexualOrientationUserText.getText().toString().trim();
     }
 
@@ -223,6 +224,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
                         maleFemaleGroup.check(R.id.radioButtonFemale);
                     }
                     lastNameUserText.setText(user.getLastName());
+                    locationUserValue = user.getLocation();
                     locationText.setText(user.getLocation());
                     sexualOrientationUserText.setText(user.getSexualOrientation());
                     birthDateText.setText(user.getBirthDate());
