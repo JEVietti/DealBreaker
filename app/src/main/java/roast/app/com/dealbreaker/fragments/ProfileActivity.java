@@ -28,7 +28,7 @@ import roast.app.com.dealbreaker.util.Constants;
 import roast.app.com.dealbreaker.util.DownloadImages;
 
 public class ProfileActivity extends Fragment {
-    private TextView bio_info,goodQualitiesInfo,badQualitiesInfo, personalName,age, location;
+    private TextView bio_info,goodQualitiesInfo,badQualitiesInfo, personalName,age, location, sexText;
     private ImageButton imageButton;
     private String userName;
     private String key, profilePicURL;
@@ -98,7 +98,8 @@ public class ProfileActivity extends Fragment {
         goodQualitiesInfo = (TextView) rootView.findViewById(R.id.goodQualitiesText);
         imageButton = (ImageButton) rootView.findViewById(R.id.imageButton);
         age = (TextView) rootView.findViewById(R.id.ageContent);
-        location = (TextView) rootView.findViewById(R.id.locationContent);
+        sexText = (TextView)rootView.findViewById(R.id.sexContent);
+        location = (TextView) rootView.findViewById(R.id.locationTextValue);
         //Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
     }
 
@@ -165,7 +166,8 @@ public class ProfileActivity extends Fragment {
                     personalName.setText(firstAndLastName);
                     //displays the age of the user
                     age.setText(user.getAge().toString());
-                    location.setText(user.getSex().toString());
+                    sexText.setText(user.getSex());
+                    location.setText(user.getLocation());
                 }
 
             }

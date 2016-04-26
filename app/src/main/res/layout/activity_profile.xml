@@ -30,9 +30,10 @@
             android:textColor="@color/colorPrimaryDark"
             android:text="@string/biography_label"
             android:id="@+id/bioLabel"
-            android:layout_below="@+id/locationTextLabel"
-            android:layout_centerHorizontal="true"
-            android:paddingTop="5dp" />
+            android:paddingTop="5dp"
+            android:layout_marginTop="18dp"
+            android:layout_below="@+id/locationTextValue"
+            android:layout_centerHorizontal="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -57,7 +58,7 @@
             android:textColor="@color/black"
             android:layout_below="@id/bioLabel"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -134,8 +135,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Location:"
-            android:id="@+id/locationTextLabel"
+            android:text="Sex:"
+            android:id="@+id/sexTextLabel"
             android:paddingRight="0dp"
             android:paddingLeft="0dp"
             android:layout_below="@+id/nameTextView"
@@ -146,10 +147,34 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Small Text"
-            android:id="@+id/locationContent"
+            android:id="@+id/sexContent"
             android:paddingLeft="5dp"
             android:layout_below="@+id/nameTextView"
-            android:layout_toEndOf="@+id/locationTextLabel" />
+            android:layout_toEndOf="@+id/sexTextLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Location:"
+            android:paddingTop="4dp"
+            android:id="@+id/locationTextLabel"
+            android:layout_below="@+id/ageTextLabel"
+            android:layout_alignStart="@+id/ageTextLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:hint="your location"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp"
+            android:id="@+id/locationTextValue"
+            android:layout_alignBottom="@+id/locationTextLabel"
+            android:layout_below="@+id/ageContent"
+            android:layout_toEndOf="@+id/locationTextLabel"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp" />
 
 
     </RelativeLayout>

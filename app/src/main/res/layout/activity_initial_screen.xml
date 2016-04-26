@@ -32,8 +32,8 @@
         android:id="@+id/login_button"
         android:textStyle="bold"
         android:background="@drawable/login_button"
-        android:layout_marginTop="19dp"
-        android:layout_below="@+id/forgotPasswordLink"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/loginErrorMessage"
         android:layout_centerHorizontal="true"/>
 
     <Button
@@ -93,8 +93,8 @@
         android:text="Forgot Password"
         android:textColor="#0e27c8"
         android:id="@+id/forgotPasswordLink"
-        android:layout_marginTop="60dp"
-        android:layout_below="@+id/LoginPassword"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/register_button"
         android:layout_centerHorizontal="true"/>
 
     <!-- <com.facebook.login.widget.LoginButton

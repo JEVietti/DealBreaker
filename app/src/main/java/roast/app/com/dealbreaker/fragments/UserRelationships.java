@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import roast.app.com.dealbreaker.R;
+import roast.app.com.dealbreaker.models.ConfirmedRelationshipViewHolder;
 
 //This class acts as a holder for the pending and confirmed
 //relationships for the user : Classes Pending and Confirmed Relationships
@@ -64,11 +65,11 @@ public class UserRelationships extends Fragment {
                 case 0:
                     fragment = ConfirmedRelationships.newInstance(userName);
                     break;
-                case 1:
+                /*case 1:
                     fragment = PendingRelationships.newInstance(userName);
-                    break;
+                    break;*/
                 default:
-                    fragment = PendingRelationships.newInstance(userName);
+                    fragment = ConfirmedRelationships.newInstance(userName);
                     break;
             }
 

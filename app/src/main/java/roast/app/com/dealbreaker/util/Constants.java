@@ -15,7 +15,7 @@ public final class Constants {
         public static final String FIREBASE_LOC_IMAGES = "images";
         public static final String FIREBASE_LOC_PROFILE_PIC = "profilePic";
         public static final String FIREBASE_LOC_PENDING = "pending";
-
+        public static final String FIREBASE_LOC_CONFIRMED_RELATIONSHIPS = "confirmed";
 
     // Constants for Firebase URL
 
@@ -28,6 +28,7 @@ public final class Constants {
     public static final String FIREBASE_URL_USER_INFO = FIREBASE_URL + FIREBASE_LOC_USER_INFO;
     public static final String FIREBASE_URL_IMAGES = FIREBASE_URL + FIREBASE_LOC_IMAGES;
     public static final String FIREBASE_URL_PENDING = FIREBASE_URL +FIREBASE_LOC_PENDING;
+    public static final String FIREBASE_URL_CONFIRMED_RELATIONSHIPS = FIREBASE_URL + FIREBASE_LOC_CONFIRMED_RELATIONSHIPS;
     // Constants for bundles, extras and shared preferences keys
 
 }

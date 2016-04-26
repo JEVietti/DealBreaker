@@ -110,7 +110,7 @@ public class UpdateImage extends Fragment {
                 profilePicREF.removeEventListener(profilePicListener);
                 intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent,"Select Picture"), checkStatus);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), checkStatus);
             }
         });
     }
@@ -120,14 +120,20 @@ public class UpdateImage extends Fragment {
         uploadImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newUserProfilePic = new File(imagePath);
-                uploadFile.execute(newUserProfilePic);
-                //Work around until I can figure out how to retrieve resulting URL from the ASYNC TASK
-                //Partially Hardcoded URL
-                newProfilePicURL = "https://s3-us-west-1.amazonaws.com/" + "dealbreaker"+ "/" + userName + "/" + newUserProfilePic.getName();
-                setNewUserProfilePic();
-                Toast.makeText(getContext(), "Successfully Uploaded your File", Toast.LENGTH_LONG).show();
-                listenUSER_PROFILE_PIC();
+                if (imagePath != null) {
+                    newUserProfilePic = new File(imagePath);
+                    uploadFile.execute(newUserProfilePic);
+                    //Work around until I can figure out how to retrieve resulting URL from the ASYNC TASK
+                    //Partially Hardcoded URL
+                    newProfilePicURL = "https://s3-us-west-1.amazonaws.com/" + "dealbreaker" + "/" + userName + "/" + newUserProfilePic.getName();
+                    setNewUserProfilePic();
+                    Toast.makeText(getContext(), "Successfully Uploaded your File", Toast.LENGTH_LONG).show();
+                    listenUSER_PROFILE_PIC();
+                }
+                else{
+                    Toast.makeText(getContext(), "Please select an Image First", Toast.LENGTH_LONG).show();
+                    listenUSER_PROFILE_PIC();
+                }
             }
         });
     }
