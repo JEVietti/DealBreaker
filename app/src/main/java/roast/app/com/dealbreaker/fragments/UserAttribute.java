@@ -120,6 +120,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
                 grabButtonValues();
                 checkSendStatus = checkAndSendData();
                 if (checkAndSendData()) {
+                    addUserToRoamingList();
                     Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "UnSuccessful!", Toast.LENGTH_SHORT).show();
@@ -286,6 +287,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             String sexual_orientation = sexualOrientationUserValue;
             User user = new User(username, firstName, lastName, sex, birthday ,age, sexual_orientation, height, locationUserValue);
             addUserAttributes(user);
+
             return true;
         }
 
@@ -307,5 +309,33 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
     @Override
     public void returnDate(String date) {
         birthDate = date;
+    }
+
+
+    // Add users to the roming list
+    public void addUserToRoamingList(){
+        Firebase roamingURL = new Firebase(Constants.FIREBASE_URL + "roamingList").child(locationUserValue).child(sexUserValue).child(sexualOrientationUserValue);
+
+        int userAge = Integer.parseInt(ageUserValue);
+
+        // If statements to check which branch the user will fall under.
+        if(userAge <= 20){
+            roamingURL.child("18-20").setValue(0);
+        }
+        else if(userAge >= 21 && userAge <= 29){
+            roamingURL.child("21-29").child(username).setValue(0);
+        }
+        else if(userAge >= 30 && userAge <= 39){
+            roamingURL.child("30-39").child(username).setValue(0);
+        }
+        else if(userAge >= 40 && userAge <= 49){
+            roamingURL.child("40-49").child(username).setValue(0);
+        }
+        else if(userAge >= 50 && userAge <= 59){
+            roamingURL.child("50-59").child(username).setValue(0);
+        }
+        else {
+            roamingURL.child("60+").child(username).setValue(0);
+        }
     }
 }
