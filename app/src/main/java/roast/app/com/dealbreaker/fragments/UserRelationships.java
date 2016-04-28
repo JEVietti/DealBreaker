@@ -65,9 +65,9 @@ public class UserRelationships extends Fragment {
                 case 0:
                     fragment = ConfirmedRelationships.newInstance(userName);
                     break;
-                /*case 1:
+                case 1:
                     fragment = PendingRelationships.newInstance(userName);
-                    break;*/
+                    break;
                 default:
                     fragment = ConfirmedRelationships.newInstance(userName);
                     break;
@@ -87,6 +87,7 @@ public class UserRelationships extends Fragment {
                 case 0:
                     return getString(R.string.ConfirmedRelationshipLabel);
                 case 1:
+                    return getString(R.string.PendingRelationshipLabel);
                 default:
                     return getString(R.string.PendingRelationshipLabel);
             }

@@ -1,29 +1,28 @@
 package roast.app.com.dealbreaker.fragments;
 
 import android.app.DownloadManager;
-import android.content.Context;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ListAdapter;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.firebase.ui.FirebaseListAdapter;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.firebase.client.Query;
 
-import java.util.List;
+import java.util.ArrayList;
+
 
 import roast.app.com.dealbreaker.R;
+import roast.app.com.dealbreaker.models.PendingRelationshipAttribute;
 import roast.app.com.dealbreaker.models.PendingRelationshipViewHolder;
 import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.util.Constants;
@@ -39,12 +38,15 @@ import roast.app.com.dealbreaker.util.Constants;
 // http://stackoverflow.com/questions/24885223/why-doesnt-recyclerview-have-onitemclicklistener-and-how-recyclerview-is-dif/24933117#24933117
 public class PendingRelationships extends Fragment {
 
-    FirebaseRecyclerAdapter<User,PendingRelationshipViewHolder> pendingRecyclerAdapter;
+    FirebaseRecyclerAdapter<PendingRelationshipAttribute,PendingRelationshipViewHolder> pendingRecyclerAdapter;
 
-    Firebase firebaseREF = new Firebase(Constants.FIREBASE_URL_PENDING).child("password");
     private RecyclerView recycViewPending;
-
-    private String username;
+    private String userName;
+    private ArrayList<String> PendingUsername;
+    private Query refPendingUser, getPendingUsersInfo;
+    private ArrayList<User> pendingUserObjects;
+    private View view;
+    private Firebase refPendingUsersInfo;
 
     public PendingRelationships() {
         // Required empty public constructor
@@ -62,48 +64,102 @@ public class PendingRelationships extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            String key = getString(R.string.key_UserName);
-            username = getArguments().getString(key);
+            userName = getArguments().getString("userName");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pending_relationships, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_pending_relationships, container, false);
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState ){
-        super.onViewCreated(view, savedInstanceState);
+        LinearLayoutManager RLM = new LinearLayoutManager(getActivity());
+        RLM.setOrientation(LinearLayoutManager.VERTICAL);
+        Firebase firebaseREF = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName);
+
+        getPendingUsersInfo = firebaseREF.orderByChild("lastName");
         recycViewPending = (RecyclerView) view.findViewById(R.id.pending_relationship_recycler_view);
-        final LinearLayoutManager laym = new LinearLayoutManager(getActivity());
-        laym.setOrientation(LinearLayoutManager.VERTICAL);
-        recycViewPending.setLayoutManager(laym);
-        recyclerPage();
+        recycViewPending.setHasFixedSize(true);
+        recycViewPending.setLayoutManager(RLM);
 
-        //recycViewPending.setAdapter(pendingRecyclerAdapter);
+        //recyclerPage(view);
+        //listenerFunc();
+
+        return view;
     }
 
-    private void recyclerPage(){
-
-        pendingRecyclerAdapter = new FirebaseRecyclerAdapter<User, PendingRelationshipViewHolder>(
-                User.class,
+    private void recyclerPage(View rootview){
+        pendingRecyclerAdapter = new FirebaseRecyclerAdapter<PendingRelationshipAttribute, PendingRelationshipViewHolder>(
+                PendingRelationshipAttribute.class,
                 R.layout.item_pending_relationship,
                 PendingRelationshipViewHolder.class,
-                firebaseREF
+                getPendingUsersInfo
         ) {
             @Override
-            protected void populateViewHolder(PendingRelationshipViewHolder pendingRelationshipViewHolder, User user, int i) {
-
-                pendingRelationshipViewHolder.name.setText(user.getFirstName());
-                pendingRelationshipViewHolder.attribute.setText(user.getSex());
-
+            protected void populateViewHolder(PendingRelationshipViewHolder pendingRelationshipViewHolder, PendingRelationshipAttribute PRA, int i) {
+                pendingRelationshipViewHolder.name.setText(PRA.getFirstName());
+                pendingRelationshipViewHolder.attribute.setText(PRA.getSex());
             }
         };
         recycViewPending.setAdapter(pendingRecyclerAdapter);
+    }
+
+
+    private void listenerFunc(){
+        Firebase firebaseREF = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName);
+        PendingUsername = new ArrayList<>();
+
+        refPendingUser = firebaseREF.orderByKey();
+        refPendingUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot childUsers : dataSnapshot.getChildren()) {
+
+                    String name = childUsers.getKey();
+                    if (name != null) {
+                        PendingUsername.add(name);
+                    }
+                }
+                if (PendingUsername.size() > 0) {
+                    getUserInfoPending(); //calls func getUserInfoPending to retrieve info
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void getUserInfoPending() {
+        pendingUserObjects = new ArrayList<>();
+        for (int i = 0; i < PendingUsername.size(); i++) {
+            refPendingUsersInfo = new Firebase(Constants.FIREBASE_URL_USERS).child(PendingUsername.get(i)).child(Constants.FIREBASE_LOC_USER_INFO);
+            getPendingUsersInfo = refPendingUsersInfo.orderByKey();
+            getPendingUsersInfo.addValueEventListener(new ValueEventListener() {
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+                    if (user != null) {
+                        Log.d("Size", String.valueOf(PendingUsername.size()));
+                        Log.d("userObj", user.getFirstName());
+                        pendingUserObjects.add(user);
+
+                    }
+
+                   recyclerPage(view);
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    Log.e(getString(R.string.LogTagUserProfile),
+                            getString(R.string.FirebaseOnCancelledError) +
+                                    firebaseError.getMessage());
+                }
+            });
+        }
     }
 
     @Override
@@ -112,21 +168,19 @@ public class PendingRelationships extends Fragment {
         pendingRecyclerAdapter.cleanup();
     }
 
-    //class list users  -- list of users
-    public class listUsers{
-        public List<User> users;
-    }
-
-    /*public void populateList()
+    public void listener(Firebase firebaseREF)
     {
+        //class list users  -- list of users
+        final ArrayList<User> users = new ArrayList<>();
+
         firebaseREF.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     for(DataSnapshot user: dataSnapshot.getChildren()){
-                        for(DataSnapshot programSnapshot :user.getChildren()){
-                            final listUsers users = programSnapshot.getValue(listUsers.class);
-
+                        for(DataSnapshot programSnapshot :user.getChildren()) {
+                            final User us = programSnapshot.getValue(User.class);
+                            users.add(us);
                         }
                     }
                 }
@@ -138,6 +192,6 @@ public class PendingRelationships extends Fragment {
 
             }
         });
-    }*/
+    }
 
 }
