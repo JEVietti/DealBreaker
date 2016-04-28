@@ -49,6 +49,7 @@ import roast.app.com.dealbreaker.util.DatePickerFragment;
 public class UserAttribute extends Fragment implements DatePickerFragment.DateListener{
    //Class Variables
     private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, birthDate, sexUserValue, sexualOrientationUserValue, locationUserValue, username, key;
+    private Long mUserAge;
     private EditText firstNameUserText, lastNameUserText, heightUserText, sexualOrientationUserText;
     private EditText birthDateText;
     private TextView locationText;
@@ -309,6 +310,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             Age a = new Age();
             Date birth = a.ConvertToDate(birthDate);
             Long age = Long.valueOf(a.calculateAge(birth));
+
             if(age < 18 ){
                 birthDateText.setText("Must be 18 years or older!");
                 return false;
@@ -318,6 +320,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
                 return false;
             }
             Log.d("Age of User", age.toString());
+            mUserAge = age;
             String firstName = firstNameUserValue;
             String lastName = lastNameUserValue;
             Long height = Long.valueOf(heightUserValue);
@@ -355,7 +358,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
     public void addUserToRoamingList(){
         Firebase roamingURL = new Firebase(Constants.FIREBASE_URL + "roamingList").child(locationUserValue).child(sexUserValue).child(sexualOrientationUserValue);
 
-        int userAge = Integer.parseInt(ageUserValue);
+        long userAge = mUserAge;
 
         // If statements to check which branch the user will fall under.
         if(userAge <= 20){
