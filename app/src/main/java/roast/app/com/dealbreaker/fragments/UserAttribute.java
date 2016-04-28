@@ -35,6 +35,7 @@ import roast.app.com.dealbreaker.models.Age;
 import roast.app.com.dealbreaker.models.UserLocation;
 import roast.app.com.dealbreaker.util.Constants;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,7 +49,7 @@ import roast.app.com.dealbreaker.util.DatePickerFragment;
 public class UserAttribute extends Fragment implements DatePickerFragment.DateListener{
    //Class Variables
     private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, birthDate, sexUserValue, sexualOrientationUserValue, locationUserValue, username, key;
-    private EditText firstNameUserText, lastNameUserText, ageUserText, heightUserText, sexualOrientationUserText;
+    private EditText firstNameUserText, lastNameUserText, heightUserText, sexualOrientationUserText;
     private EditText birthDateText;
     private TextView locationText;
     private RadioButton setMale, setFemale;
@@ -153,7 +154,6 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
     private void initializeScreen(View rootView) {
         firstNameUserText=(EditText)rootView.findViewById(R.id.et_user_first_name);
         lastNameUserText=(EditText)rootView.findViewById(R.id.et_user_last_name);
-        ageUserText=(EditText) rootView.findViewById(R.id.et_user_age);
         maleFemaleGroup = (RadioGroup) rootView.findViewById(R.id.radioGroupSex);
         setMale = (RadioButton) rootView.findViewById(R.id.radioButtonMale);
         setFemale = (RadioButton) rootView.findViewById(R.id.radioButtonFemale);
@@ -169,7 +169,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
     private void grabEditText() {
         firstNameUserValue = firstNameUserText.getText().toString().trim();
         lastNameUserValue = lastNameUserText.getText().toString().trim();
-        ageUserValue = ageUserText.getText().toString().trim();
+        //ageUserValue = ageUserText.getText().toString().trim();
         birthDate = birthDateText.getText().toString().trim();
         heightUserValue = heightUserText.getText().toString().trim();
         //locationUserValue = locationText.getText().toString();
@@ -214,7 +214,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
                 User user = dataSnapshot.getValue(User.class);
                 // If there was no data at the location we added the listener, then
                 if (user != null) {
-                    ageUserText.setText(Long.toString(user.getAge()));
+                    //ageUserText.setText(Long.toString(user.getAge()));
                     firstNameUserText.setText(user.getFirstName());
                     heightUserText.setText(Long.toString(user.getHeight()));
                     String sex = user.getSex();
@@ -243,6 +243,37 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
 
     }
 
+    public boolean isThisDateValid(String dateToValidate, String dateFormat){
+        Date date;
+        if(dateToValidate == null){
+            return false;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        sdf.setLenient(false);
+
+        try {
+
+            //if not valid, it will throw ParseException
+            date = sdf.parse(dateToValidate);
+            Log.d("UserAttributes Date",date.toString());
+
+        } catch (ParseException e) {
+            Log.d("UserAttributes Date","Not working");
+            e.printStackTrace();
+            return false;
+        }
+        Date current = new Date();
+        try {
+            current = sdf.parse(sdf.format(current));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return current.getTime() >= date.getTime();  //current date < entered date
+    }
+
+
     //Check to see if the data entered is in the set of inputs needed or that it is not empty
     private boolean checkAndSendData(){
 
@@ -255,7 +286,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             return false;
         }
         //need to add more handling for checking if the date is entered in a proper format
-        else if(birthDate == null ){
+        else if(!isThisDateValid(birthDate,"MM/dd/yyyy")){
             birthDateText.setError("Invalid!");
             return false;
         }
@@ -263,10 +294,10 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             locationText.setError("Location Invalid");
             return false;
         }
-        else if (TextUtils.isEmpty(ageUserValue)) {
+        /*else if (TextUtils.isEmpty(ageUserValue)) {
             ageUserText.setError("This field cannot be empty!");
             return false;
-        }
+        }*/
         else if(TextUtils.isEmpty(sexualOrientationUserValue)||((!sexualOrientationUserValue.equals("straight")&&(!sexualOrientationUserValue.equals("bisexual"))&&(!sexualOrientationUserValue.equals("gay"))))){
             sexualOrientationUserText.setError("Invalid!, Inputs can be straight, gay, or bisexual");
             return false;
@@ -278,6 +309,14 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             Age a = new Age();
             Date birth = a.ConvertToDate(birthDate);
             Long age = Long.valueOf(a.calculateAge(birth));
+            if(age < 18 ){
+                birthDateText.setText("Must be 18 years or older!");
+                return false;
+            }
+            else if(age >= 130){
+                birthDateText.setText("Possibly Invalid, Age >= 130");
+                return false;
+            }
             Log.d("Age of User", age.toString());
             String firstName = firstNameUserValue;
             String lastName = lastNameUserValue;

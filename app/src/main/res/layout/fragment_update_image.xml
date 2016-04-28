@@ -15,6 +15,7 @@
             android:layout_width="220dp"
             android:layout_height="200dp"
             android:id="@+id/imageCurrentProfilePic"
+            android:background="@drawable/rounded_corner"
             android:adjustViewBounds="true"
             android:contentDescription="@string/user_profilePicDescription"
             android:layout_marginTop="40dp"
