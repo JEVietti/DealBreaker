@@ -1,6 +1,6 @@
 package roast.app.com.dealbreaker.fragments;
 
-import android.app.DownloadManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -20,9 +19,9 @@ import com.firebase.ui.FirebaseRecyclerAdapter;
 
 import java.util.ArrayList;
 
+import roast.app.com.dealbreaker.ConfirmedUserProfile;
 import roast.app.com.dealbreaker.R;
 import roast.app.com.dealbreaker.models.ConfirmedRelationshipViewHolder;
-import roast.app.com.dealbreaker.models.RecyclerViewUserAdapter;
 import roast.app.com.dealbreaker.models.RelationshipAttribute;
 import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.util.Constants;
@@ -91,16 +90,25 @@ public class ConfirmedRelationships extends Fragment {
         confirmedRelationshipsRecycler.setHasFixedSize(true);
         confirmedRelationshipsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
+
         //Use the Query
         if (getRefConfirmedUsersInfo != null) {
             Log.d("Building Adpater", "true");
             recyclerAdapter = new FirebaseRecyclerAdapter<RelationshipAttribute, ConfirmedRelationshipViewHolder>(RelationshipAttribute.class, R.layout.item_confirmed_relationship, ConfirmedRelationshipViewHolder.class, getRefConfirmedUsersInfo) {
                 @Override
-                protected void populateViewHolder(ConfirmedRelationshipViewHolder confirmedRelationshipViewHolder, RelationshipAttribute user, int i) {
+                protected void populateViewHolder(ConfirmedRelationshipViewHolder confirmedRelationshipViewHolder, RelationshipAttribute user, final int pos) {
                     DownloadImages downloadImages = new DownloadImages(confirmedRelationshipViewHolder.userImage, getActivity());
                     downloadImages.execute(user.getProfilePic());
                     confirmedRelationshipViewHolder.userFist_LastName.setText(user.getFirstName() + " " + user.getLastName() + "    Age: " + user.getAge());
                     confirmedRelationshipViewHolder.userAttribute.setText(user.getLocation() + "    SO: " + user.getSexualOrientation());
+                    confirmedRelationshipViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent selectedProfile = new Intent(getActivity(), ConfirmedUserProfile.class);
+                            selectedProfile.putExtra("userName",recyclerAdapter.getRef(pos).getKey());
+                            startActivity(selectedProfile);
+                        }
+                    });
                 }
             };
             confirmedRelationshipsRecycler.setAdapter(recyclerAdapter);
@@ -159,7 +167,7 @@ public class ConfirmedRelationships extends Fragment {
 
                     }
 
-                    //RecyclerViewUserAdapter recyclerViewUserAdapter = new RecyclerViewUserAdapter(getActivity(), confirmedUserInfoObjects);
+                    //RecyclerViewRelationshipAdapter recyclerViewUserAdapter = new RecyclerViewRelationshipAdapter(getActivity(), confirmedUserInfoObjects);
                     initializeView(view);
                 }
 

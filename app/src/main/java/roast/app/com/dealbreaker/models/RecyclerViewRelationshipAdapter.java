@@ -10,11 +10,9 @@ import java.util.ArrayList;
 //Use this instead of the FireBase Recycler View Adapter if needing to go into a nest place
 //in the database from one to another reference for instance getting a username in confirmed and
 //getting the info for it in the UserInfo section
-public class RecyclerViewUserAdapter extends RecyclerView.Adapter<ConfirmedRelationshipViewHolder> {
+public class RecyclerViewRelationshipAdapter extends RecyclerView.Adapter<ConfirmedRelationshipViewHolder> {
 
-
-
-    public RecyclerViewUserAdapter(Activity context, ArrayList<RelationshipAttribute> userInfoArrayList){
+    public RecyclerViewRelationshipAdapter(Activity context, ArrayList<RelationshipAttribute> relationshipAttributeArrayList){
 
     }
 
