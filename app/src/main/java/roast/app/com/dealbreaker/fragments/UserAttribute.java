@@ -49,7 +49,7 @@ import roast.app.com.dealbreaker.util.DatePickerFragment;
 public class UserAttribute extends Fragment implements DatePickerFragment.DateListener{
    //Class Variables
     private String firstNameUserValue, lastNameUserValue, ageUserValue, heightUserValue, birthDate, sexUserValue, sexualOrientationUserValue, locationUserValue, username, key;
-    private Long mUserAge;
+
     private EditText firstNameUserText, lastNameUserText, heightUserText, sexualOrientationUserText;
     private EditText birthDateText;
     private TextView locationText;
@@ -61,6 +61,9 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
     boolean checkSendStatus;
     Location userLocation;
     Context context;
+
+    private Long mUserAge;
+    private String mCurrentCity, mCurrentSex, mCurrentSexOr, mCurrentAge;
     public static UserAttribute newInstance(String userName) {
         UserAttribute fragment = new UserAttribute();
         Bundle args = new Bundle();
@@ -122,7 +125,10 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
                 grabButtonValues();
                 checkSendStatus = checkAndSendData();
                 if (checkAndSendData()) {
-                    addUserToRoamingList();
+                    if (checkIfChange()) {      // Checks to see if the user changed any data.
+                        deleteUserFromBranch(); // If changes occured, delete the old branch
+                    }
+                    addUserToRoamingList();     // Add users to the appropriate branch
                     Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "UnSuccessful!", Toast.LENGTH_SHORT).show();
@@ -230,6 +236,11 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
                     locationText.setText(user.getLocation());
                     sexualOrientationUserText.setText(user.getSexualOrientation());
                     birthDateText.setText(user.getBirthDate());
+
+                    mCurrentCity = user.getLocation();
+                    mCurrentSex = user.getSex();
+                    mCurrentSexOr = user.getSexualOrientation();
+                    mCurrentAge = user.getAge().toString();
                 }
 
             }
@@ -353,6 +364,67 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
         birthDate = date;
     }
 
+    // Checks to see if the user changed data. If there is a change, return true;
+    public boolean checkIfChange() {
+        System.out.println(mCurrentCity);
+        System.out.println(locationUserValue);
+        System.out.println("City: " + (mCurrentCity.equals(locationUserValue)));
+        System.out.println(mCurrentSex);
+        System.out.println(sexUserValue);
+        System.out.println("Sex: " + (mCurrentSex.equals(sexUserValue)));
+        System.out.println(mCurrentSexOr);
+        System.out.println(sexualOrientationUserValue);
+        System.out.println("SO: " + (mCurrentSexOr.equals(sexualOrientationUserValue)));
+        System.out.println(mCurrentAge);
+        System.out.println(mUserAge);
+        System.out.println("Age: " + mCurrentAge.equals(mUserAge.toString()));;
+        if(!mCurrentCity.equals(locationUserValue)){
+            return true;
+        }
+
+        if(!mCurrentSex.equals(sexUserValue)){
+            return true;
+        }
+
+        if(!mCurrentSexOr.equals(sexualOrientationUserValue)){
+            return true;
+        }
+
+        if(!mCurrentAge.equals(mUserAge.toString())){
+            return true;
+        }
+
+        return false;
+    }
+
+    // Delete user from branch
+    public void deleteUserFromBranch(){
+        Firebase roamingURL = new Firebase(Constants.FIREBASE_URL + "roamingList").child(mCurrentCity).child(mCurrentSex).child(mCurrentSexOr);
+
+        int userAge = Integer.parseInt(mCurrentAge);
+
+        // If statements to check which branch the user will fall under.
+        if(userAge <= 20){
+            roamingURL = roamingURL.child("18-20");
+        }
+        else if(userAge >= 21 && userAge <= 29){
+            roamingURL = roamingURL.child("21-29");
+        }
+        else if(userAge >= 30 && userAge <= 39){
+            roamingURL = roamingURL.child("30-39");
+        }
+        else if(userAge >= 40 && userAge <= 49){
+            roamingURL = roamingURL.child("40-49");
+        }
+        else if(userAge >= 50 && userAge <= 59){
+            roamingURL = roamingURL.child("50-59");
+        }
+        else {
+            roamingURL = roamingURL.child("60+");
+        }
+
+        roamingURL.removeValue();
+    }
 
     // Add users to the roming list
     public void addUserToRoamingList(){
@@ -362,7 +434,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
 
         // If statements to check which branch the user will fall under.
         if(userAge <= 20){
-            roamingURL.child("18-20").setValue(0);
+            roamingURL.child("18-20").child(username).setValue(0);
         }
         else if(userAge >= 21 && userAge <= 29){
             roamingURL.child("21-29").child(username).setValue(0);
