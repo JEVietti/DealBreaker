@@ -9,18 +9,24 @@ public class RelationshipAttribute {
     private String firstName, lastName, sex, birthDate;
     //Class Variables for attribute assignment
     private Long age, height;
+    private int mark;
     private String goodQualities, badQualities, sexualOrientation, location;
     HashMap<String, Object> timeStampLastChanged;
 
     public RelationshipAttribute(){}
 
-    public RelationshipAttribute(String firstName, Long age, String lastName, String sexualOrientation, String location, String profilePic){
+    public RelationshipAttribute(int mark){
+        this.mark = mark;
+    }
+
+    public RelationshipAttribute(String firstName, String lastName, Long age, String sexualOrientation, String location, String profilePic, int mark){
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.sexualOrientation = sexualOrientation;
         this.location = location;
         this.profilePic = profilePic;
+        this.mark = mark;
     }
 
     public String getProfilePic() {
@@ -77,6 +83,9 @@ public class RelationshipAttribute {
         return sexualOrientation;
     }
 
+    public int getMark() {
+        return mark;
+    }
 
     public HashMap<String, Object> getTimeStampLastChanged() {
         return timeStampLastChanged;

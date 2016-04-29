@@ -52,6 +52,9 @@
     <string name="LogTagUpload">UploadFile: </string>
     <string name="RemoveConfirmedUser">Remove</string>
 
+    <string name="removeUserYes">No!</string>
+    <string name="removeUserNo">Fine,one more chance.</string>
+
     <string name="ChooseImageButtonLabel">Choose Image</string>
     <string name="UploadImageButtonLabel">Upload Image</string>
 

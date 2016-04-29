@@ -9,4 +9,10 @@
     <item android:id="@+id/action_remove_rel"
         android:title="@string/RemoveConfirmedUser"
         android:orderInCategory="100" />
+    <item
+        android:title="Remove"
+        android:id="@+id/remove_user_icon"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/remove_user"
+        />
 </menu>

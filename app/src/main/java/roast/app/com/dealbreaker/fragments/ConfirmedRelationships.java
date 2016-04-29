@@ -106,6 +106,7 @@ public class ConfirmedRelationships extends Fragment {
                         public void onClick(View v) {
                             Intent selectedProfile = new Intent(getActivity(), ConfirmedUserProfile.class);
                             selectedProfile.putExtra("userName",recyclerAdapter.getRef(pos).getKey());
+                            selectedProfile.putExtra("rootUser",userName);
                             startActivity(selectedProfile);
                         }
                     });
@@ -116,7 +117,7 @@ public class ConfirmedRelationships extends Fragment {
     }
 
     private void listenRelationships(){
-        confirmedUserName = new ArrayList<>();
+        //confirmedUserName = new ArrayList<>();
         refConfirmedUsers = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName);
         //Query for the username keys of the people listed in the confirmed section of the database
         //Get that list and use it in the Recycler View by grabbing from that List a List of
@@ -127,16 +128,17 @@ public class ConfirmedRelationships extends Fragment {
         getRefConfirmedUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                initializeView(view); //Refresh Recycler based on Data Changes
                 for (DataSnapshot childUsers : dataSnapshot.getChildren()) {
                     Log.d("Users confirmed", childUsers.toString());
                     String name = childUsers.getKey();
                     if (name != null) {
-                        confirmedUserName.add(name);
+                        //confirmedUserName.add(name);
                     }
                 }
-                if(confirmedUserName.size() > 0) {
-                    getConfirmedUserInfo();
-                }
+               // if(confirmedUserName.size() > 0) {
+                 //   getConfirmedUserInfo();
+               // }
             }
 
             @Override
@@ -146,6 +148,12 @@ public class ConfirmedRelationships extends Fragment {
         });
 
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        initializeView(view);
     }
 
     private void getConfirmedUserInfo() {

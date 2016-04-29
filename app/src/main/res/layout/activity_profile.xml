@@ -119,9 +119,10 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Age:"
+            android:paddingLeft="15dp"
             android:id="@+id/ageTextLabel"
             android:layout_below="@+id/nameTextView"
-            android:layout_alignStart="@+id/nameTextView" />
+            android:layout_alignStart="@+id/imageButton" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -140,9 +141,9 @@
             android:text="Sex:"
             android:id="@+id/sexTextLabel"
             android:paddingRight="0dp"
-            android:paddingLeft="0dp"
+            android:paddingLeft="10dp"
             android:layout_below="@+id/nameTextView"
-            android:layout_toEndOf="@+id/bioLabel" />
+            android:layout_toEndOf="@+id/ageContent" />
 
         <TextView
             android:layout_width="wrap_content"

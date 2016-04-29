@@ -1,6 +1,5 @@
 package roast.app.com.dealbreaker.fragments;
 
-import android.app.DownloadManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -24,6 +22,7 @@ import java.util.ArrayList;
 import roast.app.com.dealbreaker.R;
 import roast.app.com.dealbreaker.models.PendingRelationshipAttribute;
 import roast.app.com.dealbreaker.models.PendingRelationshipViewHolder;
+import roast.app.com.dealbreaker.models.RelationshipAttribute;
 import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.util.Constants;
 import roast.app.com.dealbreaker.util.DownloadImages;
@@ -39,14 +38,14 @@ import roast.app.com.dealbreaker.util.DownloadImages;
 // http://stackoverflow.com/questions/24885223/why-doesnt-recyclerview-have-onitemclicklistener-and-how-recyclerview-is-dif/24933117#24933117
 public class PendingRelationships extends Fragment {
 
-    FirebaseRecyclerAdapter<PendingRelationshipAttribute,PendingRelationshipViewHolder> pendingRecyclerAdapter;
+    FirebaseRecyclerAdapter<RelationshipAttribute ,PendingRelationshipViewHolder> pendingRecyclerAdapter;
 
     private RecyclerView recycViewPending;
     private String userName;
     private ArrayList<String> PendingUsername;
     private Query refPendingUser, getPendingUsersInfo;
     private ArrayList<User> pendingUserObjects;
-    private View viewr;
+    private View view;
     private Firebase refPendingUsersInfo;
 
     public PendingRelationships() {
@@ -72,12 +71,12 @@ public class PendingRelationships extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewr = inflater.inflate(R.layout.fragment_pending_relationships, container, false);
+        view = inflater.inflate(R.layout.fragment_pending_relationships, container, false);
 
-        recyclerPage(viewr);
+        recyclerPage(view);
         listenerFunc();
 
-        return viewr;
+        return view;
     }
 
     private void recyclerPage(View rootView){
@@ -91,18 +90,18 @@ public class PendingRelationships extends Fragment {
         recycViewPending.setLayoutManager(new LinearLayoutManager(getContext()));
 
         if(getPendingUsersInfo != null) {
-            pendingRecyclerAdapter = new FirebaseRecyclerAdapter<PendingRelationshipAttribute, PendingRelationshipViewHolder>(
-                    PendingRelationshipAttribute.class,
+            pendingRecyclerAdapter = new FirebaseRecyclerAdapter<RelationshipAttribute, PendingRelationshipViewHolder>(
+                    RelationshipAttribute.class,
                     R.layout.item_pending_relationship,
                     PendingRelationshipViewHolder.class,
                     getPendingUsersInfo
             ) {
                 @Override
-                protected void populateViewHolder(PendingRelationshipViewHolder pendingRelationshipViewHolder, PendingRelationshipAttribute PRA, int i) {
+                protected void populateViewHolder(PendingRelationshipViewHolder pendingRelationshipViewHolder, RelationshipAttribute PRA, int i) {
                     DownloadImages imageDownload = new DownloadImages(pendingRelationshipViewHolder.imageView ,getActivity());
+                    imageDownload.execute(PRA.getProfilePic());
                     pendingRelationshipViewHolder.name.setText(PRA.getFirstName());
                     pendingRelationshipViewHolder.attribute.setText(PRA.getSex());
-                    imageDownload.execute(PRA.getProfilePic());
                     pendingRelationshipViewHolder.add.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -124,6 +123,7 @@ public class PendingRelationships extends Fragment {
         refPendingUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                recyclerPage(view);
                 for (DataSnapshot childUsers : dataSnapshot.getChildren()) {
 
                     String name = childUsers.getKey();
@@ -160,7 +160,7 @@ public class PendingRelationships extends Fragment {
 
                     }
 
-                   recyclerPage(viewr);
+                   recyclerPage(view);
                 }
 
                 @Override
@@ -174,10 +174,11 @@ public class PendingRelationships extends Fragment {
     }
 
     @Override
-    public void onDestroy(){
-        super.onDestroy();
-        pendingRecyclerAdapter.cleanup();
+    public void onResume(){
+        super.onResume();
+        recyclerPage(view);
     }
+
 
     public void listener(Firebase firebaseREF)
     {

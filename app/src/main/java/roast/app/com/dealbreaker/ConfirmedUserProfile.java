@@ -1,5 +1,9 @@
 package roast.app.com.dealbreaker;
 
+import android.app.AlertDialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -24,11 +28,12 @@ import roast.app.com.dealbreaker.util.DownloadImages;
 public class ConfirmedUserProfile extends AppCompatActivity {
 
     private TextView confirmedBiography,confirmedGoodQualitiesInfo, confirmedBadQualitiesInfo, confirmedPersonalName, confirmedUserAge, confirmedUserLocation, confirmedSexText;
+    private TextView confirmedHeightText, confirmedSexORText;
     private ImageView confirmedUserView;
-    private String userName;
+    private String userName, rootUserName, userActualName;
     private String key, profilePicURL;
     private DownloadImages downloadImages;
-    private Firebase userInfoREF, userQualitiesREF, profilePicREF;
+    private Firebase userInfoREF, userQualitiesREF, profilePicREF, confirmedRootUserRef, confirmedUserRef;
     private ValueEventListener userInfoListener, userQualitiesListener, profilePicListener;
     Toolbar toolbar;
     @Override
@@ -38,6 +43,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
         if(getIntent().getExtras() != null) {
             Bundle arg = getIntent().getExtras();
             userName = arg.getString(getString(R.string.key_UserName));
+            rootUserName = arg.getString("rootUser");
             //Initialize the View of the Fragment
             initializeView();
         }
@@ -58,6 +64,8 @@ public class ConfirmedUserProfile extends AppCompatActivity {
         confirmedUserAge = (TextView) findViewById(R.id.confirmedAgeContent);
         confirmedSexText = (TextView) findViewById(R.id.confirmedSexContent);
         confirmedUserLocation = (TextView) findViewById(R.id.confirmedLocationTextValue);
+        confirmedSexORText = (TextView) findViewById(R.id.confirmedSexORContent);
+        confirmedHeightText = (TextView) findViewById(R.id.confirmedHeightTextValue);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) {
@@ -80,7 +88,19 @@ public class ConfirmedUserProfile extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.action_remove_rel:
+            //Remove the User from confirmed list, Use Dialog to make sure
+            case R.id.remove_user_icon:
+                AlertDialog.Builder dlg = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+                dlg.setTitle("End Relationship");
+                dlg.setMessage("... One more Chance?");
+                dlg.setNegativeButton(R.string.removeUserNo, null);
+                dlg.setPositiveButton(R.string.removeUserYes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Toast.makeText(getApplicationContext(),userActualName + " has been removed from your confirmed relationship list." , Toast.LENGTH_LONG).show();
+                        removeFromConfirmed();
+                    }
+                }).create();
+                dlg.show();
                 return true;
             case R.id.action_help:
                 return true;
@@ -92,7 +112,6 @@ public class ConfirmedUserProfile extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
     }
 
     //Recreate the Listener if it had been removed due to Pause
@@ -142,6 +161,15 @@ public class ConfirmedUserProfile extends AppCompatActivity {
         }
     }
 
+    //Remove a selected user from the confirmed list and yourself from their confirmed list
+    private void removeFromConfirmed(){
+        confirmedRootUserRef = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(rootUserName).child(userName);
+        confirmedRootUserRef.removeValue();
+
+        confirmedUserRef = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName).child(rootUserName);
+        confirmedUserRef.removeValue();
+    }
+
     private void listenUSER_INFO(){
         userInfoREF = new Firebase(Constants.FIREBASE_URL_USERS).child(userName).child(Constants.FIREBASE_LOC_USER_INFO);
         //Add the value Event Listener so if data has already been inputted by the user then it will
@@ -154,10 +182,13 @@ public class ConfirmedUserProfile extends AppCompatActivity {
                 if (user != null) {
                     //displays first and last name of user to profile page
                     String firstAndLastName = user.getFirstName() + " " + user.getLastName();
+                    userActualName = firstAndLastName;
                     confirmedPersonalName.setText(firstAndLastName);
                     //displays the age of the user
                     confirmedUserAge.setText(user.getAge().toString());
                     confirmedSexText.setText(user.getSex());
+                    confirmedSexORText.setText(user.getSexualOrientation());
+                    confirmedHeightText.setText(user.getHeight().toString() + "'");
                     confirmedUserLocation.setText(user.getLocation());
                     toolbar.setTitle(firstAndLastName);
                 }

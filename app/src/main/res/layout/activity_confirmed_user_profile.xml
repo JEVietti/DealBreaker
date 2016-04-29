@@ -121,6 +121,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Age:"
+            android:paddingLeft="15dp"
             android:id="@+id/confirmedAgeTextLabel"
             android:layout_below="@+id/confirmedNameTextView"
             android:layout_alignStart="@+id/confirmedUserImage" />
@@ -142,9 +143,9 @@
             android:text="Sex:"
             android:id="@+id/confirmedSexTextLabel"
             android:paddingRight="0dp"
-            android:paddingLeft="0dp"
+            android:paddingLeft="15dp"
             android:layout_below="@+id/confirmedNameTextView"
-            android:layout_toEndOf="@+id/confirmedBioLabel" />
+            android:layout_toEndOf="@+id/confirmedAgeContent" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -159,11 +160,63 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Height"
+            android:paddingLeft="10dp"
+            android:paddingTop="4dp"
+            android:id="@+id/confirmedHeightTextLabel"
+            android:layout_below="@+id/confirmedAgeTextLabel"
+            android:layout_alignStart="@+id/confirmedUserImage" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:hint="your height"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp"
+            android:id="@+id/confirmedHeightTextValue"
+            android:layout_alignBottom="@+id/confirmedHeightTextLabel"
+            android:layout_below="@+id/confirmedAgeContent"
+            android:layout_toEndOf="@+id/confirmedHeightTextLabel"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Sexual OR:"
+            android:id="@+id/confirmedSexORTextLabel"
+            android:paddingRight="0dp"
+            android:paddingLeft="0dp"
+            android:layout_alignBottom="@+id/confirmedHeightTextValue"
+            android:layout_toEndOf="@+id/confirmedAgeContent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:paddingBottom="1dp"
+            android:text="your pref"
+            android:id="@+id/confirmedSexORContent"
+            android:paddingLeft="5dp"
+            android:layout_alignBottom="@+id/confirmedSexORTextLabel"
+            android:layout_toEndOf="@+id/confirmedSexORTextLabel" />
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Location:"
             android:paddingTop="4dp"
             android:id="@+id/confirmedLocationTextLabel"
-            android:layout_below="@+id/confirmedAgeTextLabel"
+            android:layout_below="@+id/confirmedHeightTextLabel"
             android:layout_alignStart="@+id/confirmedUserImage" />
 
         <TextView
@@ -175,7 +228,7 @@
             android:textSize="12sp"
             android:id="@+id/confirmedLocationTextValue"
             android:layout_alignBottom="@+id/confirmedLocationTextLabel"
-            android:layout_below="@+id/confirmedAgeContent"
+            android:layout_below="@+id/confirmedHeightTextValue"
             android:layout_toEndOf="@+id/confirmedLocationTextLabel"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="2dp" />
