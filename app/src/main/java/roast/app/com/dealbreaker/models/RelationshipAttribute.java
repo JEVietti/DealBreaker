@@ -87,6 +87,10 @@ public class RelationshipAttribute {
         return mark;
     }
 
+    public void setMark(int mark) {
+        this.mark = mark;
+    }
+
     public HashMap<String, Object> getTimeStampLastChanged() {
         return timeStampLastChanged;
     }

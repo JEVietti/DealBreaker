@@ -5,7 +5,7 @@
     tools:context="roast.app.com.dealbreaker.fragments.PendingRelationships">
 
         <android.support.v7.widget.RecyclerView
-            android:paddingTop="45dp"
+            android:layout_marginTop="10dp"
             android:id="@+id/pending_relationship_recycler_view"
             android:scrollbarAlwaysDrawVerticalTrack="true"
             android:layout_width="match_parent"

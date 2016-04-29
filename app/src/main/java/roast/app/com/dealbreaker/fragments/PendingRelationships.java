@@ -1,5 +1,6 @@
 package roast.app.com.dealbreaker.fragments;
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -97,16 +98,40 @@ public class PendingRelationships extends Fragment {
                     getPendingUsersInfo
             ) {
                 @Override
-                protected void populateViewHolder(PendingRelationshipViewHolder pendingRelationshipViewHolder, RelationshipAttribute PRA, int i) {
+                protected void populateViewHolder(PendingRelationshipViewHolder pendingRelationshipViewHolder,final RelationshipAttribute PRA, final int i) {
                     DownloadImages imageDownload = new DownloadImages(pendingRelationshipViewHolder.imageView ,getActivity());
                     imageDownload.execute(PRA.getProfilePic());
                     pendingRelationshipViewHolder.name.setText(PRA.getFirstName());
                     pendingRelationshipViewHolder.attribute.setText(PRA.getSex());
-                    pendingRelationshipViewHolder.add.setOnClickListener(new View.OnClickListener() {
+
+                    if(PRA.getMark() == 0) {
+                        pendingRelationshipViewHolder.add.setText("Confirm");
+                        pendingRelationshipViewHolder.add.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String key = pendingRecyclerAdapter.getRef(i).getKey();
+                                //Add to confirmed list
+                                 Firebase refConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName).child(key);
+                                PRA.setMark(1);
+                                refConfirmed.setValue(PRA);
+                                //Delete from pending
+
+                                Firebase removeREFPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(key);
+                                removeREFPending.removeValue();
+
+                            }
+                        });
+                    }
+                    else {
+                        pendingRelationshipViewHolder.add.setText("Pending");
+                        pendingRelationshipViewHolder.add.setEnabled(false);
+                    }
+
+                    //On Click Listener for bringing up User's Profile in PendingUserProfileActivity
+                    pendingRelationshipViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //Add to confirmed list
-                            //Delete from pending
+
                         }
                     });
                 }
@@ -142,6 +167,10 @@ public class PendingRelationships extends Fragment {
             }
         });
 
+
+    }
+
+    private void getPendingUserRelationshipInfo(){
 
     }
 

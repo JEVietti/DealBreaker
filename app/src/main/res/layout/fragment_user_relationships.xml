@@ -1,8 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ConfirmedRelationships">
+    android:orientation="vertical">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout_relationships"
@@ -16,4 +16,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</FrameLayout>
+
+</LinearLayout>
