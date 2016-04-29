@@ -8,7 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="roast.app.com.dealbreaker.fragments.editProfile">
+    tools:context="roast.app.com.dealbreaker.fragments.editProfile"
+    android:fillViewport="false">
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -92,7 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/scrollViewgood"
-        android:layout_below="@id/goodqual"
+        android:layout_below="@+id/goodqual"
         android:layout_centerHorizontal="true">
 
         <EditText
@@ -106,36 +107,16 @@
             android:layout_centerHorizontal="true"
             android:textColor="@color/red"
             android:maxLines="3"/>
+
     </ScrollView>
 
     <Button
-        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go"
-        android:id="@+id/buttonBio"
-        android:textSize="14dp"
-        android:layout_alignTop="@+id/bio"
-        android:layout_toEndOf="@+id/scrollView" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go"
-        android:id="@+id/buttonBad"
-        android:textSize="14dp"
-        android:layout_alignTop="@+id/badqual"
-        android:layout_toEndOf="@+id/scrollViewbad" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go"
-        android:id="@+id/buttonGood"
-        android:textSize="14dp"
-        android:layout_alignTop="@+id/goodqual"
+        android:text="GO"
+        android:id="@+id/Submit"
+        android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/scrollViewgood" />
 </RelativeLayout>
 </ScrollView>
+

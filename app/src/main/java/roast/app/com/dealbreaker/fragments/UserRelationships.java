@@ -89,7 +89,7 @@ public class UserRelationships extends Fragment {
                 case 1:
                     return getString(R.string.PendingRelationshipLabel);
                 default:
-                    return getString(R.string.PendingRelationshipLabel);
+                    return getString(R.string.ConfirmedRelationshipLabel);
             }
         }
     }

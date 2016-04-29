@@ -34,7 +34,7 @@ public class editProfile extends Fragment {
     private TextView bio, badqual, goodqual;
     private ScrollView scrollView;                       //scrollview
     private View.OnTouchListener scrollTouch;
-    private Button   bioGo, badGo, goodGo;
+    private Button   bioGo, badGo, goodGo, Submit;
     private Firebase userInfoREF, userInfoREFBAD, userInfoREFGOOD;
     private EditText biographyEdit, badEdit, goodEdit;
 
@@ -88,8 +88,8 @@ public class editProfile extends Fragment {
 
         //calls funcs
         BIOGRAPHY();          //biography onclick functionality
-        BAD();                //bad onclick functionality
-        GOOD();               //good onclick functionality
+        //BAD();                //bad onclick functionality
+        //GOOD();               //good onclick functionality
 
         return view;
     }
@@ -115,13 +115,21 @@ public class editProfile extends Fragment {
 
        // userInfoREF.removeEventListener(initialValues);
         //Biography --
-        bioGo.setOnClickListener(new View.OnClickListener() {
+        Submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String BioData = biographyEdit.getText().toString();
                 userInfoREF.child("biography").setValue(BioData);
+
+                String badChar = badEdit.getText().toString();
+                userInfoREF.child("badQualities").setValue(badChar);
+
+                String goodChar = goodEdit.getText().toString();
+                userInfoREF.child("goodQualities").setValue(goodChar);
+
                 Toast.makeText(getContext(), "Submitted", Toast.LENGTH_SHORT).show();
-        }
+
+            }
         });
 
     }
@@ -161,9 +169,10 @@ public class editProfile extends Fragment {
         goodqual = (TextView) mainview.findViewById(R.id.goodqual);
         scrollView = (ScrollView) mainview.findViewById(R.id.ScrollView01);
 
-        bioGo = (Button) mainview.findViewById(R.id.buttonBio);
-        badGo = (Button) mainview.findViewById(R.id.buttonBad);
-        goodGo = (Button) mainview.findViewById(R.id.buttonGood);
+        //bioGo = (Button) mainview.findViewById(R.id.buttonBio);
+        //badGo = (Button) mainview.findViewById(R.id.buttonBad);
+        //goodGo = (Button) mainview.findViewById(R.id.buttonGood);
+        Submit = (Button) mainview.findViewById(R.id.Submit);
 
         biographyEdit = (EditText) mainview.findViewById(R.id.bioEditText);
         badEdit = (EditText) mainview.findViewById(R.id.badQualEditText2);

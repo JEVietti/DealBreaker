@@ -26,6 +26,7 @@ import roast.app.com.dealbreaker.models.PendingRelationshipAttribute;
 import roast.app.com.dealbreaker.models.PendingRelationshipViewHolder;
 import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.util.Constants;
+import roast.app.com.dealbreaker.util.DownloadImages;
 
 
 //This class will be used to Show the status of the Pending Relationships
@@ -45,7 +46,7 @@ public class PendingRelationships extends Fragment {
     private ArrayList<String> PendingUsername;
     private Query refPendingUser, getPendingUsersInfo;
     private ArrayList<User> pendingUserObjects;
-    private View view;
+    private View viewr;
     private Firebase refPendingUsersInfo;
 
     public PendingRelationships() {
@@ -71,39 +72,49 @@ public class PendingRelationships extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_pending_relationships, container, false);
+        viewr = inflater.inflate(R.layout.fragment_pending_relationships, container, false);
 
-        LinearLayoutManager RLM = new LinearLayoutManager(getActivity());
-        RLM.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerPage(viewr);
+        listenerFunc();
+
+        return viewr;
+    }
+
+    private void recyclerPage(View rootView){
         Firebase firebaseREF = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName);
+        //LinearLayoutManager RLM = new LinearLayoutManager(getActivity());
+        //RLM.setOrientation(LinearLayoutManager.VERTICAL);
 
         getPendingUsersInfo = firebaseREF.orderByChild("lastName");
-        recycViewPending = (RecyclerView) view.findViewById(R.id.pending_relationship_recycler_view);
+        recycViewPending = (RecyclerView) rootView.findViewById(R.id.pending_relationship_recycler_view);
         recycViewPending.setHasFixedSize(true);
-        recycViewPending.setLayoutManager(RLM);
+        recycViewPending.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //recyclerPage(view);
-        //listenerFunc();
-
-        return view;
+        if(getPendingUsersInfo != null) {
+            pendingRecyclerAdapter = new FirebaseRecyclerAdapter<PendingRelationshipAttribute, PendingRelationshipViewHolder>(
+                    PendingRelationshipAttribute.class,
+                    R.layout.item_pending_relationship,
+                    PendingRelationshipViewHolder.class,
+                    getPendingUsersInfo
+            ) {
+                @Override
+                protected void populateViewHolder(PendingRelationshipViewHolder pendingRelationshipViewHolder, PendingRelationshipAttribute PRA, int i) {
+                    DownloadImages imageDownload = new DownloadImages(pendingRelationshipViewHolder.imageView ,getActivity());
+                    pendingRelationshipViewHolder.name.setText(PRA.getFirstName());
+                    pendingRelationshipViewHolder.attribute.setText(PRA.getSex());
+                    imageDownload.execute(PRA.getProfilePic());
+                    pendingRelationshipViewHolder.add.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //Add to confirmed list
+                            //Delete from pending
+                        }
+                    });
+                }
+            };
+            recycViewPending.setAdapter(pendingRecyclerAdapter);
+        }
     }
-
-    private void recyclerPage(View rootview){
-        pendingRecyclerAdapter = new FirebaseRecyclerAdapter<PendingRelationshipAttribute, PendingRelationshipViewHolder>(
-                PendingRelationshipAttribute.class,
-                R.layout.item_pending_relationship,
-                PendingRelationshipViewHolder.class,
-                getPendingUsersInfo
-        ) {
-            @Override
-            protected void populateViewHolder(PendingRelationshipViewHolder pendingRelationshipViewHolder, PendingRelationshipAttribute PRA, int i) {
-                pendingRelationshipViewHolder.name.setText(PRA.getFirstName());
-                pendingRelationshipViewHolder.attribute.setText(PRA.getSex());
-            }
-        };
-        recycViewPending.setAdapter(pendingRecyclerAdapter);
-    }
-
 
     private void listenerFunc(){
         Firebase firebaseREF = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName);
@@ -149,7 +160,7 @@ public class PendingRelationships extends Fragment {
 
                     }
 
-                   recyclerPage(view);
+                   recyclerPage(viewr);
                 }
 
                 @Override
