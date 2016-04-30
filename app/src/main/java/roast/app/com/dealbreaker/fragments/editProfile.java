@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import roast.app.com.dealbreaker.R;
+import roast.app.com.dealbreaker.models.ContactInfo;
 import roast.app.com.dealbreaker.models.UserQualities;
 import roast.app.com.dealbreaker.util.Constants;
 
@@ -31,14 +32,14 @@ import roast.app.com.dealbreaker.util.Constants;
 public class editProfile extends Fragment {
 
     //textviews that user can edit on main profile page
-    private TextView bio, badqual, goodqual;
+    private TextView bio, badqual, goodqual, contacInfoLabel, contactInfoNote;
     private ScrollView scrollView;                       //scrollview
     private View.OnTouchListener scrollTouch;
     private Button   bioGo, badGo, goodGo, Submit;
-    private Firebase userInfoREF, userInfoREFBAD, userInfoREFGOOD;
-    private EditText biographyEdit, badEdit, goodEdit;
+    private Firebase userInfoREF, userInfoREFBAD, userInfoREFGOOD, contactInfoRef;
+    private EditText biographyEdit, badEdit, goodEdit, contactInfoEdit;
 
-    private ValueEventListener InfoListener;
+    private ValueEventListener InfoListener, contactInfoListener;
 
     private String username;
     //Creates a new instance func for editprofile
@@ -100,7 +101,7 @@ public class editProfile extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserQualities userQualities = dataSnapshot.getValue(UserQualities.class);
-                if(userQualities != null){
+                if (userQualities != null) {
                     biographyEdit.setText(userQualities.getBiography());
                     badEdit.setText(userQualities.getBadQualities());
                     goodEdit.setText(userQualities.getGoodQualities());
@@ -113,19 +114,34 @@ public class editProfile extends Fragment {
             }
         });
 
-       // userInfoREF.removeEventListener(initialValues);
-        //Biography --
+        contactInfoRef = new Firebase(Constants.FIREBASE_URL_USERS).child(username).child("contact_info");
+        contactInfoListener = contactInfoRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ContactInfo contactInfo = dataSnapshot.getValue(ContactInfo.class);
+                if(contactInfo != null){
+                    contactInfoEdit.setText(contactInfo.getContactInfo());
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
         Submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String BioData = biographyEdit.getText().toString();
-                userInfoREF.child("biography").setValue(BioData);
-
                 String badChar = badEdit.getText().toString();
-                userInfoREF.child("badQualities").setValue(badChar);
-
                 String goodChar = goodEdit.getText().toString();
+                String contact = contactInfoEdit.getText().toString();
+
+                userInfoREF.child("biography").setValue(BioData);
+                userInfoREF.child("badQualities").setValue(badChar);
                 userInfoREF.child("goodQualities").setValue(goodChar);
+                contactInfoRef.child("contactInfo").setValue(contact);
 
                 Toast.makeText(getContext(), "Submitted", Toast.LENGTH_SHORT).show();
 
@@ -167,6 +183,8 @@ public class editProfile extends Fragment {
         bio = (TextView) mainview.findViewById(R.id.bio);
         badqual = (TextView) mainview.findViewById(R.id.badqual);
         goodqual = (TextView) mainview.findViewById(R.id.goodqual);
+        contacInfoLabel = (TextView) mainview.findViewById(R.id.contactInfoLabel);
+        contactInfoNote = (TextView) mainview.findViewById(R.id.contactInfoNote);
         scrollView = (ScrollView) mainview.findViewById(R.id.ScrollView01);
 
         //bioGo = (Button) mainview.findViewById(R.id.buttonBio);
@@ -177,10 +195,13 @@ public class editProfile extends Fragment {
         biographyEdit = (EditText) mainview.findViewById(R.id.bioEditText);
         badEdit = (EditText) mainview.findViewById(R.id.badQualEditText2);
         goodEdit = (EditText) mainview.findViewById(R.id.goodQualEditText3);
+        contactInfoEdit = (EditText) mainview.findViewById(R.id.contactInfoTextValue);
 
         bio.setText("Bio:");
         badqual.setText("Set Your Bad Qualities:");
         goodqual.setText(" Set Your Good Qualities");
+        contactInfoNote.setText("NOTE: Shared with your Confirmed Relationships");
+        contacInfoLabel.setText("Contact Information");
     }
 
 }

@@ -53,11 +53,15 @@
     <string name="RemoveConfirmedUser">Remove</string>
 
     <string name="removeUserYes">No!</string>
-    <string name="removeUserNo">Fine,one more chance.</string>
+    <string name="removeUserNo">Fine, one more chance.</string>
 
     <string name="ChooseImageButtonLabel">Choose Image</string>
     <string name="UploadImageButtonLabel">Upload Image</string>
 
     <string name="ConfirmedRelationshipLabel">Relationships</string>
     <string name="PendingRelationshipLabel">Pending</string>
+
+    <string name="ContactInfoLabel">Contact Info</string>
+    <string name="GotItLabel">Got It!</string>
+
 </resources>

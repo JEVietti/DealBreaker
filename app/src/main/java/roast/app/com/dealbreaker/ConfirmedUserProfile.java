@@ -15,11 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
+import roast.app.com.dealbreaker.models.ContactInfo;
 import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.models.UserQualities;
 import roast.app.com.dealbreaker.util.Constants;
@@ -30,7 +33,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
     private TextView confirmedBiography,confirmedGoodQualitiesInfo, confirmedBadQualitiesInfo, confirmedPersonalName, confirmedUserAge, confirmedUserLocation, confirmedSexText;
     private TextView confirmedHeightText, confirmedSexORText;
     private ImageView confirmedUserView;
-    private String userName, rootUserName, userActualName;
+    private String userName, rootUserName, userActualName, confirmedContactInfo;
     private String key, profilePicURL;
     private DownloadImages downloadImages;
     private Firebase userInfoREF, userQualitiesREF, profilePicREF, confirmedRootUserRef, confirmedUserRef;
@@ -46,6 +49,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
             rootUserName = arg.getString("rootUser");
             //Initialize the View of the Fragment
             initializeView();
+            returnContactInfo();
         }
         else{
             finish();
@@ -88,19 +92,30 @@ public class ConfirmedUserProfile extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.action_contact_info_rel:
+                String info = returnContactInfo();
+                AlertDialog.Builder dlg = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+                dlg.setTitle("Contact Info");
+                dlg.setMessage(info);
+                dlg.setPositiveButton(R.string.GotItLabel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                    }
+                }).create();
+                dlg.show();
+                return true;
             //Remove the User from confirmed list, Use Dialog to make sure
             case R.id.remove_user_icon:
-                AlertDialog.Builder dlg = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
-                dlg.setTitle("End Relationship");
-                dlg.setMessage("... One more Chance?");
-                dlg.setNegativeButton(R.string.removeUserNo, null);
-                dlg.setPositiveButton(R.string.removeUserYes, new DialogInterface.OnClickListener() {
+                AlertDialog.Builder dlgRM = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+                dlgRM.setTitle("End Relationship");
+                dlgRM.setMessage("... One more Chance?");
+                dlgRM.setNegativeButton(R.string.removeUserNo, null);
+                dlgRM.setPositiveButton(R.string.removeUserYes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
                         Toast.makeText(getApplicationContext(),userActualName + " has been removed from your confirmed relationship list." , Toast.LENGTH_LONG).show();
                         removeFromConfirmed();
                     }
                 }).create();
-                dlg.show();
+                dlgRM.show();
                 return true;
             case R.id.action_help:
                 return true;
@@ -132,7 +147,6 @@ public class ConfirmedUserProfile extends AppCompatActivity {
         //Function call for listening to update the user qualities of the Firebase Database
         listenUSER_QUALITIES();
 
-
         Log.d("Event Listeners Back: ", "In User Profile Fragment!");
     }
 
@@ -159,6 +173,33 @@ public class ConfirmedUserProfile extends AppCompatActivity {
             userQualitiesREF.removeEventListener(userQualitiesListener);
             Log.d("Event Listeners Gone: ", "In User Profile Fragment!");
         }
+    }
+
+    private String returnContactInfo(){
+        Query contactInfo;
+        contactInfo = new Firebase(Constants.FIREBASE_URL_USERS).child(userName).child("contact_info");
+        if(contactInfo != null){
+              contactInfo.addValueEventListener(new ValueEventListener() {
+                  @Override
+                  public void onDataChange(DataSnapshot dataSnapshot) {
+                      ContactInfo userCI = dataSnapshot.child("contactInfo").getValue(ContactInfo.class);
+                      if(userCI != null) {
+                          confirmedContactInfo = userCI.getContactInfo();
+                      }
+                      else{
+                          confirmedContactInfo = "User has not made their contact information available.";
+                      }
+                  }
+
+                  @Override
+                  public void onCancelled(FirebaseError firebaseError) {
+
+                  }
+              });
+
+        }
+
+        return confirmedContactInfo;
     }
 
     //Remove a selected user from the confirmed list and yourself from their confirmed list
