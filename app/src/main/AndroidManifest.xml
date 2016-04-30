@@ -66,8 +66,9 @@
 
         <activity android:name=".ConfirmedUserProfile">
         </activity>
-        <activity android:name=".RoamingProfile">
-        </activity>
+        <activity android:name=".PendingUserProfile"></activity>
+
+        <activity android:name=".RoamingProfile"></activity>
     </application>
 
 </manifest>

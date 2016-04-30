@@ -58,7 +58,7 @@
     <string name="ChooseImageButtonLabel">Choose Image</string>
     <string name="UploadImageButtonLabel">Upload Image</string>
 
-    <string name="ConfirmedRelationshipLabel">Relationships</string>
+    <string name="ConfirmedRelationshipLabel">Confirmed</string>
     <string name="PendingRelationshipLabel">Pending</string>
 
     <string name="ContactInfoLabel">Contact Info</string>

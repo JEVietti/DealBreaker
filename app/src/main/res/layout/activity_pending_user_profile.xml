@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".PendingUserProfile">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="180dp"
+            android:id="@+id/pendingUserImage"
+            android:adjustViewBounds="true"
+            android:background="@drawable/rounded_corner"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/toolbar"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/user_profilePicDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="@string/biography_label"
+            android:id="@+id/pendingBioLabel"
+            android:paddingTop="5dp"
+            android:layout_marginTop="18dp"
+            android:layout_below="@+id/pendingLocationTextValue"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/userNamesDefault"
+            android:textAlignment="center"
+            android:textColorHighlight="@color/colorAccent"
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/pendingNameTextView"
+            android:layout_below="@+id/pendingUserImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="205dp"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:textAlignment="center"
+            android:id="@+id/pendingBioText"
+            android:textColor="@color/black"
+            android:layout_below="@id/pendingBioLabel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/bad_qualities_label"
+            android:textColor="@color/colorPrimaryDark"
+            android:id="@+id/pendingBadQualitiesLabel"
+            android:textAlignment="center"
+            android:paddingTop="5dp"
+            android:layout_centerVertical="true"
+            android:layout_below="@id/pendingBioText"
+            android:layout_alignStart="@+id/pendingBadQualitiesText"
+            android:layout_alignEnd="@+id/pendingBadQualitiesText"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/good_qualities_label"
+            android:id="@+id/pendingGoodQualitiesLabel"
+            android:textAlignment="center"
+            android:paddingTop="8dp"
+            android:layout_alignTop="@+id/pendingBadQualitiesLabel"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginRight="0dp"
+            android:layout_below="@+id/pendingBioText"
+            android:layout_alignStart="@+id/pendingGoodQualitiesText"
+            android:layout_alignEnd="@+id/pendingGoodQualitiesText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:textAlignment="center"
+            android:id="@+id/pendingGoodQualitiesText"
+            android:textColor="@color/black"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/pendingGoodQualitiesLabel"
+            android:layout_toEndOf="@+id/pendingBioLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:ems="10"
+            android:id="@+id/pendingBadQualitiesText"
+            android:layout_alignTop="@+id/pendingGoodQualitiesText"
+            android:layout_toStartOf="@+id/pendingBioLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Age:"
+            android:paddingLeft="15dp"
+            android:id="@+id/pendingAgeTextLabel"
+            android:layout_below="@+id/pendingNameTextView"
+            android:layout_alignStart="@+id/pendingUserImage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/pendingAgeContent"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/pendingNameTextView"
+            android:layout_toEndOf="@+id/pendingAgeTextLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Sex:"
+            android:id="@+id/pendingSexTextLabel"
+            android:paddingRight="0dp"
+            android:paddingLeft="15dp"
+            android:layout_below="@+id/pendingNameTextView"
+            android:layout_toEndOf="@+id/pendingAgeContent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/pendingSexContent"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/pendingNameTextView"
+            android:layout_toEndOf="@+id/pendingSexTextLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Height"
+            android:paddingLeft="10dp"
+            android:paddingTop="4dp"
+            android:id="@+id/pendingHeightTextLabel"
+            android:layout_below="@+id/pendingAgeTextLabel"
+            android:layout_alignStart="@+id/pendingUserImage" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:hint="your height"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp"
+            android:id="@+id/pendingHeightTextValue"
+            android:layout_alignBottom="@+id/pendingHeightTextLabel"
+            android:layout_below="@+id/pendingAgeContent"
+            android:layout_toEndOf="@+id/pendingHeightTextLabel"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Sexual OR:"
+            android:id="@+id/pendingSexORTextLabel"
+            android:paddingRight="0dp"
+            android:paddingLeft="0dp"
+            android:layout_alignBottom="@+id/pendingHeightTextValue"
+            android:layout_toEndOf="@+id/pendingAgeContent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:paddingBottom="1dp"
+            android:text="your pref"
+            android:id="@+id/pendingSexORContent"
+            android:paddingLeft="5dp"
+            android:layout_alignBottom="@+id/pendingSexORTextLabel"
+            android:layout_toEndOf="@+id/pendingSexORTextLabel" />
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Location:"
+            android:paddingTop="4dp"
+            android:id="@+id/pendingLocationTextLabel"
+            android:layout_below="@+id/pendingHeightTextLabel"
+            android:layout_alignStart="@+id/pendingUserImage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:hint="your location"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp"
+            android:id="@+id/pendingLocationTextValue"
+            android:layout_alignBottom="@+id/pendingLocationTextLabel"
+            android:layout_below="@+id/pendingHeightTextValue"
+            android:layout_toEndOf="@+id/pendingLocationTextLabel"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp" />
+
+    </RelativeLayout>
+</ScrollView>

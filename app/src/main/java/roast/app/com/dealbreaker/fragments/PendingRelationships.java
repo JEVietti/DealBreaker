@@ -1,5 +1,6 @@
 package roast.app.com.dealbreaker.fragments;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,8 @@ import com.firebase.client.Query;
 import java.util.ArrayList;
 
 
+import roast.app.com.dealbreaker.ConfirmedUserProfile;
+import roast.app.com.dealbreaker.PendingUserProfile;
 import roast.app.com.dealbreaker.R;
 import roast.app.com.dealbreaker.models.PendingRelationshipAttribute;
 import roast.app.com.dealbreaker.models.PendingRelationshipViewHolder;
@@ -111,12 +114,33 @@ public class PendingRelationships extends Fragment {
                             public void onClick(View v) {
                                 String key = pendingRecyclerAdapter.getRef(i).getKey();
                                 //Add to confirmed list
-                                 Firebase refConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName).child(key);
-                                PRA.setMark(1);
-                                refConfirmed.setValue(PRA);
+                                final Firebase refConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName).child(key);
+                                final Firebase refSelectedConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(key).child(userName);
+                                final Firebase removeREFPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(key);
+                                final Firebase removeREFSelectedPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(key).child(userName);
+                                removeREFSelectedPending.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        RelationshipAttribute userRA = dataSnapshot.getValue(RelationshipAttribute.class);
+                                        if (userRA != null) {
+                                            userRA.setMark(1);
+                                            refSelectedConfirmed.setValue(userRA);
+                                            PRA.setMark(1);
+                                            refConfirmed.setValue(PRA);
+                                            removeREFPending.removeValue();
+                                            removeREFSelectedPending.removeValue();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(FirebaseError firebaseError) {
+
+                                    }
+                                });
+
                                 //Delete from pending
 
-                                Firebase removeREFPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(key);
+
                                 removeREFPending.removeValue();
 
                             }
@@ -131,7 +155,10 @@ public class PendingRelationships extends Fragment {
                     pendingRelationshipViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            Intent selectedProfile = new Intent(getActivity(), PendingUserProfile.class);
+                            selectedProfile.putExtra("userName",pendingRecyclerAdapter.getRef(i).getKey());
+                            selectedProfile.putExtra("rootUser",userName);
+                            startActivity(selectedProfile);
                         }
                     });
                 }
