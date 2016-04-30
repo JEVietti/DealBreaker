@@ -170,10 +170,10 @@ public class PendingUserProfile extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 RelationshipAttribute markUser = dataSnapshot.getValue(RelationshipAttribute.class);
-                if(markUser != null) {
-                   pendingMark = markUser.getMark();
+                if (markUser != null) {
+                    pendingMark = markUser.getMark();
                 }
-               }
+            }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -193,21 +193,20 @@ public class PendingUserProfile extends AppCompatActivity {
     }
 
     private void confirmFromPending(){
-        final Firebase refConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(rootUserName).child(userName);
-        final Firebase refPendingUserConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName).child(rootUserName);
-        Query relUser = new Firebase(Constants.FIREBASE_URL_PENDING).child(rootUserName).child(userName);
-        relUser.addValueEventListener(new ValueEventListener() {
+        final Firebase addREFConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(rootUserName).child(userName);
+        final Firebase addREFPendingUserConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName).child(rootUserName);
+        final Firebase REFPendingUserPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(rootUserName);
+        final Firebase REFRootUserPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(rootUserName).child(userName);
+
+        REFPendingUserPending.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                RelationshipAttribute userRA = dataSnapshot.getValue(RelationshipAttribute.class);
-                RelationshipAttribute rootUserRA = dataSnapshot.getValue(RelationshipAttribute.class);
-                if(userRA != null && rootUserRA != null){
-                    userRA.setMark(1);
-                    rootUserRA.setMark(1);
-                    refConfirmed.setValue(userRA);
-                    refPendingUserConfirmed.setValue(rootUserRA);
+                RelationshipAttribute pendingRA = dataSnapshot.getValue(RelationshipAttribute.class);
+                if (pendingRA != null) {
+                    pendingRA.setMark(1);
+                    addREFPendingUserConfirmed.setValue(pendingRA);
+                    REFPendingUserPending.removeValue();
                 }
-
             }
 
             @Override
@@ -216,9 +215,25 @@ public class PendingUserProfile extends AppCompatActivity {
             }
         });
 
-        //Delete from pending
-        Firebase removeREFPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(rootUserName);
-        removeREFPending.removeValue();
+        REFRootUserPending.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                RelationshipAttribute rootRA = dataSnapshot.getValue(RelationshipAttribute.class);
+                if (rootRA != null) {
+                    rootRA.setMark(1);
+                    addREFConfirmed.setValue(rootRA);
+                    REFRootUserPending.removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+
     }
 
     private void listenUSER_INFO() {
