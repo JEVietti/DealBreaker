@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/ScrollView01"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
+    <RelativeLayout android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center_horizontal"
+                    tools:context="roast.app.com.dealbreaker.RoamingProfile">
+
+        <ImageButton
+            android:layout_width="200dp"
+            android:layout_height="180dp"
+            android:id="@+id/roamingImageButton"
+            android:adjustViewBounds="true"
+            android:background="@drawable/rounded_corner"
+            android:layout_marginTop="15dp"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/user_profilePicDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="@string/biography_label"
+            android:id="@+id/roamingBioLabel"
+            android:paddingTop="5dp"
+            android:layout_marginTop="18dp"
+            android:layout_below="@+id/roamingLocationTextValue"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/userNamesDefault"
+            android:textAlignment="center"
+            android:textColorHighlight="@color/colorAccent"
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/roamingNameTextView"
+            android:layout_below="@+id/roamingImageButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="205dp"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:textAlignment="center"
+            android:id="@+id/roamingBioText"
+            android:textColor="@color/black"
+            android:layout_below="@id/roamingBioLabel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/bad_qualities_label"
+            android:textColor="@color/colorPrimaryDark"
+            android:id="@+id/roamingBadQualitiesLabel"
+            android:textAlignment="center"
+            android:paddingTop="5dp"
+            android:layout_centerVertical="true"
+            android:layout_below="@id/roamingBioText"
+            android:layout_alignStart="@+id/roamingBadQualitiesText"
+            android:layout_alignEnd="@+id/roamingBadQualitiesText"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/good_qualities_label"
+            android:id="@+id/roamingGoodQualitiesLabel"
+            android:textAlignment="center"
+            android:paddingTop="8dp"
+            android:layout_alignTop="@+id/roamingBadQualitiesLabel"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginRight="0dp"
+            android:layout_below="@+id/roamingBioText"
+            android:layout_alignStart="@+id/roamingGoodQualitiesText"
+            android:layout_alignEnd="@+id/roamingGoodQualitiesText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:textAlignment="center"
+            android:id="@+id/roamingGoodQualitiesText"
+            android:textColor="@color/black"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/roamingGoodQualitiesLabel"
+            android:layout_toEndOf="@+id/roamingBioLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:ems="10"
+            android:id="@+id/roamingBadQualitiesText"
+            android:layout_alignTop="@+id/roamingGoodQualitiesText"
+            android:layout_toStartOf="@+id/roamingBioLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Age:"
+            android:id="@+id/roamingAgeTextLabel"
+            android:layout_below="@+id/roamingNameTextView"
+            android:layout_alignStart="@+id/roamingNameTextView" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/roamingAgeContent"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/roamingNameTextView"
+            android:layout_toEndOf="@+id/roamingAgeTextLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Sex:"
+            android:id="@+id/roamingSexTextLabel"
+            android:paddingRight="0dp"
+            android:paddingLeft="0dp"
+            android:layout_below="@+id/roamingNameTextView"
+            android:layout_toEndOf="@+id/roamingBioLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/roamingSexContent"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/roamingNameTextView"
+            android:layout_toEndOf="@+id/roamingSexTextLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Location:"
+            android:paddingTop="4dp"
+            android:id="@+id/roamingLocationTextLabel"
+            android:layout_below="@+id/roamingAgeTextLabel"
+            android:layout_alignStart="@+id/roamingImageButton" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:hint="your location"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp"
+            android:id="@+id/roamingLocationTextValue"
+            android:layout_alignBottom="@+id/roamingLocationTextLabel"
+            android:layout_below="@+id/roamingAgeContent"
+            android:layout_toEndOf="@+id/roamingLocationTextLabel"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp" />
+
+
+    </RelativeLayout>
+</ScrollView>
+
+

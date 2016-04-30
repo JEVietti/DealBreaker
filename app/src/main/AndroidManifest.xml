@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="roast.app.com.dealbreaker" >
+          package="roast.app.com.dealbreaker" >
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_PROFILE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <uses-feature
         android:name="android.hardware.location"
-        android:required="true" />
+        android:required="true"/>
     <uses-feature
         android:name="android.hardware.location.gps"
-        android:required="true" />
+        android:required="true"/>
 
     <application
         android:name=".MainActivity"
@@ -29,32 +29,32 @@
         android:icon="@mipmap/db_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".InitialScreen"
             android:label="@string/title_activity_initial_screen"
-            android:theme="@style/AppTheme.ActionBar" >
-            <intent-filter android:label="@string/app_name" >
-                <action android:name="android.intent.action.MAIN" />
+            android:theme="@style/AppTheme.ActionBar">
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ResetPassword" >
+        <activity android:name=".ResetPassword">
         </activity>
         <activity
             android:name=".RegisterActivity"
             android:configChanges="orientation"
             android:label="@string/register_activity_title"
-            android:theme="@style/AppTheme.ActionBar" >
+            android:theme="@style/AppTheme.ActionBar">
         </activity>
-        <activity android:name=".RoamingActivity" >
+        <activity android:name=".RoamingActivity">
         </activity>
         <activity
             android:name=".UserNavigation"
             android:configChanges="orientation"
             android:label="@string/title_activity_user_navigation"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme">
         </activity>
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -62,9 +62,11 @@
         -->
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
-        <activity android:name=".ConfirmedUserProfile" >
+        <activity android:name=".ConfirmedUserProfile">
+        </activity>
+        <activity android:name=".RoamingProfile">
         </activity>
     </application>
 
