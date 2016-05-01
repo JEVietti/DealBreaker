@@ -27,6 +27,7 @@ import com.firebase.client.ValueEventListener;
 
 import roast.app.com.dealbreaker.fragments.AttributeAssignment;
 import roast.app.com.dealbreaker.fragments.ProfileActivity;
+import roast.app.com.dealbreaker.fragments.UpdateImage;
 import roast.app.com.dealbreaker.fragments.UserRelationships;
 import roast.app.com.dealbreaker.fragments.editProfile;
 import roast.app.com.dealbreaker.models.UserImages;
@@ -179,7 +180,7 @@ public class UserNavigation extends AppCompatActivity {
                 fragment = AttributeAssignment.newInstance(userName);
                 break;
             case R.id.nav_gallery:
-                fragment = AttributeAssignment.newInstance(userName);
+                fragment = UpdateImage.newInstance(userName);
                 break;
             case R.id.nav_home:
                 fragment = ProfileActivity.newInstance(userName);
@@ -192,6 +193,7 @@ public class UserNavigation extends AppCompatActivity {
                 break;
             case R.id.nav_share:
                 fragment = editProfile.newInstance(userName);
+                break;
             default:
                 fragment = AttributeAssignment.newInstance(userName);
                 break;

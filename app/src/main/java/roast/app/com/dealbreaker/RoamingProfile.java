@@ -189,6 +189,8 @@ public class RoamingProfile extends AppCompatActivity {
                     roamingAge.setText(user.getAge().toString());
                     roamingSexText.setText(user.getSex());
                     roamingUserLocation.setText(user.getLocation());
+                    roamingHeightText.setText(user.getHeight().toString());
+                    roamingSexORText.setText(user.getSexualOrientation());
                 }
 
             }
@@ -257,6 +259,7 @@ public class RoamingProfile extends AppCompatActivity {
         });
     }
 
+    //Add the users into their corresponding rejected list pile and remove them from the queue/viewing
     private void rejectRoaming(){
         roamingRootUserRef = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(rootUserName).child(userName);
 
@@ -272,6 +275,7 @@ public class RoamingProfile extends AppCompatActivity {
                 if(rootRelationshipAttribute != null){
                     rootRelationshipAttribute.setMark(0);
                     rejectedUserREF.setValue(rootRelationshipAttribute);
+                    roamingRootUserRef.removeValue();
                 }
             }
 
@@ -285,9 +289,10 @@ public class RoamingProfile extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 RelationshipAttribute userRelationshipAttribute = dataSnapshot.getValue(RelationshipAttribute.class);
-                if(userRelationshipAttribute != null){
+                if (userRelationshipAttribute != null) {
                     userRelationshipAttribute.setMark(0);
                     rejectedRootREF.setValue(userRelationshipAttribute);
+                    roamingUserRef.removeValue();
                 }
             }
 
@@ -296,11 +301,10 @@ public class RoamingProfile extends AppCompatActivity {
 
             }
         });
-        roamingUserRef.removeValue();
-        roamingRootUserRef.removeValue();
+
     }
 
-    //This may need some tuning
+    //Send a request to the selected user and add them both to their pending list delete both correspondingly from their queues
     private void roamingSendRequest(){
         pendingRootUserREF = new Firebase(Constants.FIREBASE_URL_PENDING).child(rootUserName).child(userName);
         pendingUserREF = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(rootUserName);
@@ -314,6 +318,7 @@ public class RoamingProfile extends AppCompatActivity {
                 RelationshipAttribute rootRA = dataSnapshot.getValue(RelationshipAttribute.class);
                 rootRA.setMark(1);
                 pendingRootUserREF.setValue(rootRA);
+                queueRootREF.removeValue();
             }
 
             @Override
@@ -329,6 +334,7 @@ public class RoamingProfile extends AppCompatActivity {
                 RelationshipAttribute userRA = dataSnapshot.getValue(RelationshipAttribute.class);
                 userRA.setMark(0);
                 pendingUserREF.setValue(userRA);
+                queueUserREF.removeValue();
             }
 
             @Override
@@ -337,8 +343,6 @@ public class RoamingProfile extends AppCompatActivity {
             }
         });
         //Remove the two Relationship Attributes from their Queues
-        queueRootREF.removeValue();
-        queueUserREF.removeValue();
 
     }
 

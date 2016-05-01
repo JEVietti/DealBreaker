@@ -28,6 +28,7 @@ import roast.app.com.dealbreaker.models.PendingRelationshipAttribute;
 import roast.app.com.dealbreaker.models.PendingRelationshipViewHolder;
 import roast.app.com.dealbreaker.models.RelationshipAttribute;
 import roast.app.com.dealbreaker.models.User;
+import roast.app.com.dealbreaker.models.UserImages;
 import roast.app.com.dealbreaker.util.Constants;
 import roast.app.com.dealbreaker.util.DownloadImages;
 
@@ -50,7 +51,7 @@ public class PendingRelationships extends Fragment {
     private Query refPendingUser, getPendingUsersInfo;
     private ArrayList<User> pendingUserObjects;
     private View view;
-    private Firebase refPendingUsersInfo;
+    private Firebase refPendingUsersInfo, pendingFirebaseREF;
 
     public PendingRelationships() {
         // Required empty public constructor
@@ -84,11 +85,11 @@ public class PendingRelationships extends Fragment {
     }
 
     private void recyclerPage(View rootView){
-        Firebase firebaseREF = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName);
+        pendingFirebaseREF = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName);
         //LinearLayoutManager RLM = new LinearLayoutManager(getActivity());
         //RLM.setOrientation(LinearLayoutManager.VERTICAL);
 
-        getPendingUsersInfo = firebaseREF.orderByChild("lastName");
+        getPendingUsersInfo = pendingFirebaseREF.orderByChild("lastName");
         recycViewPending = (RecyclerView) rootView.findViewById(R.id.pending_relationship_recycler_view);
         recycViewPending.setHasFixedSize(true);
         recycViewPending.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -102,6 +103,9 @@ public class PendingRelationships extends Fragment {
             ) {
                 @Override
                 protected void populateViewHolder(PendingRelationshipViewHolder pendingRelationshipViewHolder,final RelationshipAttribute PRA, final int i) {
+                    String listedUserName = pendingRecyclerAdapter.getRef(i).getKey();
+                    currentProfilePic(listedUserName);
+                    updateUserInfo(listedUserName);
                     DownloadImages imageDownload = new DownloadImages(pendingRelationshipViewHolder.imageView ,getActivity());
                     imageDownload.execute(PRA.getProfilePic());
                     pendingRelationshipViewHolder.name.setText(PRA.getFirstName());
@@ -253,6 +257,62 @@ public class PendingRelationships extends Fragment {
                     }
                 }
 
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    /* This allows for the Images updated by the listed user at any time to be updated directly to the pending list
+    * */
+    private void currentProfilePic(final String listedUser){
+        Firebase listedUserImagesREF = new Firebase(Constants.FIREBASE_URL_IMAGES).child(listedUser).child(Constants.FIREBASE_LOC_PROFILE_PIC);
+        listedUserImagesREF.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserImages userImages = dataSnapshot.getValue(UserImages.class);
+                if (userImages != null) {
+                    String profilePic = userImages.getProfilePic();
+                    pendingFirebaseREF.child(listedUser).child("profilePic").setValue(profilePic);
+                    //initializeView(view);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+    }
+
+        /* This allows for any pertinent User information updated by the listed user at any time to be updated directly to the pending list
+        */
+    private void updateUserInfo(final String listedUser){
+        Firebase listedUserInfo = new Firebase(Constants.FIREBASE_URL_USERS).child(listedUser).child(Constants.FIREBASE_LOC_USER_INFO);
+        listedUserInfo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    String firstName = user.getFirstName();
+                    String lastName = user.getLastName();
+                    Long age = user.getAge();
+                    String sex = user.getSex();
+                    String location = user.getLocation();
+                    String sexualOrientation = user.getSexualOrientation();
+
+                    pendingFirebaseREF.child(listedUser).child("firstName").setValue(firstName);
+                    pendingFirebaseREF.child(listedUser).child("lastName").setValue(lastName);
+                    pendingFirebaseREF.child(listedUser).child("age").setValue(age);
+                    pendingFirebaseREF.child(listedUser).child("sex").setValue(sex);
+                    pendingFirebaseREF.child(listedUser).child("location").setValue(location);
+                    pendingFirebaseREF.child(listedUser).child("sexualOrientation").setValue(sexualOrientation);
+                    //initializeView(view);
+                }
             }
 
             @Override

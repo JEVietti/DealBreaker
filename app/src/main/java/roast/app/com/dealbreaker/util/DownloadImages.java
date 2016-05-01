@@ -73,35 +73,47 @@ public class DownloadImages extends AsyncTask<String, Void, Bitmap> {
             ImageView imageView = imageViewWeakReference.get();
             InputStream stream = null;
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            final int REQUIRED_WIDTH = imageView.getWidth();
-            final int REQUIRED_HEIGHT = imageView.getHeight();
-            bmOptions.inScaled = true;
-            //scales the image appropriately
+            if(imageView != null) {
+                final int REQUIRED_WIDTH = imageView.getWidth();
+                final int REQUIRED_HEIGHT = imageView.getHeight();
+                bmOptions.inScaled = true;
+                //scales the image appropriately
 
-            bmOptions.inSampleSize = calculateInSampleSize(bmOptions,REQUIRED_WIDTH, REQUIRED_HEIGHT);
-            try {
-                URL imageURL = new URL(url);
-                //establish connection
-                stream = getHttpConnection(imageURL);
-                //convert image in url to a bitmap
-                bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
-                if(bitmap==null||stream==null){
-                    return returnDefault();}
-                stream.close();
-            } catch (IOException e1) {
-                e1.printStackTrace();}
+                bmOptions.inSampleSize = calculateInSampleSize(bmOptions, REQUIRED_WIDTH, REQUIRED_HEIGHT);
+                try {
+                    URL imageURL = new URL(url);
+                    //establish connection
+                    stream = getHttpConnection(imageURL);
+                    //convert image in url to a bitmap
+                    bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
+                    if (bitmap == null || stream == null) {
+                        return returnDefault();
+                    }
+                    stream.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
 
-            return bitmap;
+                return bitmap;
+            }
+            return returnDefault();
         }
 
     private Bitmap returnDefault(){
         Bitmap result;
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         ImageView imageView = imageViewWeakReference.get();
+        if(imageView != null){
         final int REQUIRED_WIDTH = imageView.getWidth();
         final int REQUIRED_HEIGHT = imageView.getHeight();
         result = decodeSampledBitmapFromResource(source.getResources(), R.drawable.defaultuser, REQUIRED_WIDTH, REQUIRED_HEIGHT, bmOptions);
-        return result;
+        return result;}
+        else{
+            final int REQUIRED_WIDTH = 70;
+            final int REQUIRED_HEIGHT = 70;
+            result = decodeSampledBitmapFromResource(source.getResources(), R.drawable.defaultuser, REQUIRED_WIDTH, REQUIRED_HEIGHT, bmOptions);
+            return result;
+        }
     }
 
         // Makes HttpURLConnection and returns InputStream

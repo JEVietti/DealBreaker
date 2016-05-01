@@ -220,6 +220,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
                 if(rootRelationshipAttribute != null){
                     rootRelationshipAttribute.setMark(0);
                     rejectedUserREF.setValue(rootRelationshipAttribute);
+                    confirmedRootUserRef.removeValue();
                 }
             }
 
@@ -233,9 +234,10 @@ public class ConfirmedUserProfile extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 RelationshipAttribute userRelationshipAttribute = dataSnapshot.getValue(RelationshipAttribute.class);
-                if(userRelationshipAttribute != null){
+                if (userRelationshipAttribute != null) {
                     userRelationshipAttribute.setMark(0);
                     rejectedRootREF.setValue(userRelationshipAttribute);
+                    confirmedUserRef.removeValue();
                 }
             }
 
@@ -244,8 +246,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
 
             }
         });
-        confirmedUserRef.removeValue();
-        confirmedRootUserRef.removeValue();
+
     }
 
     private void listenUSER_INFO(){

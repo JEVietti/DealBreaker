@@ -19,10 +19,11 @@ public class RelationshipAttribute {
         this.mark = mark;
     }
 
-    public RelationshipAttribute(String firstName, String lastName, Long age, String sexualOrientation, String location, String profilePic, int mark){
+    public RelationshipAttribute(String firstName, String lastName, String sex, Long age, String sexualOrientation, String location, String profilePic, int mark){
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
+        this.sex = sex;
         this.sexualOrientation = sexualOrientation;
         this.location = location;
         this.profilePic = profilePic;

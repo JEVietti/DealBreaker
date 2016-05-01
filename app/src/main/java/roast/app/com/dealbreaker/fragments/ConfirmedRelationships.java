@@ -24,6 +24,7 @@ import roast.app.com.dealbreaker.R;
 import roast.app.com.dealbreaker.models.ConfirmedRelationshipViewHolder;
 import roast.app.com.dealbreaker.models.RelationshipAttribute;
 import roast.app.com.dealbreaker.models.User;
+import roast.app.com.dealbreaker.models.UserImages;
 import roast.app.com.dealbreaker.util.Constants;
 import roast.app.com.dealbreaker.util.DownloadImages;
 
@@ -86,6 +87,7 @@ public class ConfirmedRelationships extends Fragment {
         refConfirmedUsers = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName);
         //refConfirmedUsers.orderByChild("lastName");
         getRefConfirmedUsersInfo = refConfirmedUsers.orderByChild("lastName");
+        getRefConfirmedUsersInfo.keepSynced(true);
         confirmedRelationshipsRecycler = (RecyclerView) rootView.findViewById(R.id.confirmed_relationship_recycler_view);
         confirmedRelationshipsRecycler.setHasFixedSize(true);
         confirmedRelationshipsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -97,6 +99,9 @@ public class ConfirmedRelationships extends Fragment {
             recyclerAdapter = new FirebaseRecyclerAdapter<RelationshipAttribute, ConfirmedRelationshipViewHolder>(RelationshipAttribute.class, R.layout.item_confirmed_relationship, ConfirmedRelationshipViewHolder.class, getRefConfirmedUsersInfo) {
                 @Override
                 protected void populateViewHolder(ConfirmedRelationshipViewHolder confirmedRelationshipViewHolder, RelationshipAttribute user, final int pos) {
+                    String listedUserName = recyclerAdapter.getRef(pos).getKey();
+                    currentProfilePic(listedUserName);
+                    updateUserInfo(listedUserName);
                     DownloadImages downloadImages = new DownloadImages(confirmedRelationshipViewHolder.userImage, getActivity());
                     downloadImages.execute(user.getProfilePic());
                     confirmedRelationshipViewHolder.userFist_LastName.setText(user.getFirstName() + " " + user.getLastName() + "    Age: " + user.getAge());
@@ -136,9 +141,9 @@ public class ConfirmedRelationships extends Fragment {
                         //confirmedUserName.add(name);
                     }
                 }
-               // if(confirmedUserName.size() > 0) {
-                 //   getConfirmedUserInfo();
-               // }
+                // if(confirmedUserName.size() > 0) {
+                //   getConfirmedUserInfo();
+                // }
             }
 
             @Override
@@ -187,6 +192,58 @@ public class ConfirmedRelationships extends Fragment {
                 }
             });
         }
+    }
+
+    private void currentProfilePic(final String listedUser){
+        Firebase listedUserImagesREF = new Firebase(Constants.FIREBASE_URL_IMAGES).child(listedUser).child(Constants.FIREBASE_LOC_PROFILE_PIC);
+        listedUserImagesREF.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserImages userImages = dataSnapshot.getValue(UserImages.class);
+                if (userImages != null) {
+                    String profilePic = userImages.getProfilePic();
+                    refConfirmedUsers.child(listedUser).child("profilePic").setValue(profilePic);
+                    //initializeView(view);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+    }
+
+    private void updateUserInfo(final String listedUser){
+        Firebase listedUserInfo = new Firebase(Constants.FIREBASE_URL_USERS).child(listedUser).child(Constants.FIREBASE_LOC_USER_INFO);
+        listedUserInfo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    String firstName = user.getFirstName();
+                    String lastName = user.getLastName();
+                    Long age = user.getAge();
+                    String sex = user.getSex();
+                    String location = user.getLocation();
+                    String sexualOrientation = user.getSexualOrientation();
+
+                    refConfirmedUsers.child(listedUser).child("firstName").setValue(firstName);
+                    refConfirmedUsers.child(listedUser).child("lastName").setValue(lastName);
+                    refConfirmedUsers.child(listedUser).child("age").setValue(age);
+                    refConfirmedUsers.child(listedUser).child("sex").setValue(sex);
+                    refConfirmedUsers.child(listedUser).child("location").setValue(location);
+                    refConfirmedUsers.child(listedUser).child("sexualOrientation").setValue(sexualOrientation);
+                    //initializeView(view);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
     //Potential: Swipe Method for the Recycler View

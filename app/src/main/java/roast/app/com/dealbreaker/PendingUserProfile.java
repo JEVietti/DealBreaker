@@ -168,6 +168,8 @@ public class PendingUserProfile extends AppCompatActivity {
         }
     }
 
+    /*Return the Pending Mark of the root to create the correct menu
+    * */
     private int returnPendingMark(){
         final Query markValue = new Firebase(Constants.FIREBASE_URL_PENDING).child(rootUserName).child(userName);
         markValue.addValueEventListener(new ValueEventListener() {
@@ -189,7 +191,6 @@ public class PendingUserProfile extends AppCompatActivity {
 
     //Remove a selected user from the pending list and yourself from their pending list
     private void dismissFromPending() {
-
         pendingRootUserRef = new Firebase(Constants.FIREBASE_URL_PENDING).child(rootUserName).child(userName);
         pendingUserRef = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(rootUserName);
         //Add the Users to their respective rejected lists
@@ -203,7 +204,8 @@ public class PendingUserProfile extends AppCompatActivity {
                 if(rootRelationshipAttribute != null){
                     rootRelationshipAttribute.setMark(0);
                     rejectedUserREF.setValue(rootRelationshipAttribute);
-                    status1 = 1;
+                    pendingRootUserRef.removeValue();
+
                 }
             }
 
@@ -220,7 +222,7 @@ public class PendingUserProfile extends AppCompatActivity {
                 if(userRelationshipAttribute != null){
                     userRelationshipAttribute.setMark(0);
                     rejectedRootREF.setValue(userRelationshipAttribute);
-                    status2 = 1;
+                    pendingUserRef.removeValue();
                 }
             }
 
@@ -229,10 +231,7 @@ public class PendingUserProfile extends AppCompatActivity {
 
             }
         });
-        if(status1 == 1 && status2 == 1) {
-            pendingUserRef.removeValue();
-            pendingRootUserRef.removeValue();
-        }
+
     }
 
     private void confirmFromPending(){
