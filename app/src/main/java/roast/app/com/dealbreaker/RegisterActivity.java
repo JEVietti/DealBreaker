@@ -49,10 +49,12 @@ public class RegisterActivity extends AppCompatActivity {
 
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    String userEmail = postSnapshot.child("email").getValue().toString();
-                    String userName = postSnapshot.child("userName").getValue().toString();
-                    mUserEmailUsed.addElement(userEmail);
-                    mUserNameUsed.addElement(userName);
+                    if(postSnapshot != null){
+                        String userEmail = postSnapshot.child("email").getValue().toString();
+                        String userName = postSnapshot.child("userName").getValue().toString();
+                        mUserEmailUsed.addElement(userEmail);
+                        mUserNameUsed.addElement(userName);
+                    }
                 }
 
             }

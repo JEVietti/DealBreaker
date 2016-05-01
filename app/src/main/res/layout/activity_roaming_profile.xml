@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/ScrollView01"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:fillViewport="true">
-    <RelativeLayout android:layout_height="wrap_content"
-                    android:layout_width="fill_parent"
-                    android:focusableInTouchMode="true"
-                    android:gravity="center_horizontal"
-                    tools:context="roast.app.com.dealbreaker.RoamingProfile">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true">
 
-        <ImageButton
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".RoamingProfile">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+        <ImageView
             android:layout_width="200dp"
             android:layout_height="180dp"
-            android:id="@+id/roamingImageButton"
+            android:id="@+id/roamingUserImage"
             android:adjustViewBounds="true"
             android:background="@drawable/rounded_corner"
             android:layout_marginTop="15dp"
+            android:layout_below="@+id/toolbar"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/user_profilePicDescription" />
 
@@ -42,7 +48,7 @@
             android:textColorHighlight="@color/colorAccent"
             android:textColor="@color/colorPrimary"
             android:id="@+id/roamingNameTextView"
-            android:layout_below="@+id/roamingImageButton"
+            android:layout_below="@+id/roamingUserImage"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp" />
 
@@ -115,9 +121,10 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Age:"
+            android:paddingLeft="15dp"
             android:id="@+id/roamingAgeTextLabel"
             android:layout_below="@+id/roamingNameTextView"
-            android:layout_alignStart="@+id/roamingNameTextView" />
+            android:layout_alignStart="@+id/roamingUserImage" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -136,9 +143,9 @@
             android:text="Sex:"
             android:id="@+id/roamingSexTextLabel"
             android:paddingRight="0dp"
-            android:paddingLeft="0dp"
+            android:paddingLeft="15dp"
             android:layout_below="@+id/roamingNameTextView"
-            android:layout_toEndOf="@+id/roamingBioLabel" />
+            android:layout_toEndOf="@+id/roamingAgeContent" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -153,12 +160,64 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Height"
+            android:paddingLeft="10dp"
+            android:paddingTop="4dp"
+            android:id="@+id/roamingHeightTextLabel"
+            android:layout_below="@+id/roamingAgeTextLabel"
+            android:layout_alignStart="@+id/roamingUserImage" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:hint="your height"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp"
+            android:id="@+id/roamingHeightTextValue"
+            android:layout_alignBottom="@+id/roamingHeightTextLabel"
+            android:layout_below="@+id/roamingAgeContent"
+            android:layout_toEndOf="@+id/roamingHeightTextLabel"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Sexual OR:"
+            android:id="@+id/roamingSexORTextLabel"
+            android:paddingRight="0dp"
+            android:paddingLeft="0dp"
+            android:layout_alignBottom="@+id/roamingHeightTextValue"
+            android:layout_toEndOf="@+id/roamingAgeContent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:paddingBottom="1dp"
+            android:text="your pref"
+            android:id="@+id/roamingSexORContent"
+            android:paddingLeft="5dp"
+            android:layout_alignBottom="@+id/roamingSexORTextLabel"
+            android:layout_toEndOf="@+id/roamingSexORTextLabel" />
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Location:"
             android:paddingTop="4dp"
             android:id="@+id/roamingLocationTextLabel"
-            android:layout_below="@+id/roamingAgeTextLabel"
-            android:layout_alignStart="@+id/roamingImageButton" />
+            android:layout_below="@+id/roamingHeightTextLabel"
+            android:layout_alignStart="@+id/roamingUserImage" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -169,13 +228,10 @@
             android:textSize="12sp"
             android:id="@+id/roamingLocationTextValue"
             android:layout_alignBottom="@+id/roamingLocationTextLabel"
-            android:layout_below="@+id/roamingAgeContent"
+            android:layout_below="@+id/roamingHeightTextValue"
             android:layout_toEndOf="@+id/roamingLocationTextLabel"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="2dp" />
 
-
     </RelativeLayout>
 </ScrollView>
-
-

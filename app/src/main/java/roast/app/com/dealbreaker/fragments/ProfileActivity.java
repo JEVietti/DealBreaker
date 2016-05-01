@@ -1,11 +1,16 @@
 package roast.app.com.dealbreaker.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -78,7 +83,7 @@ public class ProfileActivity extends Fragment {
             public void onClick(View v) {
                 Fragment f = null;
                 f = UpdateImage.newInstance(userName);
-                if(f != null && savedInstanceState == null) {
+                if (f != null && savedInstanceState == null) {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.Content, f);
@@ -89,6 +94,7 @@ public class ProfileActivity extends Fragment {
         });
         return view;
     }
+
 
     private void initializeScreen(View rootView) {
         //profile_info = (TextView) rootView.findViewById(R.id.textView);

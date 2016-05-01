@@ -22,6 +22,7 @@
             android:adjustViewBounds="true"
             android:background="@drawable/rounded_corner"
             android:layout_marginTop="15dp"
+            android:scaleType="fitXY"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/user_profilePicDescription" />
 

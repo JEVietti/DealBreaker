@@ -27,12 +27,14 @@ public class PendingUserProfile extends AppCompatActivity {
     private TextView pendingBiography, pendingGoodQualitiesInfo, pendingBadQualitiesInfo, pendingPersonalName, pendingUserAge, pendingUserLocation, pendingSexText;
     private TextView pendingHeightText, pendingSexORText;
     private int pendingMark;
+    private int status1, status2;
     private ImageView pendingUserView;
     private String userName, rootUserName, userActualName, pendingContactInfo;
     private String key, profilePicURL;
     private DownloadImages downloadImages;
-    private Firebase userInfoREF, userQualitiesREF, profilePicREF, pendingRootUserRef, pendingUserRef;
-    private ValueEventListener userInfoListener, userQualitiesListener, profilePicListener;
+    private Firebase userInfoREF, userQualitiesREF, profilePicREF, pendingRootUserRef, pendingUserRef, rejectedRootREF, rejectedUserREF;
+    private Firebase addREFConfirmed, addREFPendingUserConfirmed, REFRootUserPending, REFPendingUserPending;
+    private ValueEventListener userInfoListener, userQualitiesListener, profilePicListener, rejectedROOT, rejectedUSER, pendingROOT, pendingUSER;
     Toolbar toolbar;
 
     @Override
@@ -97,10 +99,12 @@ public class PendingUserProfile extends AppCompatActivity {
                     return true;
 
                 case R.id.action_confirm_pending_request:
+                    //Add a AlertDialog
                     confirmFromPending();
                     return true;
 
                 case R.id.action_dismiss_pending:
+                    //Add a AlertDialog
                     dismissFromPending();
                     return true;
 
@@ -185,20 +189,60 @@ public class PendingUserProfile extends AppCompatActivity {
 
     //Remove a selected user from the pending list and yourself from their pending list
     private void dismissFromPending() {
-        pendingRootUserRef = new Firebase(Constants.FIREBASE_URL_PENDING).child(rootUserName).child(userName);
-        pendingRootUserRef.removeValue();
 
+        pendingRootUserRef = new Firebase(Constants.FIREBASE_URL_PENDING).child(rootUserName).child(userName);
         pendingUserRef = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(rootUserName);
-        pendingUserRef.removeValue();
+        //Add the Users to their respective rejected lists
+        rejectedRootREF = new Firebase(Constants.FIREBASE_URL_REJECTED).child(rootUserName).child(userName);
+        rejectedUserREF = new Firebase(Constants.FIREBASE_URL_REJECTED).child(userName).child(rootUserName);
+        //get their Relationship Attribute Objects
+       rejectedROOT = pendingRootUserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                RelationshipAttribute rootRelationshipAttribute = dataSnapshot.getValue(RelationshipAttribute.class);
+                if(rootRelationshipAttribute != null){
+                    rootRelationshipAttribute.setMark(0);
+                    rejectedUserREF.setValue(rootRelationshipAttribute);
+                    status1 = 1;
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+       rejectedUSER = pendingUserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                RelationshipAttribute userRelationshipAttribute = dataSnapshot.getValue(RelationshipAttribute.class);
+                if(userRelationshipAttribute != null){
+                    userRelationshipAttribute.setMark(0);
+                    rejectedRootREF.setValue(userRelationshipAttribute);
+                    status2 = 1;
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        if(status1 == 1 && status2 == 1) {
+            pendingUserRef.removeValue();
+            pendingRootUserRef.removeValue();
+        }
     }
 
     private void confirmFromPending(){
-        final Firebase addREFConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(rootUserName).child(userName);
-        final Firebase addREFPendingUserConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName).child(rootUserName);
-        final Firebase REFPendingUserPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(rootUserName);
-        final Firebase REFRootUserPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(rootUserName).child(userName);
 
-        REFPendingUserPending.addValueEventListener(new ValueEventListener() {
+         addREFConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(rootUserName).child(userName);
+         addREFPendingUserConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName).child(rootUserName);
+         REFPendingUserPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(rootUserName);
+         REFRootUserPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(rootUserName).child(userName);
+
+       pendingUSER = REFPendingUserPending.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 RelationshipAttribute pendingRA = dataSnapshot.getValue(RelationshipAttribute.class);
@@ -215,7 +259,7 @@ public class PendingUserProfile extends AppCompatActivity {
             }
         });
 
-        REFRootUserPending.addValueEventListener(new ValueEventListener() {
+       pendingROOT = REFRootUserPending.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 RelationshipAttribute rootRA = dataSnapshot.getValue(RelationshipAttribute.class);
@@ -323,4 +367,6 @@ public class PendingUserProfile extends AppCompatActivity {
             }
         });
     }
+
+
 }

@@ -23,6 +23,7 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 import roast.app.com.dealbreaker.models.ContactInfo;
+import roast.app.com.dealbreaker.models.RelationshipAttribute;
 import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.models.UserQualities;
 import roast.app.com.dealbreaker.util.Constants;
@@ -36,7 +37,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
     private String userName, rootUserName, userActualName, confirmedContactInfo;
     private String key, profilePicURL;
     private DownloadImages downloadImages;
-    private Firebase userInfoREF, userQualitiesREF, profilePicREF, confirmedRootUserRef, confirmedUserRef;
+    private Firebase userInfoREF, userQualitiesREF, profilePicREF, confirmedRootUserRef, confirmedUserRef, rejectedRootREF, rejectedUserREF;
     private ValueEventListener userInfoListener, userQualitiesListener, profilePicListener;
     Toolbar toolbar;
     @Override
@@ -85,6 +86,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
         return true;
     }
 
+    //REMEMBER DON'T JUST REMOVE THEM FROM THE QUEUE ADD THEM TO THE REJECTED LIST
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -147,7 +149,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
         //Function call for listening to update the user qualities of the Firebase Database
         listenUSER_QUALITIES();
 
-        Log.d("Event Listeners Back: ", "In User Profile Fragment!");
+        Log.d("Event Listeners Back: ", "In Confirmed ");
     }
 
     //Destroy the Listener if the App is paused
@@ -171,7 +173,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
             userInfoREF.removeEventListener(userInfoListener);
             profilePicREF.removeEventListener(profilePicListener);
             userQualitiesREF.removeEventListener(userQualitiesListener);
-            Log.d("Event Listeners Gone: ", "In User Profile Fragment!");
+            Log.d("Event Listeners Gone: ", "In Confirmed Profile!");
         }
     }
 
@@ -205,10 +207,45 @@ public class ConfirmedUserProfile extends AppCompatActivity {
     //Remove a selected user from the confirmed list and yourself from their confirmed list
     private void removeFromConfirmed(){
         confirmedRootUserRef = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(rootUserName).child(userName);
-        confirmedRootUserRef.removeValue();
 
         confirmedUserRef = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName).child(rootUserName);
+        //Add the Users to their respective rejected lists
+        rejectedRootREF = new Firebase(Constants.FIREBASE_URL_REJECTED).child(rootUserName).child(userName);
+        rejectedUserREF = new Firebase(Constants.FIREBASE_URL_REJECTED).child(userName).child(rootUserName);
+        //get their Relationship Attribute Objects
+        confirmedRootUserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                RelationshipAttribute rootRelationshipAttribute = dataSnapshot.getValue(RelationshipAttribute.class);
+                if(rootRelationshipAttribute != null){
+                    rootRelationshipAttribute.setMark(0);
+                    rejectedUserREF.setValue(rootRelationshipAttribute);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        confirmedUserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                RelationshipAttribute userRelationshipAttribute = dataSnapshot.getValue(RelationshipAttribute.class);
+                if(userRelationshipAttribute != null){
+                    userRelationshipAttribute.setMark(0);
+                    rejectedRootREF.setValue(userRelationshipAttribute);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
         confirmedUserRef.removeValue();
+        confirmedRootUserRef.removeValue();
     }
 
     private void listenUSER_INFO(){

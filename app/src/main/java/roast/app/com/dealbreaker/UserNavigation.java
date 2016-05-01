@@ -20,19 +20,30 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
 import roast.app.com.dealbreaker.fragments.AttributeAssignment;
 import roast.app.com.dealbreaker.fragments.ProfileActivity;
 import roast.app.com.dealbreaker.fragments.UserRelationships;
 import roast.app.com.dealbreaker.fragments.editProfile;
+import roast.app.com.dealbreaker.models.UserImages;
+import roast.app.com.dealbreaker.util.Constants;
+import roast.app.com.dealbreaker.util.DownloadImages;
 
 /* The UserNavigation class is meant as the base means of navigation during the app states
 * of which include the User's Home page, Images, Preferences and User Information Tasks (Fragments)
 *
 * */
-public class UserNavigation extends AppCompatActivity{
+public class UserNavigation extends AppCompatActivity {
     private String userName;
     private DrawerLayout mDrawer;
+    Firebase userImageREF;
+    private ValueEventListener profilePicListener;
     private NavigationView nvDrawer;
+    private int state;
     private ImageView headerImageView;
 
     @Override
@@ -45,9 +56,12 @@ public class UserNavigation extends AppCompatActivity{
             userName = arg.getString(getString(R.string.key_UserName));
             //Initialize the View of the Fragment
             initializeView();
+           // profilePicListener();
+            state = 0;
             //Set the first Fragment to be loaded
             if (savedInstanceState == null) {
                 setFirstItemNavigationView();
+                state = 1;
             }
         }
         else {
@@ -73,8 +87,8 @@ public class UserNavigation extends AppCompatActivity{
         } else {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
             AlertDialog dialog = dlg.create();
-            dlg.setTitle("Really Exit!");
-            dlg.setMessage("Are you Sure you want to Exit?");
+            dlg.setTitle("Logout!");
+            dlg.setMessage("Are you Sure you want to log out?");
             dlg.setNegativeButton(android.R.string.no, null);
             dlg.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface arg0, int arg1) {
@@ -102,6 +116,31 @@ public class UserNavigation extends AppCompatActivity{
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.action_navigation_logout:
+                onBackPressed();
+                return true;
+            case R.id.action_navigation_delete_account:
+                AlertDialog.Builder dlgDel1 = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+                //AlertDialog dialog = dlgDel1.create();
+                dlgDel1.setTitle("Delete Account!");
+                dlgDel1.setMessage("Are you Sure you want to DELETE YOUR ACCOUNT?");
+                dlgDel1.setNegativeButton(android.R.string.no, null);
+                dlgDel1.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        AlertDialog.Builder dlgDel2 = new AlertDialog.Builder(getApplicationContext(), R.style.AlertDialogTheme);
+                        dlgDel2.setTitle("LAST CHANCE");
+                        dlgDel2.setMessage("Are you Sure you want to DELETE THIS ACCOUNT, THIS IS NOT RECOVERABLE");
+                        dlgDel2.setNegativeButton(android.R.string.no, null);
+                        dlgDel2.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                deleteAccount();
+                            }
+                        }).create();
+                        dlgDel2.show();
+                    }
+                }).create();
+                dlgDel1.show();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -113,14 +152,22 @@ public class UserNavigation extends AppCompatActivity{
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        NavItemSelected(menuItem);
-                        return true;
+                        if(menuItem.isChecked() && state != 0){
+                            mDrawer.closeDrawer(nvDrawer);
+                            return true;
+                        }
+                        else{
+                             NavItemSelected(menuItem);
+                             return true;}
+
                     }
                 });
     }
 
-    //
-    @SuppressWarnings("StatementWithEmptyBody")
+    private void deleteAccount(){
+
+    }
+
     private boolean NavItemSelected(MenuItem item) {
         // Create a new fragment and specify the planet to show based on
         // position
@@ -129,6 +176,9 @@ public class UserNavigation extends AppCompatActivity{
         //which can be found in the DealBreaker\app\src\main\res\menu\activity_user_navigation_drawer.xml file
         switch (item.getItemId()) {
             case R.id.nav_preferences:
+                fragment = AttributeAssignment.newInstance(userName);
+                break;
+            case R.id.nav_gallery:
                 fragment = AttributeAssignment.newInstance(userName);
                 break;
             case R.id.nav_home:
@@ -140,6 +190,8 @@ public class UserNavigation extends AppCompatActivity{
             case R.id.nav_relationship:
                 fragment = UserRelationships.newInstance(userName);
                 break;
+            case R.id.nav_share:
+                fragment = editProfile.newInstance(userName);
             default:
                 fragment = AttributeAssignment.newInstance(userName);
                 break;
@@ -178,6 +230,43 @@ public class UserNavigation extends AppCompatActivity{
         nvDrawer.setCheckedItem(R.id.nav_home);
         nvDrawer.getMenu().performIdentifierAction(R.id.nav_home, 0);
         nvDrawer.setCheckedItem(R.id.nav_home);
+    }
+  /*
+    private void profilePicListener(){
+        userImageREF = new Firebase(Constants.FIREBASE_URL_IMAGES).child(userName).child(Constants.FIREBASE_LOC_PROFILE_PIC);
+        profilePicListener = userImageREF.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserImages userImages = dataSnapshot.getValue(UserImages.class);
+                String url = userImages.getProfilePic();
+                DownloadImages downloadImages = new DownloadImages(headerImageView, UserNavigation.this);
+                downloadImages.execute(url);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+*/
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //profilePicListener();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //if(profilePicListener != null){
+         //   userImageREF.removeEventListener(profilePicListener);
+       // }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
 }
