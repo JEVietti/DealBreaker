@@ -1,5 +1,7 @@
 package roast.app.com.dealbreaker;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -100,12 +102,29 @@ public class PendingUserProfile extends AppCompatActivity {
 
                 case R.id.action_confirm_pending_request:
                     //Add a AlertDialog
-                    confirmFromPending();
+                    AlertDialog.Builder dlgC = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+                    dlgC.setTitle("Confirm Request");
+                    dlgC.setMessage("Would you like to accept this User's relationship request?");
+                    dlgC.setNegativeButton(android.R.string.no, null);
+                    dlgC.setPositiveButton(R.string.OKAY, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            confirmFromPending();
+                        }
+                    }).create();
+                    dlgC.show();
                     return true;
-
                 case R.id.action_dismiss_pending:
                     //Add a AlertDialog
-                    dismissFromPending();
+                    AlertDialog.Builder dlgD = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+                    dlgD.setTitle("Dismiss Request");
+                    dlgD.setMessage("Would you like to reject this User's relationship request?");
+                    dlgD.setNegativeButton(android.R.string.no, null);
+                    dlgD.setPositiveButton(R.string.OKAY, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            dismissFromPending();
+                        }
+                    }).create();
+                    dlgD.show();
                     return true;
 
                 case R.id.action_help:
@@ -297,7 +316,7 @@ public class PendingUserProfile extends AppCompatActivity {
                     pendingUserAge.setText(user.getAge().toString());
                     pendingSexText.setText(user.getSex());
                     pendingSexORText.setText(user.getSexualOrientation());
-                    pendingHeightText.setText(user.getHeight().toString() + "'");
+                    pendingHeightText.setText(user.getHeight().toString() + "in");
                     pendingUserLocation.setText(user.getLocation());
                     toolbar.setTitle(firstAndLastName);
                 }

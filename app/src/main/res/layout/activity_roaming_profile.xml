@@ -162,7 +162,7 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:text="Height"
-            android:paddingLeft="10dp"
+            android:paddingLeft="5dp"
             android:paddingTop="4dp"
             android:id="@+id/roamingHeightTextLabel"
             android:layout_below="@+id/roamingAgeTextLabel"
@@ -178,7 +178,7 @@
             android:layout_alignBottom="@+id/roamingHeightTextLabel"
             android:layout_below="@+id/roamingAgeContent"
             android:layout_toEndOf="@+id/roamingHeightTextLabel"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="3dp"
             android:layout_marginTop="2dp" />
 
 

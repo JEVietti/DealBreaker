@@ -166,7 +166,8 @@ public class UserNavigation extends AppCompatActivity {
     }
 
     private void deleteAccount(){
-
+        //Delete the account from the email registry, User Profile
+        finish();
     }
 
     private boolean NavItemSelected(MenuItem item) {

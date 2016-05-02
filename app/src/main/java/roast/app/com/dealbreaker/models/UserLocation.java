@@ -84,7 +84,7 @@ public class UserLocation extends Service implements LocationListener {
         mProviderName = getProviderName();
         if (isGPSEnabled) {
             //get run time permission
-            permissionsHelper = new PermissionsHelper(rootActivity, new PermissionsHelper.OnPermissionListener() {
+            permissionsHelper = new PermissionsHelper(rootActivity, "GPS", new PermissionsHelper.OnPermissionListener() {
                 @Override
                 public void OnPermissionChanged(boolean permissionGranted) {
                     Log.d("GPS Permission: ", "permissionGranted: " + permissionGranted);

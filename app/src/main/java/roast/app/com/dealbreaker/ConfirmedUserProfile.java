@@ -267,7 +267,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
                     confirmedUserAge.setText(user.getAge().toString());
                     confirmedSexText.setText(user.getSex());
                     confirmedSexORText.setText(user.getSexualOrientation());
-                    confirmedHeightText.setText(user.getHeight().toString() + "'");
+                    confirmedHeightText.setText(user.getHeight().toString() + "in");
                     confirmedUserLocation.setText(user.getLocation());
                     toolbar.setTitle(firstAndLastName);
                 }

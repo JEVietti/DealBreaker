@@ -189,7 +189,8 @@ public class RoamingProfile extends AppCompatActivity {
                     roamingAge.setText(user.getAge().toString());
                     roamingSexText.setText(user.getSex());
                     roamingUserLocation.setText(user.getLocation());
-                    roamingHeightText.setText(user.getHeight().toString());
+
+                    roamingHeightText.setText(user.getHeight().toString() + "in");
                     roamingSexORText.setText(user.getSexualOrientation());
                 }
 

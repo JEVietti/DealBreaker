@@ -178,7 +178,7 @@
             android:layout_alignBottom="@+id/confirmedHeightTextLabel"
             android:layout_below="@+id/confirmedAgeContent"
             android:layout_toEndOf="@+id/confirmedHeightTextLabel"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="3dp"
             android:layout_marginTop="2dp" />
 
 

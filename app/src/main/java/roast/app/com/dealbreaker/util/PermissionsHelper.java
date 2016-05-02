@@ -8,7 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import roast.app.com.dealbreaker.models.UserLocation;
 
 //Helper Class that Distributes Permissions for the Users due to API 23 (Marshmallow) new way
-// in handling permissions for location by requiring users to confirm GPS/Location based Permissions
+// in handling permissions for location by requiring users to confirm GPS/Location, and File based Permissions
 //directly, not just through the Manifest
 
 public class PermissionsHelper {
@@ -20,9 +20,10 @@ public class PermissionsHelper {
         void OnPermissionChanged(boolean permissionGranted);
     }
 
-    public PermissionsHelper(Activity activity, OnPermissionListener onPermissionListener) {
+    public PermissionsHelper(Activity activity,  String key, OnPermissionListener onPermissionListener) {
         mActivity = activity;
         setOnPermissionListener(onPermissionListener);
+        if(key.equals("GPS")){
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
 
@@ -32,6 +33,36 @@ public class PermissionsHelper {
             }
         } else {
             requestPermission(); //Permission must be requested
+        }
+        }
+        else if(key.equals("FILE")){
+            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+
+                // Permission is already available
+                if (mOnPermissionListener != null) {
+                    mOnPermissionListener.OnPermissionChanged(true);
+                }
+            } else {
+                requestWrite(); //Permission must be requested
+            }
+        }
+    }
+
+    private void requestWrite(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            ActivityCompat.requestPermissions(mActivity,  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
+
+        } else {
+
+            if (mOnPermissionListener != null) {
+                mOnPermissionListener.OnPermissionChanged(false);
+            }
+
+            // Request the permission. The result will be received in onRequestPermissionResult().
+            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
         }
     }
 

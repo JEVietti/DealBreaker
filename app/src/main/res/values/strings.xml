@@ -63,5 +63,7 @@
 
     <string name="ContactInfoLabel">Contact Info</string>
     <string name="GotItLabel">Got It!</string>
+    <string name="OKAY">Yes!</string>
+    <string name="Inches">"</string>
 
 </resources>

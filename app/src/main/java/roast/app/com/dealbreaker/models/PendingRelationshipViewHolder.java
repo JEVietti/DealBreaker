@@ -20,14 +20,14 @@ public class PendingRelationshipViewHolder extends RecyclerView.ViewHolder{
 
     public PendingRelationshipViewHolder(View itemView){
         super(itemView);
-        initialzeView(itemView);
+        initializeView(itemView);
 
     }
 
-    private void initialzeView(View itemView){
+    private void initializeView(View itemView){
         name = (TextView) itemView.findViewById(R.id.nameLinePending);
         attribute = (TextView) itemView.findViewById(R.id.attributeLinePending);
-        add = (Button) itemView.findViewById(R.id.addUserButton);
+        add = (Button) itemView.findViewById(R.id.pendingAddUserButton);
         imageView = (ImageView) itemView.findViewById(R.id.pendingUserImage);
     }
 

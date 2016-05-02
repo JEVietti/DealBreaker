@@ -32,6 +32,7 @@ import roast.app.com.dealbreaker.models.UserImages;
 import roast.app.com.dealbreaker.models.UserQualities;
 import roast.app.com.dealbreaker.util.Constants;
 import roast.app.com.dealbreaker.util.DownloadImages;
+import roast.app.com.dealbreaker.util.PermissionsHelper;
 import roast.app.com.dealbreaker.util.UploadFile;
 
 public class UpdateImage extends Fragment {
@@ -45,6 +46,9 @@ public class UpdateImage extends Fragment {
     private Button uploadImageButton, chooseFileButton;
     private static final int checkStatus = 1;
     private Intent intent;
+    private boolean isWriteEnabled;
+    private PermissionsHelper permissionsHelper;
+
 
     public static UpdateImage newInstance(String param) {
         UpdateImage updateImage = new UpdateImage();
@@ -102,21 +106,30 @@ public class UpdateImage extends Fragment {
             profilePicREF.removeEventListener(profilePicListener);
         }
     }
-    
+
     private void pickImage() {
         chooseFileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                profilePicREF.removeEventListener(profilePicListener);
-                intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), checkStatus);
+                permissionsHelper = new PermissionsHelper(getActivity(), "FILE" , new PermissionsHelper.OnPermissionListener() {
+                    @Override
+                    public void OnPermissionChanged(boolean permissionGranted) {
+                        if (permissionGranted) {
+                            profilePicREF.removeEventListener(profilePicListener);
+                            intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            intent.setType("image/*");
+                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), checkStatus);
+                        } else {
+                            Toast.makeText(getContext(), "This is required to upload images.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
     }
 
-    private void uploadImage(){
-       final UploadFile uploadFile = new UploadFile(userName);
+    private void uploadImage() {
+        final UploadFile uploadFile = new UploadFile(userName);
         uploadImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,6 +154,7 @@ public class UpdateImage extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == checkStatus && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 Uri selectedImage  = data.getData();

@@ -4,7 +4,7 @@
     android:padding="6dip" >
 
     <ImageView
-        android:id="@+id/pendingUserImage"
+        android:id="@+id/roamingUserImage"
         android:layout_width="75dp"
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
@@ -14,38 +14,37 @@
         android:layout_alignParentBottom="true" />
 
     <TextView
-        android:id="@+id/attributeLinePending"
+        android:id="@+id/attributeLineRoaming"
         android:layout_width="fill_parent"
         android:layout_height="26dip"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/pendingAddUserButton"
-        android:layout_toRightOf="@id/pendingUserImage"
+        android:layout_toLeftOf="@+id/roamingAddUserButton"
+        android:layout_toRightOf="@id/roamingUserImage"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="Attribute"
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/nameLinePending"
+        android:id="@+id/nameLineRoaming"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/attributeLinePending"
+        android:layout_above="@id/attributeLineRoaming"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_toLeftOf="@+id/pendingAddUserButton"
-        android:layout_toRightOf="@id/pendingUserImage"
+        android:layout_toLeftOf="@+id/roamingAddUserButton"
+        android:layout_toRightOf="@id/roamingUserImage"
         android:gravity="center_vertical"
         android:text="Name"
         android:textSize="16sp" />
 
     <Button
-        android:layout_width="70dp"
+        android:layout_width="50dp"
         android:layout_height="50dp"
         android:textStyle="bold"
-        android:textSize="14sp"
-        android:text="Confirm"
+        android:text="ADD"
         android:background="@drawable/login_button"
-        android:id="@+id/pendingAddUserButton"
+        android:id="@+id/roamingAddUserButton"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true" />
 
