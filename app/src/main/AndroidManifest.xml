@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="roast.app.com.dealbreaker" >
 
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
@@ -65,6 +66,15 @@
             android:value="@integer/google_play_services_version"/>
 
         <activity android:name=".ConfirmedUserProfile">
+        </activity>
+        <activity android:name=".InitialUserAttributes">
+        </activity>
+        <activity android:name=".InitialRoamingAttributes">
+        </activity>
+        <activity android:name=".InitialGetRoamingList">
+        </activity>
+        <activity android:name=".PreRoamingActivity">
+
         </activity>
         <activity android:name=".PendingUserProfile"></activity>
 

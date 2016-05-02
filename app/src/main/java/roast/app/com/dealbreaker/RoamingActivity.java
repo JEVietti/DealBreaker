@@ -12,6 +12,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.util.Constants;
@@ -25,7 +26,9 @@ import roast.app.com.dealbreaker.util.Constants;
 
 public class RoamingActivity extends AppCompatActivity {
     //Class variables
-    private ArrayList<String> matchedUsers;
+    private ArrayList<String> mUsersFromRoamingList, matchedUsers;
+    public Hashtable mUsersRoammingPhoto, mUsersRoamingInfo;
+    public String username;
     //If we don't want to implement swiping yet we could instead add buttons to the page
 
     private Button addButton, rejectButton, nextButton;
@@ -38,6 +41,10 @@ public class RoamingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roaming);
+        mUsersRoamingInfo = new Hashtable();
+        mUsersRoammingPhoto = new Hashtable();
+        grabUsersFromRoamingList();
+
     }
     //Query the data in a pipeline
     //Grab a subset of data at once then display and regrab the data
@@ -52,6 +59,89 @@ public class RoamingActivity extends AppCompatActivity {
     private void initializeView(){
 
     }
+
+    /* Grab the first set of users to the queue after the users register, here add an onDataChange listener */
+
+    // This  part should not go here, it should go in when the users set their attributes after they register. Will leave it here for now.
+    private void grabUsersFromRoamingList(){
+        mUsersFromRoamingList = new ArrayList<String>();
+
+        grabUserNames();
+
+    }
+
+    public void grabUserNames(){
+        Firebase roamingInfo = new Firebase(Constants.FIREBASE_URL_ROAMING);
+        Firebase roamingURL = new Firebase(Constants.FIREBASE_URL + "roamingList").child("Fresno, California, United States").child("male").child("straight").child("21-29");
+        Firebase userImages = new Firebase(Constants.FIREBASE_URL_IMAGES);
+
+        // Grab the list of users in the roamingList branch
+        roamingURL.addValueEventListener(new ValueEventListener() {
+
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    mUsersFromRoamingList.add(dataSnapshot.getKey().toString());
+                    Log.d("Roaming listener", dataSnapshot.getKey().toString());
+                }
+            }
+
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+
+        // Grab the roaming info for the children in the roaming branch
+        roamingInfo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // Loop through all of the users in the mUsersFromRoamingList
+                for (int i = 0; i < mUsersFromRoamingList.size(); i++){
+                    // Check to see if the postSnapshot user is in the mUsersFromRoamingList Array
+                    username = mUsersFromRoamingList.get(i);
+                    if (snapshot.child(username).exists()) {
+                        // If the user is found, add the userInfo to the mUserRoamingInfo Hash table.
+                        // The key will be the username and the value will be an user object
+                        User userInfo = snapshot.child(username).getValue(User.class);
+                        mUsersRoamingInfo.put(username, userInfo);
+                        Log.d("Roaming Info listener", snapshot.child(username).getValue().toString());
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        // Grab the picture for the children in the roaming branch
+        userImages.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // Loop through all of the users in the mUsersFromRoamingList
+                for (int i = 0; i < mUsersFromRoamingList.size(); i++){
+                    // Check to see if the postSnapshot user is in the mUsersFromRoamingList Array
+                    username = mUsersFromRoamingList.get(i);
+                    if (snapshot.child(username).exists()) {
+                        // If the user is found, add the userInfo to the mUserRoamingInfo Hash table.
+                        // The key will be the username and the value will be an user object
+                        String userImg = snapshot.child(username).child("profilePic").child("profilePic").getValue().toString();
+                        mUsersRoammingPhoto.put(username, userImg);
+                        Log.d("User image listener", userImg);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+    }
+
 /*
     private void listenRelationships(){
         confirmedUserName = new ArrayList<>();

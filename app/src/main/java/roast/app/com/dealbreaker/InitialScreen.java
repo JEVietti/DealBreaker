@@ -129,7 +129,7 @@ public class InitialScreen extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(InitialScreen.this, ResetPassword.class);
+                Intent intent = new Intent(InitialScreen.this, PreRoamingActivity.class);
                 startActivity(intent);
             }
         });

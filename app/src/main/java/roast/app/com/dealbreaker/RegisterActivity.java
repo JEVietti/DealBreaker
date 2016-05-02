@@ -76,7 +76,6 @@ public class RegisterActivity extends AppCompatActivity {
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Inside the register button");
 
                 String username = mUserName.getText().toString();
                 String userEmail = mEmail.getText().toString();
@@ -101,7 +100,6 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }
 
-                System.out.println("If statements");
                 if(!TextUtils.isEmpty(username)) {
                     if (!inUseUserName) {
                         if (isProperUserName(username)) {
@@ -161,7 +159,8 @@ public class RegisterActivity extends AppCompatActivity {
                         User user = new User(userName, userEmail);
                         userDatabase.child(userName).setValue(user);
 
-                        Intent intent = new Intent(RegisterActivity.this, InitialScreen.class);
+                        Intent intent = new Intent(RegisterActivity.this, InitialUserAttributes.class);
+                        intent.putExtra(getString(R.string.key_UserName), userName);
                         startActivity(intent);
 
                     }

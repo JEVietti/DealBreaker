@@ -22,6 +22,8 @@ public class ResetPassword extends AppCompatActivity {
     private TextView mErrorMessage;
     private Button mResetButton;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
