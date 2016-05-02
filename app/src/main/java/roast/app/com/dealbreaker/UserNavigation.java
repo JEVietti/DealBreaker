@@ -118,7 +118,8 @@ public class UserNavigation extends AppCompatActivity {
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
             case R.id.action_navigation_logout:
-                onBackPressed();
+                //onBackPressed();
+                finish();
                 return true;
             case R.id.action_navigation_delete_account:
                 AlertDialog.Builder dlgDel1 = new AlertDialog.Builder(this,R.style.AlertDialogTheme);

@@ -3,16 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_help"
         android:title="@string/action_help"
-        android:orderInCategory="102"
+        android:orderInCategory="101"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_contact_info_rel"
         android:title="@string/ContactInfoLabel"
-        android:orderInCategory="101" />
-
-    <item android:id="@+id/action_remove_rel"
-        android:title="@string/RemoveConfirmedUser"
         android:orderInCategory="100" />
+
     <item
         android:title="Remove"
         android:id="@+id/remove_user_icon"

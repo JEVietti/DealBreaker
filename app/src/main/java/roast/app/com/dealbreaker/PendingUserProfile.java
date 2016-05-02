@@ -170,7 +170,9 @@ public class PendingUserProfile extends AppCompatActivity {
             userInfoREF.removeEventListener(userInfoListener);
             profilePicREF.removeEventListener(profilePicListener);
             userQualitiesREF.removeEventListener(userQualitiesListener);
-            Log.d("Event Listeners Gone: ", "In User Profile Fragment!");
+            REFPendingUserPending.removeEventListener(pendingUSER);
+            pendingRootUserRef.removeEventListener(rejectedROOT);
+            Log.d("Event Listeners Gone: ", "In Pending User Profile Fragment!");
         }
     }
 
@@ -183,7 +185,9 @@ public class PendingUserProfile extends AppCompatActivity {
             userInfoREF.removeEventListener(userInfoListener);
             profilePicREF.removeEventListener(profilePicListener);
             userQualitiesREF.removeEventListener(userQualitiesListener);
-            Log.d("Event Listeners Gone: ", "In User Profile Fragment!");
+            REFPendingUserPending.removeEventListener(pendingUSER);
+            pendingRootUserRef.removeEventListener(rejectedROOT);
+            Log.d("Event Listeners Gone: ", "In Pending User Profile Fragment!");
         }
     }
 

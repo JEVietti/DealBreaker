@@ -1,7 +1,6 @@
 package roast.app.com.dealbreaker.fragments;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,10 +20,8 @@ import com.firebase.client.Query;
 import java.util.ArrayList;
 
 
-import roast.app.com.dealbreaker.ConfirmedUserProfile;
 import roast.app.com.dealbreaker.PendingUserProfile;
 import roast.app.com.dealbreaker.R;
-import roast.app.com.dealbreaker.models.PendingRelationshipAttribute;
 import roast.app.com.dealbreaker.models.PendingRelationshipViewHolder;
 import roast.app.com.dealbreaker.models.RelationshipAttribute;
 import roast.app.com.dealbreaker.models.User;
@@ -52,8 +49,8 @@ public class PendingRelationships extends Fragment {
     private ArrayList<User> pendingUserObjects;
     private View view;
     private Firebase refPendingUsersInfo, pendingFirebaseREF;
-    private Firebase refConfirmed, refSelectedConfirmed, removeREFPending, removeREFSelectedPending;
-    private ValueEventListener removeREFSelectedPendingListener;
+    private Firebase refRootConfirmed, refSelectedConfirmed, removeREFPending, removeREFSelectedPending;
+    private ValueEventListener removeREFSelectedPendingListener, removeREFPendingListener;
 
     public PendingRelationships() {
         // Required empty public constructor
@@ -120,32 +117,7 @@ public class PendingRelationships extends Fragment {
                             public void onClick(View v) {
                                 String key = pendingRecyclerAdapter.getRef(i).getKey();
                                 //Add to confirmed list
-                                refConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName).child(key);
-                                refSelectedConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(key).child(userName);
-                                removeREFPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(key);
-                                removeREFSelectedPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(key).child(userName);
-                                removeREFSelectedPendingListener =  removeREFSelectedPending.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        RelationshipAttribute userRA = dataSnapshot.getValue(RelationshipAttribute.class);
-                                        if (userRA != null) {
-                                            userRA.setMark(1);
-                                            refSelectedConfirmed.setValue(userRA);
-                                            PRA.setMark(1);
-                                            refConfirmed.setValue(PRA);
-                                            removeREFPending.removeValue();
-                                            removeREFSelectedPending.removeValue();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(FirebaseError firebaseError) {
-
-                                    }
-                                });
-
-                                //Delete from pending
-                                //removeREFPending.removeValue();
+                                confirmFromPending(key);
                             }
                         });
                     }
@@ -168,6 +140,51 @@ public class PendingRelationships extends Fragment {
             };
             recycViewPending.setAdapter(pendingRecyclerAdapter);
         }
+    }
+
+    private void confirmFromPending(String key){
+
+        refRootConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName).child(key);  //addREFCONFIRMED
+        refSelectedConfirmed = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(key).child(userName); //addREFPENDING
+        removeREFPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(key); //REFPendingUserPending
+        removeREFSelectedPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(key).child(userName); //REFRootUserPending
+
+        removeREFPendingListener = removeREFPending.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                RelationshipAttribute pendingRA = dataSnapshot.getValue(RelationshipAttribute.class);
+                if (pendingRA != null) {
+                    pendingRA.setMark(1);
+                    refSelectedConfirmed.setValue(pendingRA);
+                    removeREFPending.removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        removeREFSelectedPendingListener = removeREFSelectedPending.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                RelationshipAttribute rootRA = dataSnapshot.getValue(RelationshipAttribute.class);
+                if (rootRA != null) {
+                    rootRA.setMark(1);
+                    refRootConfirmed.setValue(rootRA);
+                    removeREFSelectedPending.removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+
     }
 
     private void listenerFunc(){
