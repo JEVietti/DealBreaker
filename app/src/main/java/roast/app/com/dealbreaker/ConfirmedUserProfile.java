@@ -38,7 +38,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
     private String key, profilePicURL;
     private DownloadImages downloadImages;
     private Firebase userInfoREF, userQualitiesREF, profilePicREF, confirmedRootUserRef, confirmedUserRef, rejectedRootREF, rejectedUserREF;
-    private ValueEventListener userInfoListener, userQualitiesListener, profilePicListener;
+    private ValueEventListener userInfoListener, userQualitiesListener, profilePicListener, confirmedROOTUserRefListener, confirmedUserRefListener;
     Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +161,12 @@ public class ConfirmedUserProfile extends AppCompatActivity {
             userInfoREF.removeEventListener(userInfoListener);
             profilePicREF.removeEventListener(profilePicListener);
             userQualitiesREF.removeEventListener(userQualitiesListener);
-            Log.d("Event Listeners Gone: ", "In User Profile Fragment!");
+            Log.d("Event Listeners Gone: ", "In Confirmed Profile!");
+        }
+        if(confirmedROOTUserRefListener != null && confirmedUserRefListener != null){
+            confirmedRootUserRef.removeEventListener(confirmedROOTUserRefListener);
+            confirmedUserRef.removeEventListener(confirmedUserRefListener);
+            Log.d("Event Listeners Gone: ", "In Confirmed Profile!");
         }
     }
     //Destroy the Listener if the App is destroyed/exited
@@ -174,6 +179,11 @@ public class ConfirmedUserProfile extends AppCompatActivity {
             profilePicREF.removeEventListener(profilePicListener);
             userQualitiesREF.removeEventListener(userQualitiesListener);
             Log.d("Event Listeners Gone: ", "In Confirmed Profile!");
+        }
+
+        if(confirmedROOTUserRefListener != null && confirmedUserRefListener != null){
+             confirmedRootUserRef.removeEventListener(confirmedROOTUserRefListener);
+             confirmedUserRef.removeEventListener(confirmedUserRefListener);
         }
     }
 
@@ -213,7 +223,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
         rejectedRootREF = new Firebase(Constants.FIREBASE_URL_REJECTED).child(rootUserName).child(userName);
         rejectedUserREF = new Firebase(Constants.FIREBASE_URL_REJECTED).child(userName).child(rootUserName);
         //get their Relationship Attribute Objects
-        confirmedRootUserRef.addValueEventListener(new ValueEventListener() {
+        confirmedROOTUserRefListener = confirmedRootUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 RelationshipAttribute rootRelationshipAttribute = dataSnapshot.getValue(RelationshipAttribute.class);
@@ -230,7 +240,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
             }
         });
 
-        confirmedUserRef.addValueEventListener(new ValueEventListener() {
+       confirmedUserRefListener = confirmedUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 RelationshipAttribute userRelationshipAttribute = dataSnapshot.getValue(RelationshipAttribute.class);
