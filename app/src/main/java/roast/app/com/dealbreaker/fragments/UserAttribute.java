@@ -423,7 +423,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             roamingURL = roamingURL.child("60+");
         }
 
-        roamingURL.removeValue();
+        roamingURL.child(username).removeValue();
     }
 
     // Add users to the roming list
@@ -449,7 +449,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             roamingURL.child("50-59").child(username).setValue(0);
         }
         else {
-            roamingURL.child("60+").child(username).setValue(0);
+            roamingURL.child("60+").child(username).child("mark").setValue(0);
         }
     }
 }

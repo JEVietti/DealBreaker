@@ -14,6 +14,7 @@ import com.firebase.client.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import roast.app.com.dealbreaker.models.MovingUsers;
 import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.util.Constants;
 
@@ -25,6 +26,19 @@ import roast.app.com.dealbreaker.util.Constants;
 * */
 
 public class RoamingActivity extends AppCompatActivity {
+    private int numOfUsers;
+    String userName = "bit";
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_roaming);
+    }
+
+
+
+
+
+    /*
     //Class variables
     private ArrayList<String> mUsersFromRoamingList, matchedUsers;
     public Hashtable mUsersRoammingPhoto, mUsersRoamingInfo;
@@ -60,7 +74,7 @@ public class RoamingActivity extends AppCompatActivity {
 
     }
 
-    /* Grab the first set of users to the queue after the users register, here add an onDataChange listener */
+     Grab the first set of users to the queue after the users register, here add an onDataChange listener
 
     // This  part should not go here, it should go in when the users set their attributes after they register. Will leave it here for now.
     private void grabUsersFromRoamingList(){

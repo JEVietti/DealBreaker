@@ -71,11 +71,6 @@
         </activity>
         <activity android:name=".InitialRoamingAttributes">
         </activity>
-        <activity android:name=".InitialGetRoamingList">
-        </activity>
-        <activity android:name=".PreRoamingActivity">
-
-        </activity>
         <activity android:name=".PendingUserProfile"></activity>
 
         <activity android:name=".RoamingProfile"></activity>

@@ -21,6 +21,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import roast.app.com.dealbreaker.models.UpdatingQueueBranch;
+import roast.app.com.dealbreaker.models.UpdatingViewingBranch;
 import roast.app.com.dealbreaker.util.Constants;
 
 public class InitialScreen extends AppCompatActivity {
@@ -33,6 +35,7 @@ public class InitialScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         System.out.println("test");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial_screen);
@@ -129,7 +132,7 @@ public class InitialScreen extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(InitialScreen.this, PreRoamingActivity.class);
+                Intent intent = new Intent(InitialScreen.this, RoamingActivity.class);
                 startActivity(intent);
             }
         });

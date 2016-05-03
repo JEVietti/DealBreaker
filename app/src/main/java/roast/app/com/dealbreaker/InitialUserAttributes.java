@@ -28,6 +28,7 @@ import roast.app.com.dealbreaker.models.UserLocation;
 import roast.app.com.dealbreaker.util.Constants;
 
 public class InitialUserAttributes extends AppCompatActivity {
+
     public String mFirstName, mLastName, mBirthDay, mGender, mSexualOrientation, mHeight, mLocation;
     public Long mAge;
     private EditText firstNameUserText, lastNameUserText, heightUserText, sexualOrientationUserText;
@@ -43,6 +44,7 @@ public class InitialUserAttributes extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_intial_user_info);
         firstNameUserText=(EditText) findViewById(R.id.et_user_first_name);
         lastNameUserText=(EditText) findViewById(R.id.et_user_last_name);
@@ -58,25 +60,11 @@ public class InitialUserAttributes extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("User Info");
 
-
+        // Grab intent
         Bundle arg = getIntent().getExtras();
         userName = arg.getString(getString(R.string.key_UserName));
 
-        Firebase test = new Firebase(Constants.FIREBASE_URL);
-        test.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                System.out.println("success user");
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("Failure");
-            }
-        });
-
-
-
+        // Grab the users current location
         retrieveLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,6 +73,7 @@ public class InitialUserAttributes extends AppCompatActivity {
             }
         });
 
+        // Run when the set button is pressed
         sendUserValues.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,6 +93,7 @@ public class InitialUserAttributes extends AppCompatActivity {
 
     }
 
+    // Grab the user's location
     private void getUserLocation(){
         mLocation = "Fresno, California, United States";
         /*UserLocation mUserLocation = new UserLocation(context, InitialUserAttributes.this);
@@ -116,6 +106,7 @@ public class InitialUserAttributes extends AppCompatActivity {
         }*/
     }
 
+    // Grab the data from the activity and assign the data to the activity members
     private void grabData(){
         mFirstName = firstNameUserText.getText().toString();
         mLastName = lastNameUserText.getText().toString();
@@ -137,6 +128,7 @@ public class InitialUserAttributes extends AppCompatActivity {
         mHeight = heightUserText.getText().toString();
     }
 
+    // Check if the data is valid. Returns true when valid.
     public Boolean isDataValid(){
         if(mFirstName.isEmpty()){
             Toast.makeText(this,"First name cannot be empty!", Toast.LENGTH_LONG).show();
@@ -170,6 +162,7 @@ public class InitialUserAttributes extends AppCompatActivity {
         return true;
     }
 
+    // Check to see if the date entered is a valid format.
     public boolean isThisDateValid(String dateToValidate, String dateFormat){
         Date date;
         if(dateToValidate == null){
@@ -200,6 +193,7 @@ public class InitialUserAttributes extends AppCompatActivity {
         return current.getTime() >= date.getTime();  //current date < entered date
     }
 
+    // Set the user's data to the Firebase user info branch
     public void setData(){
         Firebase usersURL = new Firebase (Constants.FIREBASE_URL_USERS).child(userName).child(Constants.FIREBASE_LOC_USER_INFO);
 
@@ -214,7 +208,7 @@ public class InitialUserAttributes extends AppCompatActivity {
         usersURL.child("userName").setValue(userName);
     }
 
-    // Add users to the roming list
+    // Add users to the roaming list
     public void addUserToRoamingList(){
         Firebase roamingURL = new Firebase(Constants.FIREBASE_URL + "roamingList").child(mLocation).child(mGender).child(mSexualOrientation);
 
@@ -222,22 +216,22 @@ public class InitialUserAttributes extends AppCompatActivity {
 
         // If statements to check which branch the user will fall under.
         if(userAge <= 20){
-            roamingURL.child("18-20").child(userName).setValue(0);
+            roamingURL.child("18-20").child(userName).child("mark").setValue(0);
         }
         else if(userAge >= 21 && userAge <= 29){
-            roamingURL.child("21-29").child(userName).setValue(0);
+            roamingURL.child("21-29").child(userName).child("mark").setValue(0);
         }
         else if(userAge >= 30 && userAge <= 39){
-            roamingURL.child("30-39").child(userName).setValue(0);
+            roamingURL.child("30-39").child(userName).child("mark").setValue(0);
         }
         else if(userAge >= 40 && userAge <= 49){
-            roamingURL.child("40-49").child(userName).setValue(0);
+            roamingURL.child("40-49").child(userName).child("mark").setValue(0);
         }
         else if(userAge >= 50 && userAge <= 59){
-            roamingURL.child("50-59").child(userName).setValue(0);
+            roamingURL.child("50-59").child(userName).child("mark").setValue(0);
         }
         else {
-            roamingURL.child("60+").child(userName).setValue(0);
+            roamingURL.child("60+").child(userName).child("mark").setValue(0);
         }
     }
 }
