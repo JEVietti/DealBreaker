@@ -52,6 +52,7 @@ public class UserNavigation extends AppCompatActivity {
     private NavigationView nvDrawer;
     private int state;
     private ImageView headerImageView;
+    private EditText edtPassword, edtEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -273,13 +274,12 @@ public class UserNavigation extends AppCompatActivity {
 
     public void showOnDeleteDialog() {
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.delete_account_dialog, null);
         dialogBuilder.setView(dialogView);
-
-        final EditText edtPassword = (EditText) dialogView.findViewById(R.id.editDialogPassword);
-        final EditText edtEmail = (EditText) dialogView.findViewById(R.id.editDialogEmail);
+        edtPassword = (EditText) dialogView.findViewById(R.id.editDialogPassword);
+        edtEmail = (EditText) dialogView.findViewById(R.id.editDialogEmail);
         dialogBuilder.setTitle("Delete Account");
         dialogBuilder.setMessage("Enter your password below");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {

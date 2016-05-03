@@ -132,7 +132,7 @@
             android:textStyle="bold"
             android:textColor="@color/white"
             android:layout_marginTop="25dp"
-            android:layout_below="@+id/locationTextValue"
+            android:layout_below="@+id/initialLocationTextValue"
             android:layout_centerHorizontal="true" />
 
         <RadioGroup
@@ -201,7 +201,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:hint="Your Location ->"
             android:textColorHint="@color/red"
-            android:id="@+id/locationTextValue"
+            android:id="@+id/initialLocationTextValue"
             android:layout_alignTop="@+id/locationTextLabel"
             android:layout_alignStart="@+id/birthDateText" />
 
@@ -211,8 +211,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ic_location"
             android:id="@+id/locationButton"
-            android:layout_alignTop="@+id/locationTextValue"
-            android:layout_toEndOf="@+id/locationTextValue"
+            android:layout_alignTop="@+id/initialLocationTextValue"
+            android:layout_toEndOf="@+id/initialLocationTextValue"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="-12dp" />
 

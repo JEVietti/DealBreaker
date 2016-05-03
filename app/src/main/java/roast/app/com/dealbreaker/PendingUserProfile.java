@@ -117,7 +117,7 @@ public class PendingUserProfile extends AppCompatActivity {
                     //Add a AlertDialog
                     AlertDialog.Builder dlgD = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
                     dlgD.setTitle("Dismiss Request");
-                    dlgD.setMessage("Would you like to reject this User's relationship request?");
+                    dlgD.setMessage("Would you like to delete your request?");
                     dlgD.setNegativeButton(android.R.string.no, null);
                     dlgD.setPositiveButton(R.string.OKAY, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {

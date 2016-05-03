@@ -29,7 +29,7 @@ import roast.app.com.dealbreaker.util.Constants;
 
 public class InitialUserAttributes extends AppCompatActivity {
 
-    public String mFirstName, mLastName, mBirthDay, mGender, mSexualOrientation, mHeight, mLocation;
+    public String mFirstName, mLastName, mBirthDay, mGender, mSexualOrientation, mHeight, mLocation, locationUserValue;
     public Long mAge;
     private EditText firstNameUserText, lastNameUserText, heightUserText, sexualOrientationUserText;
     private EditText birthDateText;
@@ -54,7 +54,7 @@ public class InitialUserAttributes extends AppCompatActivity {
         heightUserText=(EditText) findViewById(R.id.et_user_height);
         sexualOrientationUserText=(EditText)findViewById(R.id.et_user_sexual_or);
         birthDateText = (EditText)findViewById(R.id.birthDateText);
-        locationText = (TextView) findViewById(R.id.locationTextValue);
+        locationText = (TextView) findViewById(R.id.initialLocationTextValue);
         sendUserValues = (Button) findViewById(R.id.user_attribute_finished_button);
         retrieveLocationButton = (Button) findViewById(R.id.locationButton);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -69,7 +69,7 @@ public class InitialUserAttributes extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getUserLocation();
-                locationText.setText(mLocation);
+                locationText.setText(locationUserValue);
             }
         });
 
@@ -95,15 +95,13 @@ public class InitialUserAttributes extends AppCompatActivity {
 
     // Grab the user's location
     private void getUserLocation(){
-        mLocation = "Fresno, California, United States";
-        /*UserLocation mUserLocation = new UserLocation(context, InitialUserAttributes.this);
+        UserLocation mUserLocation = new UserLocation(getApplicationContext(), InitialUserAttributes.this);
         if(mUserLocation.isLocationPossible()){
-            // mLocation = mUserLocation.getUserLocation();
-            mLocation = "Fresno, California, United States";
-            if(mLocation != null){
-                Log.d("Location in USER", mLocation);
+            locationUserValue = mUserLocation.getUserLocation();
+            if(locationUserValue != null){
+                Log.d("Location in USER", locationUserValue);
             }
-        }*/
+        }
     }
 
     // Grab the data from the activity and assign the data to the activity members
