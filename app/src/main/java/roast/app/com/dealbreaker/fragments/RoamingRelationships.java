@@ -54,6 +54,7 @@ public class RoamingRelationships extends AppCompatActivity {
     private View view;
     private Firebase refRoamingUsersInfo, roamingFirebaseREF;
     private Firebase refPending, refSelectedPending, removeREFRoaming, removeREFSelectedRoaming;
+    private Firebase refRejected, refSelectedRejected;
     private ValueEventListener removeREFRoamingListener, removeREFSelectedRoamingListener;
     private Firebase refQueue, refViewing;
     public Hashtable mRoamingUsers;
@@ -70,7 +71,7 @@ public class RoamingRelationships extends AppCompatActivity {
             PreRoaming preRoaming = new PreRoaming(userName);
             preRoaming.grabInfo();
             recyclerPage();
-            //listenerFunc();
+            listenerFunc();
 
         }
     }
@@ -97,8 +98,8 @@ public class RoamingRelationships extends AppCompatActivity {
                 @Override
                 protected void populateViewHolder(RoamingViewHolder roamingRelationshipViewHolder, final RelationshipAttribute PRA, final int i) {
                     String listedUserName = roamingRecyclerAdapter.getRef(i).getKey();
-                    currentProfilePic(listedUserName);
-                    updateUserInfo(listedUserName);
+                    //currentProfilePic(listedUserName);
+                    //updateUserInfo(listedUserName);
                     DownloadImages imageDownload = new DownloadImages(roamingRelationshipViewHolder.imageView, RoamingRelationships.this);
                     imageDownload.execute(PRA.getProfilePic());
                     roamingRelationshipViewHolder.name.setText(PRA.getFirstName() + " " + PRA.getLastName() + "      Age: " + PRA.getAge());
@@ -149,11 +150,39 @@ public class RoamingRelationships extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 RelationshipAttribute selectedRA = new RelationshipAttribute();
                 RelationshipAttribute rootRA = new RelationshipAttribute();
-                    selectedRA.setMark(0);
-                    rootRA.setMark(1);
-                    refPending.setValue(rootRA);
-                    refSelectedPending.setValue(selectedRA);
-                    removeREFRoaming.removeValue();
+                selectedRA.setMark(0);
+                rootRA.setMark(1);
+                refPending.setValue(rootRA);
+                refSelectedPending.setValue(selectedRA);
+                removeREFRoaming.removeValue();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void addToRejected(String key){
+
+        refRejected = new Firebase(Constants.FIREBASE_URL_REJECTED).child(userName).child(key);
+        refSelectedRejected = new Firebase(Constants.FIREBASE_URL_REJECTED).child(key).child(userName);
+        removeREFRoaming = new Firebase(Constants.FIREBASE_URL_VIEWING_QUEUE).child(userName).child(key);
+
+
+        removeREFRoamingListener = removeREFRoaming.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                RelationshipAttribute selectedRA = new RelationshipAttribute();
+                RelationshipAttribute rootRA = new RelationshipAttribute();
+                selectedRA.setMark(0);
+                rootRA.setMark(1);
+                refRejected.setValue(rootRA);
+                refSelectedRejected.setValue(selectedRA);
+                removeREFRoaming.removeValue();
             }
 
             @Override
@@ -249,35 +278,9 @@ public class RoamingRelationships extends AppCompatActivity {
             removeREFSelectedRoaming.removeEventListener(removeREFSelectedRoamingListener);
         }
     }
-/*
-    public void listener(Firebase firebaseREF)
-    {
-        //class list users  -- list of users
-        final ArrayList<User> users = new ArrayList<>();
 
-        firebaseREF.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    for(DataSnapshot user: dataSnapshot.getChildren()){
-                        for(DataSnapshot programSnapshot :user.getChildren()) {
-                            final User us = programSnapshot.getValue(User.class);
-                            users.add(us);
-                        }
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
-*/
-    /* This allows for the Images updated by the listed user at any time to be updated directly to the roaming list
-    * */
+    /* This allows for the Images updated by the listed user at any time to be updated directly to the pending list
+  * */
     private void currentProfilePic(final String listedUser){
         Firebase listedUserImagesREF = new Firebase(Constants.FIREBASE_URL_IMAGES).child(listedUser).child(Constants.FIREBASE_LOC_PROFILE_PIC);
         listedUserImagesREF.addValueEventListener(new ValueEventListener() {
@@ -299,7 +302,7 @@ public class RoamingRelationships extends AppCompatActivity {
 
     }
 
-    /* This allows for any pertinent User information updated by the listed user at any time to be updated directly to the roaming list
+    /* This allows for any pertinent User information updated by the listed user at any time to be updated directly to the pending list
     */
     private void updateUserInfo(final String listedUser){
         Firebase listedUserInfo = new Firebase(Constants.FIREBASE_URL_USERS).child(listedUser).child(Constants.FIREBASE_LOC_USER_INFO);
@@ -331,62 +334,4 @@ public class RoamingRelationships extends AppCompatActivity {
             }
         });
     }
-
-    /*
-    private void getUsersRoamingInfo(){
-
-    }
-
-    private void populateQueue(){
-
-    }
-
-    public void grabUsersFromList(){
-
-        Firebase roamingURL = new Firebase(Constants.FIREBASE_URL + "roamingList").child(mLocation).child(mGenderWanted).child(mSexualOrientationWanted);
-
-        int userAge = Integer.parseInt(mAgeWanted);
-
-        // If statements to check which branch the user will fall under.
-        if(userAge <= 20){
-            roamingURL = roamingURL.child("18-20");
-        }
-        else if(userAge >= 21 && userAge <= 29){
-            roamingURL = roamingURL.child("21-29");
-        }
-        else if(userAge >= 30 && userAge <= 39){
-            roamingURL = roamingURL.child("30-39");
-        }
-        else if(userAge >= 40 && userAge <= 49){
-            roamingURL = roamingURL.child("40-49");
-        }
-        else if(userAge >= 50 && userAge <= 59){
-            roamingURL = roamingURL.child("50-59");
-        }
-        else {
-            roamingURL = roamingURL.child("60+");
-        }
-
-        roamingURL.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int index = 0;
-                for(DataSnapshot currentSnapShot : dataSnapshot.getChildren()){
-                    mRoamingUsers.put(currentSnapShot.getKey().toString(), currentSnapShot.getKey().toString());
-                    index++;
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
-
-    private void populateViewingList(){
-
-    }
-    */
-
 }

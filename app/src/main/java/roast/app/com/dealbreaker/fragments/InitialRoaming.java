@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import roast.app.com.dealbreaker.R;
 import roast.app.com.dealbreaker.RoamingActivity;
+import roast.app.com.dealbreaker.models.UpdatingQueueBranch;
+import roast.app.com.dealbreaker.models.UpdatingViewingBranch;
 
 
 public class InitialRoaming extends Fragment {
@@ -39,6 +41,9 @@ public class InitialRoaming extends Fragment {
         if (getArguments() != null) {
             userName = getArguments().getString("userName");
         }
+
+        UpdatingQueueBranch queueBranch = new UpdatingQueueBranch(userName);
+        queueBranch.updateQueue();
     }
 
     @Override
@@ -54,6 +59,9 @@ public class InitialRoaming extends Fragment {
         beginRoaming.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UpdatingViewingBranch viewingBranch = new UpdatingViewingBranch(userName);
+                viewingBranch.updateView();
+
                 Intent intent = new Intent(getActivity(),RoamingRelationships.class);
                 intent.putExtra("userName", userName);
                 startActivity(intent);
