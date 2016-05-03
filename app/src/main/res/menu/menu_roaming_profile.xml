@@ -7,7 +7,7 @@
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_roaming_send_request"
-        android:title="Confirm"
+        android:title="Request"
         android:orderInCategory="100"
         app:showAsAction="never"/>
 

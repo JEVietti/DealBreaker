@@ -262,9 +262,9 @@ public class RoamingProfile extends AppCompatActivity {
 
     //Add the users into their corresponding rejected list pile and remove them from the queue/viewing
     private void rejectRoaming(){
-        roamingRootUserRef = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(rootUserName).child(userName);
+        roamingRootUserRef = new Firebase(Constants.FIREBASE_URL_VIEWING_QUEUE).child(rootUserName).child(userName);
 
-        roamingUserRef = new Firebase(Constants.FIREBASE_URL_CONFIRMED_RELATIONSHIPS).child(userName).child(rootUserName);
+        //roamingUserRef = new Firebase(Constants.FIREBASE_URL_VIEWING_QUEUE).child(userName).child(rootUserName);
         //Add the Users to their respective rejected lists
         rejectedRootREF = new Firebase(Constants.FIREBASE_URL_REJECTED).child(rootUserName).child(userName);
         rejectedUserREF = new Firebase(Constants.FIREBASE_URL_REJECTED).child(userName).child(rootUserName);
@@ -272,12 +272,11 @@ public class RoamingProfile extends AppCompatActivity {
         roamingRootUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                RelationshipAttribute rootRelationshipAttribute = dataSnapshot.getValue(RelationshipAttribute.class);
-                if(rootRelationshipAttribute != null){
-                    rootRelationshipAttribute.setMark(0);
+                RelationshipAttribute rootRelationshipAttribute = new RelationshipAttribute();
+                    rootRelationshipAttribute.setMark(1);
                     rejectedUserREF.setValue(rootRelationshipAttribute);
+                    rejectedRootREF.setValue(rootRelationshipAttribute);
                     roamingRootUserRef.removeValue();
-                }
             }
 
             @Override
@@ -286,22 +285,6 @@ public class RoamingProfile extends AppCompatActivity {
             }
         });
 
-        roamingUserRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                RelationshipAttribute userRelationshipAttribute = dataSnapshot.getValue(RelationshipAttribute.class);
-                if (userRelationshipAttribute != null) {
-                    userRelationshipAttribute.setMark(0);
-                    rejectedRootREF.setValue(userRelationshipAttribute);
-                    roamingUserRef.removeValue();
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
 
     }
 
