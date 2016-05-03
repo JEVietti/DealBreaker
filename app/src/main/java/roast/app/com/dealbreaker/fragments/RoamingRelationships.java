@@ -1,11 +1,12 @@
 package roast.app.com.dealbreaker.fragments;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,18 +20,18 @@ import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.firebase.client.Query;
 
 import java.util.ArrayList;
-
+import java.util.Hashtable;
 
 
 import roast.app.com.dealbreaker.RoamingProfile;
 import roast.app.com.dealbreaker.R;
 import roast.app.com.dealbreaker.models.RelationshipAttribute;
 import roast.app.com.dealbreaker.models.RoamingViewHolder;
-import roast.app.com.dealbreaker.models.RelationshipAttribute;
 import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.models.UserImages;
 import roast.app.com.dealbreaker.util.Constants;
 import roast.app.com.dealbreaker.util.DownloadImages;
+import roast.app.com.dealbreaker.util.PreRoaming;
 
 
 //This class will be used to Show the status of the Roaming Relationships
@@ -41,11 +42,11 @@ import roast.app.com.dealbreaker.util.DownloadImages;
 //May also be using a List or Recycler view from the Firebase-UI: https://github.com/firebase/FirebaseUI-Android
 //https://www.learn2crack.com/2016/02/custom-swipe-recyclerview.html
 // http://stackoverflow.com/questions/24885223/why-doesnt-recyclerview-have-onitemclicklistener-and-how-recyclerview-is-dif/24933117#24933117
-public class RoamingRelationships extends Fragment {
+public class RoamingRelationships extends AppCompatActivity {
 
     FirebaseRecyclerAdapter<RelationshipAttribute, RoamingViewHolder> roamingRecyclerAdapter;
 
-    private RecyclerView recycViewRoaming;
+    private RecyclerView recyclerViewRoaming;
     private String userName;
     private ArrayList<String> RoamingUsername;
     private Query refRoamingUser, getRoamingUsersInfo;
@@ -53,49 +54,38 @@ public class RoamingRelationships extends Fragment {
     private View view;
     private Firebase refRoamingUsersInfo, roamingFirebaseREF;
     private Firebase refPending, refSelectedPending, removeREFRoaming, removeREFSelectedRoaming;
-    private ValueEventListener removeRefRoamingListener;
-
-    public RoamingRelationships() {
-        // Required empty public constructor
-    }
-
-    public static RoamingRelationships newInstance(String username) {
-        RoamingRelationships fragment = new RoamingRelationships();
-        Bundle args = new Bundle();
-        args.putString("userName", username);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private ValueEventListener removeREFRoamingListener, removeREFSelectedRoamingListener;
+    private Firebase refQueue, refViewing;
+    public Hashtable mRoamingUsers;
+    private Toolbar toolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            userName = getArguments().getString("userName");
+        setContentView(R.layout.fragment_roaming_relationships);
+       // initializeView();
+        if(getIntent().getExtras() != null) {
+            Bundle arg = getIntent().getExtras();
+            userName = arg.getString(getString(R.string.key_UserName));
+            PreRoaming preRoaming = new PreRoaming(userName);
+            preRoaming.grabInfo();
+            recyclerPage();
+            //listenerFunc();
+
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        view = inflater.inflate(R.layout.fragment_roaming_relationships, container, false);
 
-        recyclerPage(view);
-        listenerFunc();
-
-        return view;
-    }
-
-    private void recyclerPage(View rootView) {
-        roamingFirebaseREF = new Firebase(Constants.FIREBASE_URL_QUEUE).child(userName);
+    private void recyclerPage() {
+        roamingFirebaseREF = new Firebase(Constants.FIREBASE_URL_VIEWING_QUEUE).child(userName);
         //LinearLayoutManager RLM = new LinearLayoutManager(getActivity());
         //RLM.setOrientation(LinearLayoutManager.VERTICAL);
 
         getRoamingUsersInfo = roamingFirebaseREF.orderByChild("lastName");
-        recycViewRoaming = (RecyclerView) rootView.findViewById(R.id.roaming_relationship_recycler);
+        recyclerViewRoaming = (RecyclerView) findViewById(R.id.roaming_relationship_recycler);
 
-        recycViewRoaming.setHasFixedSize(true);
-        recycViewRoaming.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewRoaming.setHasFixedSize(true);
+        recyclerViewRoaming.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         if (getRoamingUsersInfo != null) {
             roamingRecyclerAdapter = new FirebaseRecyclerAdapter<RelationshipAttribute, RoamingViewHolder>(
@@ -109,7 +99,7 @@ public class RoamingRelationships extends Fragment {
                     String listedUserName = roamingRecyclerAdapter.getRef(i).getKey();
                     currentProfilePic(listedUserName);
                     updateUserInfo(listedUserName);
-                    DownloadImages imageDownload = new DownloadImages(roamingRelationshipViewHolder.imageView, getActivity());
+                    DownloadImages imageDownload = new DownloadImages(roamingRelationshipViewHolder.imageView, RoamingRelationships.this);
                     imageDownload.execute(PRA.getProfilePic());
                     roamingRelationshipViewHolder.name.setText(PRA.getFirstName() + " " + PRA.getLastName() + "      Age: " + PRA.getAge());
                     roamingRelationshipViewHolder.attribute.setText(PRA.getLocation() + "   SO:" + PRA.getSexualOrientation());
@@ -121,35 +111,7 @@ public class RoamingRelationships extends Fragment {
                             public void onClick(View v) {
                                 String key = roamingRecyclerAdapter.getRef(i).getKey();
                                 //Add to pending list
-                                refPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(key);
-                                refSelectedPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(key).child(userName);
-                                removeREFRoaming = new Firebase(Constants.FIREBASE_URL_QUEUE).child(userName).child(key);
-                                removeREFSelectedRoaming = new Firebase(Constants.FIREBASE_URL_QUEUE).child(key).child(userName);
-                                removeRefRoamingListener = removeREFSelectedRoaming.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        RelationshipAttribute userRA = dataSnapshot.getValue(RelationshipAttribute.class);
-                                        if (userRA != null) {
-                                            userRA.setMark(1);
-                                            refSelectedPending.setValue(userRA);
-                                            PRA.setMark(1);
-                                            refPending.setValue(PRA);
-                                            removeREFRoaming.removeValue();
-                                            removeREFSelectedRoaming.removeValue();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(FirebaseError firebaseError) {
-
-                                    }
-                                });
-
-                                //Delete from roaming
-
-
-                                removeREFRoaming.removeValue();
-
+                                addToPending(key);
                             }
                         });
                     }
@@ -158,7 +120,7 @@ public class RoamingRelationships extends Fragment {
                     roamingRelationshipViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent selectedProfile = new Intent(getActivity(), RoamingProfile.class);
+                            Intent selectedProfile = new Intent(RoamingRelationships.this, RoamingProfile.class);
                             selectedProfile.putExtra("userName", roamingRecyclerAdapter.getRef(i).getKey());
                             selectedProfile.putExtra("rootUser", userName);
                             startActivity(selectedProfile);
@@ -166,19 +128,53 @@ public class RoamingRelationships extends Fragment {
                     });
                 }
             };
-            recycViewRoaming.setAdapter(roamingRecyclerAdapter);
+            recyclerViewRoaming.setAdapter(roamingRecyclerAdapter);
         }
     }
 
+    private void initializeView(){
+        //toolbar = (Toolbar) findViewById(R.id.roaming_relationship_toolbar);
+        //toolbar.setTitle("Roaming");
+    }
+
+    private void addToPending(String key){
+
+        refPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(key);
+        refSelectedPending = new Firebase(Constants.FIREBASE_URL_PENDING).child(key).child(userName);
+        removeREFRoaming = new Firebase(Constants.FIREBASE_URL_VIEWING_QUEUE).child(userName).child(key);
+
+
+        removeREFRoamingListener = removeREFRoaming.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                RelationshipAttribute selectedRA = new RelationshipAttribute();
+                RelationshipAttribute rootRA = new RelationshipAttribute();
+                    selectedRA.setMark(0);
+                    rootRA.setMark(1);
+                    refPending.setValue(rootRA);
+                    refSelectedPending.setValue(selectedRA);
+                    removeREFRoaming.removeValue();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+    }
+
+
     private void listenerFunc() {
-        Firebase firebaseREF = new Firebase(Constants.FIREBASE_URL_QUEUE).child(userName);
+        Firebase firebaseREF = new Firebase(Constants.FIREBASE_URL_VIEWING_QUEUE).child(userName);
         RoamingUsername = new ArrayList<>();
 
         refRoamingUser = firebaseREF.orderByKey();
         refRoamingUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                recyclerPage(view);
+                //recyclerPage();
                 for (DataSnapshot childUsers : dataSnapshot.getChildren()) {
 
                     String name = childUsers.getKey();
@@ -200,9 +196,7 @@ public class RoamingRelationships extends Fragment {
 
     }
 
-    private void getRoamingUserRelationshipInfo() {
 
-    }
 
     private void getUserInfoRoaming() {
         roamingUserObjects = new ArrayList<>();
@@ -219,7 +213,7 @@ public class RoamingRelationships extends Fragment {
 
                     }
 
-                    recyclerPage(view);
+                    recyclerPage();
                 }
 
                 @Override
@@ -235,25 +229,27 @@ public class RoamingRelationships extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        recyclerPage(view);
+        recyclerPage();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (removeRefRoamingListener != null){
-            removeREFSelectedRoaming.removeEventListener(removeRefRoamingListener);
-       }
+        if (removeREFRoamingListener != null && removeREFSelectedRoamingListener != null) {
+            removeREFSelectedRoaming.removeEventListener(removeREFRoamingListener);
+            removeREFSelectedRoaming.removeEventListener(removeREFSelectedRoamingListener);
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (removeRefRoamingListener != null) {
-            removeREFSelectedRoaming.removeEventListener(removeRefRoamingListener);
+        if (removeREFRoamingListener != null && removeREFSelectedRoamingListener != null) {
+            removeREFSelectedRoaming.removeEventListener(removeREFRoamingListener);
+            removeREFSelectedRoaming.removeEventListener(removeREFSelectedRoamingListener);
         }
     }
-
+/*
     public void listener(Firebase firebaseREF)
     {
         //class list users  -- list of users
@@ -279,7 +275,7 @@ public class RoamingRelationships extends Fragment {
             }
         });
     }
-
+*/
     /* This allows for the Images updated by the listed user at any time to be updated directly to the roaming list
     * */
     private void currentProfilePic(final String listedUser){
@@ -335,5 +331,62 @@ public class RoamingRelationships extends Fragment {
             }
         });
     }
+
+    /*
+    private void getUsersRoamingInfo(){
+
+    }
+
+    private void populateQueue(){
+
+    }
+
+    public void grabUsersFromList(){
+
+        Firebase roamingURL = new Firebase(Constants.FIREBASE_URL + "roamingList").child(mLocation).child(mGenderWanted).child(mSexualOrientationWanted);
+
+        int userAge = Integer.parseInt(mAgeWanted);
+
+        // If statements to check which branch the user will fall under.
+        if(userAge <= 20){
+            roamingURL = roamingURL.child("18-20");
+        }
+        else if(userAge >= 21 && userAge <= 29){
+            roamingURL = roamingURL.child("21-29");
+        }
+        else if(userAge >= 30 && userAge <= 39){
+            roamingURL = roamingURL.child("30-39");
+        }
+        else if(userAge >= 40 && userAge <= 49){
+            roamingURL = roamingURL.child("40-49");
+        }
+        else if(userAge >= 50 && userAge <= 59){
+            roamingURL = roamingURL.child("50-59");
+        }
+        else {
+            roamingURL = roamingURL.child("60+");
+        }
+
+        roamingURL.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int index = 0;
+                for(DataSnapshot currentSnapShot : dataSnapshot.getChildren()){
+                    mRoamingUsers.put(currentSnapShot.getKey().toString(), currentSnapShot.getKey().toString());
+                    index++;
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    private void populateViewingList(){
+
+    }
+    */
 
 }

@@ -26,6 +26,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import roast.app.com.dealbreaker.fragments.AttributeAssignment;
+import roast.app.com.dealbreaker.fragments.InitialRoaming;
 import roast.app.com.dealbreaker.fragments.ProfileActivity;
 import roast.app.com.dealbreaker.fragments.UpdateImage;
 import roast.app.com.dealbreaker.fragments.UserRelationships;
@@ -180,6 +181,9 @@ public class UserNavigation extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.nav_preferences:
                 fragment = AttributeAssignment.newInstance(userName);
+                break;
+            case R.id.nav_roam:
+                fragment = InitialRoaming.newInstance(userName);
                 break;
             case R.id.nav_gallery:
                 fragment = UpdateImage.newInstance(userName);

@@ -39,6 +39,7 @@
     <string name="nav_userPreferences">Preferences</string>
     <string name="nav_userAdded">Relationships</string>
     <string name="nav_userHome">Profile</string>
+    <string name="nav_roaming">Roaming</string>
     <string name="nav_commTitle">Communicate</string>
     <string name="nav_Share">Share</string>
     <string name="user_profilePicDescription">user\'s profile picture</string>
@@ -65,5 +66,6 @@
     <string name="GotItLabel">Got It!</string>
     <string name="OKAY">Yes!</string>
     <string name="Inches">"</string>
+    <string name="RoamingScreenLabel">Search for Potential Relationships</string>
 
 </resources>

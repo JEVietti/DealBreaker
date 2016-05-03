@@ -5,6 +5,9 @@
         <item android:id="@+id/nav_home" android:icon="@drawable/db_menu_home"
             android:title="@string/nav_userHome" />
 
+        <item android:id="@+id/nav_roam" android:icon="@drawable/db_menu_roaming"
+            android:title="@string/nav_roaming" />
+
         <item android:id="@+id/nav_relationship" android:icon="@drawable/db_menu_relationship"
             android:title="@string/nav_userAdded" />
 

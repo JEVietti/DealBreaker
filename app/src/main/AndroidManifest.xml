@@ -79,6 +79,8 @@
         <activity android:name=".PendingUserProfile"></activity>
 
         <activity android:name=".RoamingProfile"></activity>
+
+        <activity android:name=".fragments.RoamingRelationships"></activity>
     </application>
 
 </manifest>

@@ -306,19 +306,21 @@ public class RoamingProfile extends AppCompatActivity {
     }
 
     //Send a request to the selected user and add them both to their pending list delete both correspondingly from their queues
-    private void roamingSendRequest(){
+    private void roamingSendRequest() {
         pendingRootUserREF = new Firebase(Constants.FIREBASE_URL_PENDING).child(rootUserName).child(userName);
         pendingUserREF = new Firebase(Constants.FIREBASE_URL_PENDING).child(userName).child(rootUserName);
-        queueRootREF = new Firebase(Constants.FIREBASE_URL_QUEUE).child(rootUserName).child(userName);
-        queueUserREF = new Firebase(Constants.FIREBASE_URL_QUEUE).child(userName).child(rootUserName);
+        queueRootREF = new Firebase(Constants.FIREBASE_URL_VIEWING_QUEUE).child(rootUserName).child(userName);
 
         //This one is for the user who selected the profile and send them a request
         queueRootREF.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                RelationshipAttribute rootRA = dataSnapshot.getValue(RelationshipAttribute.class);
+                RelationshipAttribute rootRA = new RelationshipAttribute();
+                RelationshipAttribute selectedRA = new RelationshipAttribute();
+                selectedRA.setMark(0);
                 rootRA.setMark(1);
-                pendingRootUserREF.setValue(rootRA);
+                pendingRootUserREF.setValue(selectedRA);
+                pendingUserREF.setValue(rootRA);
                 queueRootREF.removeValue();
             }
 
@@ -328,24 +330,6 @@ public class RoamingProfile extends AppCompatActivity {
             }
         });
 
-        //This should add the rootUser RA to the selected users pending list to be confirmed
-        queueUserREF.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                RelationshipAttribute userRA = dataSnapshot.getValue(RelationshipAttribute.class);
-                userRA.setMark(0);
-                pendingUserREF.setValue(userRA);
-                queueUserREF.removeValue();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-        //Remove the two Relationship Attributes from their Queues
-
     }
-
 
 }
