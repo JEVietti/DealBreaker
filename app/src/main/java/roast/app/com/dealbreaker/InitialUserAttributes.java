@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -37,11 +38,12 @@ public class InitialUserAttributes extends AppCompatActivity {
     Button sendUserValues, retrieveLocationButton;
     Context context;
     public String userName;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_user_attribute);
+        setContentView(R.layout.activity_intial_user_info);
         firstNameUserText=(EditText) findViewById(R.id.et_user_first_name);
         lastNameUserText=(EditText) findViewById(R.id.et_user_last_name);
         maleFemaleGroup = (RadioGroup) findViewById(R.id.radioGroupSex);
@@ -53,6 +55,8 @@ public class InitialUserAttributes extends AppCompatActivity {
         locationText = (TextView) findViewById(R.id.locationTextValue);
         sendUserValues = (Button) findViewById(R.id.user_attribute_finished_button);
         retrieveLocationButton = (Button) findViewById(R.id.locationButton);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("User Info");
 
 
         Bundle arg = getIntent().getExtras();
@@ -200,7 +204,7 @@ public class InitialUserAttributes extends AppCompatActivity {
         Firebase usersURL = new Firebase (Constants.FIREBASE_URL_USERS).child(userName).child(Constants.FIREBASE_LOC_USER_INFO);
 
         usersURL.child("firstName").setValue(mFirstName);
-        usersURL.child("lasrName").setValue(mLastName);
+        usersURL.child("lastName").setValue(mLastName);
         usersURL.child("age").setValue("23");
         usersURL.child("birthDate").setValue(mBirthDay);
         usersURL.child("sex").setValue(mGender);

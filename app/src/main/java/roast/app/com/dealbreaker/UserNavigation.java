@@ -14,15 +14,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 import roast.app.com.dealbreaker.fragments.AttributeAssignment;
@@ -123,26 +128,7 @@ public class UserNavigation extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.action_navigation_delete_account:
-                AlertDialog.Builder dlgDel1 = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
-                //AlertDialog dialog = dlgDel1.create();
-                dlgDel1.setTitle("Delete Account!");
-                dlgDel1.setMessage("Are you Sure you want to DELETE YOUR ACCOUNT?");
-                dlgDel1.setNegativeButton(android.R.string.no, null);
-                dlgDel1.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        AlertDialog.Builder dlgDel2 = new AlertDialog.Builder(getApplicationContext(), R.style.AlertDialogTheme);
-                        dlgDel2.setTitle("LAST CHANCE");
-                        dlgDel2.setMessage("Are you Sure you want to DELETE THIS ACCOUNT, THIS IS NOT RECOVERABLE");
-                        dlgDel2.setNegativeButton(android.R.string.no, null);
-                        dlgDel2.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                deleteAccount();
-                            }
-                        }).create();
-                        dlgDel2.show();
-                    }
-                }).create();
-                dlgDel1.show();
+               showOnDeleteDialog();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -167,8 +153,34 @@ public class UserNavigation extends AppCompatActivity {
                 });
     }
 
-    private void deleteAccount(){
+    private void deleteAccount(final String userEmail, final String userPassword){
+        final Firebase ref = new Firebase(Constants.FIREBASE_URL);
         //Delete the account from the email registry, User Profile
+       // Query getUserEmail = new Firebase(Constants.FIREBASE_URL_USERS).child(userName).child("email");
+
+        ref.authWithPassword(userEmail, userPassword, new Firebase.AuthResultHandler() {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+                ref.removeUser(userEmail, userPassword, new Firebase.ResultHandler() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getApplicationContext(),"Your Account has been deleted",Toast.LENGTH_LONG);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(FirebaseError firebaseError) {
+                        Toast.makeText(getApplicationContext(),"Your Account has not been deleted, try again later",Toast.LENGTH_LONG);
+                    }
+                });
+            }
+
+            @Override
+            public void onAuthenticationError(FirebaseError firebaseError) {
+                // there was an error
+                Toast.makeText(getApplicationContext(),"Your Account has not been deleted, due to an incorrect password",Toast.LENGTH_LONG);
+            }
+        });
         finish();
     }
 
@@ -258,6 +270,40 @@ public class UserNavigation extends AppCompatActivity {
         });
     }
 */
+
+    public void showOnDeleteDialog() {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.delete_account_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText edtPassword = (EditText) dialogView.findViewById(R.id.editDialogPassword);
+        final EditText edtEmail = (EditText) dialogView.findViewById(R.id.editDialogEmail);
+        dialogBuilder.setTitle("Delete Account");
+        dialogBuilder.setMessage("Enter your password below");
+        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String email, password;
+                email = edtEmail.getText().toString();
+                password = edtPassword.getText().toString();
+
+                if(email != null && password != null) {
+                    deleteAccount(email, password);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"Make Sure to Enter your email and password",Toast.LENGTH_LONG);
+                }
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

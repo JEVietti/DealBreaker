@@ -151,23 +151,23 @@ public class InitialGetRoamingList extends AppCompatActivity {
 
             */
 
-        grabUserList();
-        grabUserInfo();
-        grabUserImg();
-        addToQueue();
+        //grabUserList();
+        //grabUserInfo();
+        //grabUserImg();
+        //addToQueue();
 
 
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToQueue();
+                //addToQueue();
                 Intent intent = new Intent(InitialGetRoamingList.this, InitialScreen.class);
                 startActivity(intent);
             }
         });
     }
 
-
+/*
     public void grabUserList(){
         Firebase roamingURL = new Firebase(Constants.FIREBASE_URL + "roamingList").child(mLocation).child(mGenderWanted).child(mSexualOrientationWanted);
 
@@ -215,7 +215,7 @@ public class InitialGetRoamingList extends AppCompatActivity {
 
 
 
-    }
+    }*/
 
     public void grabUserInfo(){
         Firebase roamingInfo = new Firebase(Constants.FIREBASE_URL_ROAMING);
@@ -287,9 +287,9 @@ public class InitialGetRoamingList extends AppCompatActivity {
 
         for (int i =0; i < mUsersFromRoamingList.size(); i++){
             String tempUser = mUsersFromRoamingList.get(i).toString();
-            String userImg = mUsersRoammingPhoto.get(tempUser).toString();
+            //String userImg = mUsersRoammingPhoto.get(tempUser).toString();
             User user = (User) mUsersRoamingInfo.get(tempUser);
-            userQueue.child(tempUser).child("profilePic").setValue(userImg);
+           // userQueue.child(tempUser).child("profilePic").setValue(userImg);
             userQueue.child(tempUser).child("mark").setValue(0);//.setValue(mUsersRoamingInfo.get(tempUser));
         }
 

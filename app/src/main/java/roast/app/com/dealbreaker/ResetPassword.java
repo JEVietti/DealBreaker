@@ -45,7 +45,7 @@ public class ResetPassword extends AppCompatActivity {
 
                 final String userEmail = mUserEmail.getText().toString();
 
-                Firebase database = new Firebase(Constants.FIREBASE_URL_USER_INFO);
+                Firebase database = new Firebase(Constants.FIREBASE_URL_USERS);
                 database.resetPassword(userEmail, new Firebase.ResultHandler() {
                     @Override
                     public void onSuccess() {

@@ -3,6 +3,7 @@ package roast.app.com.dealbreaker;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +31,7 @@ public class InitialRoamingAttributes extends AppCompatActivity {
     private RadioButton maleButton, femaleButton;
     private Button sendRoamingValues;
     public String userName;
-
+    private Toolbar toolbar;
     //public ArrayList<String> mUsersFromRoamingList;
     public Hashtable mUsersRoammingPhoto, mUsersRoamingInfo, mUsersFromRoamingList;
     public String mWantedUsername;
@@ -38,7 +39,7 @@ public class InitialRoamingAttributes extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_roaming_attribute);
+        setContentView(R.layout.activity_initial_roaming);
 
         ageRoamingText=(EditText) findViewById(R.id.et_roaming_age);
         maleButton = (RadioButton) findViewById(R.id.radioButtonMaleRoaming);
@@ -46,7 +47,8 @@ public class InitialRoamingAttributes extends AppCompatActivity {
         sexualOrientationRoamingText=(EditText)findViewById(R.id.et_roaming_sexual_or);
         heightRoamingText=(EditText) findViewById(R.id.et_roaming_height);
         sendRoamingValues = (Button) findViewById(R.id.finished_roaming_attribute_button);
-
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Desired Match Information");
         Bundle arg = getIntent().getExtras();
         userName = arg.getString(getString(R.string.key_UserName));
 
