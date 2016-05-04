@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,7 @@ public class InitialRoamingAttributes extends AppCompatActivity {
 
     public String mAgeWanted, mGenderWanted, mSexualOrientationWanted, mLocation, mHeightWanted;
     private EditText ageRoamingText, heightRoamingText, sexualOrientationRoamingText;
+    private Long ageValue, heightValue;
     private RadioButton maleButton, femaleButton;
     private Button sendRoamingValues;
     public String userName;
@@ -62,7 +64,7 @@ public class InitialRoamingAttributes extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 grabData();
-                Boolean validData = isDataValid();  // Returns true if the data is valid
+                boolean validData = isDataValid();  // Returns true if the data is valid
                 if (validData) {
                     setData();
 
@@ -107,23 +109,37 @@ public class InitialRoamingAttributes extends AppCompatActivity {
     }
 
     // Check if the data is valid. Returns true when valid.
-    public Boolean isDataValid(){
-        if(mAgeWanted.isEmpty()){
-            Toast.makeText(this, "First name cannot be empty!", Toast.LENGTH_LONG).show();
+    public boolean isDataValid(){
+
+    if(TextUtils.isEmpty(mAgeWanted) || !TextUtils.isDigitsOnly(mAgeWanted)  || mAgeWanted == null ) {
+            ageRoamingText.setError("Age must be entered");
             return false;
         }
 
-        else if(mGenderWanted.isEmpty()){
-            Toast.makeText(this,"Gender must be chosen!", Toast.LENGTH_LONG).show();
+        else if((!femaleButton.isChecked() && !maleButton.isChecked()) || mGenderWanted == null || ((!mGenderWanted.equals("male") && (!mGenderWanted.equals("female"))))){
+            maleButton.setError("Sex must be chosen!");
             return false;
         }
-        else if(mSexualOrientationWanted.isEmpty()){
-            Toast.makeText(this,"Sexual orientation cannot be empty!", Toast.LENGTH_LONG).show();
+        else if(TextUtils.isEmpty(mSexualOrientationWanted) || mSexualOrientationWanted == null || ((!mSexualOrientationWanted.equals("straight")&&(!mSexualOrientationWanted.equals("bisexual"))&&(!mSexualOrientationWanted.equals("gay"))))){
+            sexualOrientationRoamingText.setError("Sexual orientation cannot be empty and must be gay, straight, or bisexual!");
             return false;
         }
-        else if(mHeightWanted.isEmpty()){
-            Toast.makeText(this,"Height cannot be empty!", Toast.LENGTH_LONG).show();
+        else if( TextUtils.isEmpty(mHeightWanted) || mHeightWanted == null || !TextUtils.isDigitsOnly(mHeightWanted)){
+            heightRoamingText.setError("Height cannot be empty!");
             return false;
+        }
+        else{
+            int age = Integer.valueOf(mAgeWanted);
+            if(age < 18 ){
+                ageRoamingText.setError("Must be 18 years or older!");
+                return false;
+            }
+            else if(age >= 130){
+                ageRoamingText.setError("Must be less than 130 years old!");
+                return false;
+            }
+        ageValue = Long.valueOf(mAgeWanted);
+        heightValue = Long.valueOf(mHeightWanted);
         }
 
         return true;
@@ -133,10 +149,10 @@ public class InitialRoamingAttributes extends AppCompatActivity {
     public void setData(){
         Firebase roamingURL = new Firebase(Constants.FIREBASE_URL_ROAMING).child(userName);
 
-        roamingURL.child("age").setValue(mAgeWanted);
+        roamingURL.child("age").setValue(ageValue);
         roamingURL.child("sex").setValue(mGenderWanted);
         roamingURL.child("sexualOrientation").setValue(mSexualOrientationWanted);
-        roamingURL.child("height").setValue(mHeightWanted);
+        roamingURL.child("height").setValue(heightValue);
 
     }
 }

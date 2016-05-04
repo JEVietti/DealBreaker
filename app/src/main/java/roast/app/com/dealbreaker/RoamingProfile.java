@@ -1,5 +1,7 @@
 package roast.app.com.dealbreaker;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -102,13 +104,30 @@ public class RoamingProfile extends AppCompatActivity {
                 return true;
 
             case R.id.action_roaming_dismiss:
-                //Add a AlertDialog
-                rejectRoaming();
+                AlertDialog.Builder dlgD = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+                dlgD.setTitle("Dismiss Request");
+                dlgD.setMessage("Would you like to dismiss this User's relationship request?");
+                dlgD.setNegativeButton(android.R.string.no, null);
+                dlgD.setPositiveButton(R.string.OKAY, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        rejectRoaming();
+                    }
+                }).create();
+                dlgD.show();
                 return true;
 
             case R.id.action_roaming_send_request:
                 //Add a AlertDialog
-                roamingSendRequest();
+                AlertDialog.Builder dlgR = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+                dlgR.setTitle("Send a Request");
+                dlgR.setMessage("Would you like to send this user request?");
+                dlgR.setNegativeButton(android.R.string.no, null);
+                dlgR.setPositiveButton(R.string.OKAY, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        roamingSendRequest();
+                    }
+                }).create();
+                dlgR.show();
                 return true;
 
             case R.id.action_help:
@@ -300,8 +319,8 @@ public class RoamingProfile extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 RelationshipAttribute rootRA = new RelationshipAttribute();
                 RelationshipAttribute selectedRA = new RelationshipAttribute();
-                selectedRA.setMark(0);
-                rootRA.setMark(1);
+                selectedRA.setMark(1);
+                rootRA.setMark(0);
                 pendingRootUserREF.setValue(selectedRA);
                 pendingUserREF.setValue(rootRA);
                 queueRootREF.removeValue();

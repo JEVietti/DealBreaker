@@ -187,23 +187,32 @@ public class RoamingAttribute extends Fragment {
 
     //Check that the Data is infact valid for the database schema
     private boolean checkAndSendData(){
-        if (TextUtils.isEmpty(ageRoamingValue)) {
-            ageRoamingText.setError("Don't leave field empty!");
+
+        if (TextUtils.isEmpty(ageRoamingValue) || ageRoamingValue == null || !TextUtils.isDigitsOnly(ageRoamingValue)  ) {
+            ageRoamingText.setError("Do not leave field empty!");
             return false;
         }
         else if(TextUtils.isEmpty(sexualOrientationRoamingValue)||((!sexualOrientationRoamingValue.equals("straight")&&(!sexualOrientationRoamingValue.equals("bisexual"))&&(!sexualOrientationRoamingValue.equals("gay"))))){
             sexualOrientationRoamingText.setError("Invalid!, Inputs can be straight, gay, or bisexual");
             return false;
         }
-        else if(TextUtils.isEmpty(heightRoamingValue)){
-            heightRoamingText.setError("Invalid!,Don't leave field Empty!");
+        else if(TextUtils.isEmpty(heightRoamingValue) || heightRoamingValue == null || !TextUtils.isDigitsOnly(heightRoamingValue)){
+            heightRoamingText.setError("This field cannot be empty and must be in digits in terms of inches!");
             return false;
         }
-        else if(sexRoamingValue == null || (!sexRoamingValue.equals("male") && !sexRoamingValue.equals("female"))){
+        else if( (!maleButton.isChecked() && !femaleButton.isChecked()) || sexRoamingValue == null || (!sexRoamingValue.equals("male") && !sexRoamingValue.equals("female"))){
             femaleButton.setError("Invalid!, Inputs can be either male or female");
             return false;
         } else{
             Long age = Long.valueOf(ageRoamingValue);
+            if(age < 18 ){
+                ageRoamingText.setError("Must be 18 years or older!");
+                return false;
+            }
+            else if(age >= 130){
+                ageRoamingText.setError("Must be less than 130 years old");
+                return false;
+            }
             Long height = Long.valueOf(heightRoamingValue);
             String sex = sexRoamingValue;
             String sexual_orientation = sexualOrientationRoamingValue;

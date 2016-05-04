@@ -195,7 +195,7 @@ public class ConfirmedUserProfile extends AppCompatActivity {
                   @Override
                   public void onDataChange(DataSnapshot dataSnapshot) {
                       ContactInfo userCI = dataSnapshot.child("contactInfo").getValue(ContactInfo.class);
-                      if(userCI != null) {
+                      if(userCI != null && !userCI.getContactInfo().isEmpty()) {
                           confirmedContactInfo = userCI.getContactInfo();
                       }
                       else{

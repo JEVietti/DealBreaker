@@ -302,19 +302,20 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             birthDateText.setError("Invalid!");
             return false;
         }
-        else if(locationUserValue == null){
-            locationText.setError("Location Invalid");
+
+        else if( TextUtils.isEmpty(locationUserValue) || locationUserValue == null){
+            locationText.setError("Location Empty");
             return false;
         }
-        /*else if (TextUtils.isEmpty(ageUserValue)) {
-            ageUserText.setError("This field cannot be empty!");
+        else if (TextUtils.isEmpty(heightUserValue) | heightUserValue == null || !TextUtils.isDigitsOnly(heightUserValue)) {
+            heightUserText.setError("This field cannot be empty and must be in digits in terms of inches!");
             return false;
-        }*/
+        }
         else if(TextUtils.isEmpty(sexualOrientationUserValue)||((!sexualOrientationUserValue.equals("straight")&&(!sexualOrientationUserValue.equals("bisexual"))&&(!sexualOrientationUserValue.equals("gay"))))){
             sexualOrientationUserText.setError("Invalid!, Inputs can be straight, gay, or bisexual");
             return false;
         }
-        else if(sexUserValue == null || (!sexUserValue.equals("male") && !sexUserValue.equals("female"))){
+        else if(sexUserValue == null || (!setFemale.isChecked() && !setMale.isChecked()) || (!sexUserValue.equals("male") && !sexUserValue.equals("female"))){
             setFemale.setError("Invalid!, Inputs can be either male or female");
             return false;
         } else {
@@ -327,7 +328,7 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
                 return false;
             }
             else if(age >= 130){
-                birthDateText.setText("Possibly Invalid, Age >= 130");
+                birthDateText.setText("Must be less than 130 years old!");
                 return false;
             }
             Log.d("Age of User", age.toString());
@@ -434,19 +435,19 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
 
         // If statements to check which branch the user will fall under.
         if(userAge <= 20){
-            roamingURL.child("18-20").child(username).setValue(0);
+            roamingURL.child("18-20").child(username).child("mark").setValue(0);
         }
         else if(userAge >= 21 && userAge <= 29){
-            roamingURL.child("21-29").child(username).setValue(0);
+            roamingURL.child("21-29").child(username).child("mark").setValue(0);
         }
         else if(userAge >= 30 && userAge <= 39){
-            roamingURL.child("30-39").child(username).setValue(0);
+            roamingURL.child("30-39").child(username).child("mark").setValue(0);
         }
         else if(userAge >= 40 && userAge <= 49){
-            roamingURL.child("40-49").child(username).setValue(0);
+            roamingURL.child("40-49").child(username).child("mark").setValue(0);
         }
         else if(userAge >= 50 && userAge <= 59){
-            roamingURL.child("50-59").child(username).setValue(0);
+            roamingURL.child("50-59").child(username).child("mark").setValue(0);
         }
         else {
             roamingURL.child("60+").child(username).child("mark").setValue(0);

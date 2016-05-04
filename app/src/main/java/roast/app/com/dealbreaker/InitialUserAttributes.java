@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +31,7 @@ import roast.app.com.dealbreaker.util.Constants;
 public class InitialUserAttributes extends AppCompatActivity {
 
     public String mFirstName, mLastName, mBirthDay, mGender, mSexualOrientation, mHeight, mLocation, locationUserValue;
-    public Long mAge;
+    public Long mAge, height;
     private EditText firstNameUserText, lastNameUserText, heightUserText, sexualOrientationUserText;
     private EditText birthDateText;
     private TextView locationText;
@@ -111,9 +112,7 @@ public class InitialUserAttributes extends AppCompatActivity {
 
         mBirthDay = birthDateText.getText().toString();
 
-        Age a = new Age();
-        Date birth = a.ConvertToDate(mBirthDay);
-        mAge = Long.valueOf(a.calculateAge(birth));
+
 
         if(setMale.isChecked()) {
             mGender = "male";
@@ -123,41 +122,60 @@ public class InitialUserAttributes extends AppCompatActivity {
         }
 
         mSexualOrientation = sexualOrientationUserText.getText().toString();
-        mHeight = heightUserText.getText().toString();
+        mHeight = heightUserText.getText().toString().trim();
     }
 
     // Check if the data is valid. Returns true when valid.
     public Boolean isDataValid(){
-        if(mFirstName.isEmpty()){
-            Toast.makeText(this,"First name cannot be empty!", Toast.LENGTH_LONG).show();
+        if(TextUtils.isEmpty(mFirstName) || mFirstName == null){
+            firstNameUserText.setError("First name cannot be empty!");
             return false;
         }
-        else if(mLastName.isEmpty()){
-            Toast.makeText(this,"Last name cannot be empty!", Toast.LENGTH_LONG).show();
+        else if(TextUtils.isEmpty(mLastName) || mLastName == null){
+            lastNameUserText.setError("Last name cannot be empty!");
             return false;
         }
-        else if(!isThisDateValid(mBirthDay,"MM/dd/yyyy")){
-            Toast.makeText(this,"Incorrect birthday format!", Toast.LENGTH_LONG).show();
+        else if(TextUtils.isEmpty(mBirthDay) || !isThisDateValid(mBirthDay,"MM/dd/yyyy")){
+            birthDateText.setError("Incorrect birthday format!");
             return false;
         }
-        else if(mGender.isEmpty()){
-            Toast.makeText(this,"Gender must be chosen!", Toast.LENGTH_LONG).show();
+        else if((!setFemale.isChecked() && !setMale.isChecked()) || mGender == null || (!mGender.equals("male") && !mGender.equals("female")))
+        {
+            setMale.setError("Sex must be chosen!");
             return false;
         }
-        else if(mSexualOrientation.isEmpty()){
-            Toast.makeText(this,"Sexual orientation cannot be empty!", Toast.LENGTH_LONG).show();
+        else if(TextUtils.isEmpty(mSexualOrientation) || mSexualOrientation == null ||((!mSexualOrientation.equals("straight")&&(!mSexualOrientation.equals("bisexual"))&&(!mSexualOrientation.equals("gay"))))){
+            sexualOrientationUserText.setError("Sexual orientation cannot be empty, and must be straight, gay, or bisexual!");
             return false;
         }
-        else if(mHeight.isEmpty()){
-            Toast.makeText(this,"Height cannot be empty!", Toast.LENGTH_LONG).show();
+        else if(TextUtils.isEmpty(mHeight) || mHeight == null || !TextUtils.isDigitsOnly(mHeight)) {
+            heightUserText.setError("Height cannot be empty and is in terms of inches numerically!");
             return false;
         }
-        else if(mLocation.isEmpty()){
-            Toast.makeText(this,"Please grab your current location!", Toast.LENGTH_LONG).show();
+        else if(TextUtils.isEmpty(locationUserValue) || locationUserValue == null) {
+            retrieveLocationButton.setError("Please grab your current location!");
             return false;
+        }
+        else{
+            Age a = new Age();
+            Date birth = a.ConvertToDate(mBirthDay);
+            mAge = Long.valueOf(a.calculateAge(birth));
+
+            if(mAge < 18) {
+                birthDateText.setError("Must be 18 years or older!");
+                return false;
+            }
+            else if(mAge >= 130) {
+                birthDateText.setError("Must be less than 130 years old!");
+                return false;
+            }
+
+            height = Long.valueOf(mHeight);
+
+            Log.d("Age", mAge.toString());
+          return true;
         }
 
-        return true;
     }
 
     // Check to see if the date entered is a valid format.
@@ -197,18 +215,18 @@ public class InitialUserAttributes extends AppCompatActivity {
 
         usersURL.child("firstName").setValue(mFirstName);
         usersURL.child("lastName").setValue(mLastName);
-        usersURL.child("age").setValue("23");
+        usersURL.child("age").setValue(mAge);
         usersURL.child("birthDate").setValue(mBirthDay);
         usersURL.child("sex").setValue(mGender);
         usersURL.child("sexualOrientation").setValue(mSexualOrientation);
-        usersURL.child("height").setValue(mHeight);
-        usersURL.child("location").setValue(mLocation);
+        usersURL.child("height").setValue(height);
+        usersURL.child("location").setValue(locationUserValue);
         usersURL.child("userName").setValue(userName);
     }
 
     // Add users to the roaming list
     public void addUserToRoamingList(){
-        Firebase roamingURL = new Firebase(Constants.FIREBASE_URL + "roamingList").child(mLocation).child(mGender).child(mSexualOrientation);
+        Firebase roamingURL = new Firebase(Constants.FIREBASE_URL + "roamingList").child(locationUserValue).child(mGender).child(mSexualOrientation);
 
         long userAge = mAge;
 

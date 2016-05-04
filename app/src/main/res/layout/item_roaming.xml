@@ -39,10 +39,10 @@
         android:textSize="16sp" />
 
     <Button
-        android:layout_width="50dp"
+        android:layout_width="70dp"
         android:layout_height="50dp"
         android:textStyle="bold"
-        android:text="ADD"
+        android:text="Request"
         android:background="@drawable/login_button"
         android:id="@+id/roamingAddUserButton"
         android:layout_centerVertical="true"
