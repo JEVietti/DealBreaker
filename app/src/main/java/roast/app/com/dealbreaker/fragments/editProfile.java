@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +41,7 @@ public class editProfile extends Fragment {
     private Button   bioGo, badGo, goodGo, Submit;
     private Firebase userInfoREF, userInfoREFBAD, userInfoREFGOOD, contactInfoRef;
     private EditText biographyEdit, badEdit, goodEdit, contactInfoEdit;
+    String BioData, badChar, goodChar, contact;
 
     private ValueEventListener InfoListener, contactInfoListener;
 
@@ -64,7 +68,7 @@ public class editProfile extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        BIOGRAPHY();
+        loadData();
     }
 
     @Override
@@ -86,16 +90,63 @@ public class editProfile extends Fragment {
 
         final View view = inflater.inflate(R.layout.activity_edit_profile, container, false);
         screen(view);
-
+        loadData();
         //calls funcs
-        BIOGRAPHY();          //biography onclick functionality
-        //BAD();                //bad onclick functionality
-        //GOOD();               //good onclick functionality
+        Submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                grabEditText();
+                if(checkAndSendData()){
+                    setData();
+                    Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
 
+                }
+                else{
+                    Toast.makeText(getContext(), "Unsuccessful", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         return view;
     }
 
-    private void BIOGRAPHY() {
+    private boolean checkAndSendData(){
+        if(TextUtils.isEmpty(BioData) || BioData == null){
+            biographyEdit.setError("Field cannot be empty");
+            return false;
+        }
+        else if(TextUtils.isEmpty(goodChar) || goodChar == null){
+            goodEdit.setError("Field cannot be empty");
+            return false;
+        }
+        else if(TextUtils.isEmpty(badChar) || badChar == null){
+            badEdit.setError("Field cannot be empty");
+            return false;
+        }
+        else if(TextUtils.isEmpty(contact) || contact == null){
+            contactInfoEdit.setError("Field cannot be empty");
+            return false;
+        }
+        return true;
+    }
+
+    private void grabEditText(){
+        userInfoREF = new Firebase(Constants.FIREBASE_URL_USERS).child(username).child(Constants.FIREBASE_LOC_USER_QUALITIES);
+        contactInfoRef = new Firebase(Constants.FIREBASE_URL_USERS).child(username).child("contact_info");
+
+        BioData = biographyEdit.getText().toString();
+        badChar = badEdit.getText().toString();
+        goodChar = goodEdit.getText().toString();
+        contact = contactInfoEdit.getText().toString();
+    }
+
+    private void setData(){
+        userInfoREF.child("biography").setValue(BioData);
+        userInfoREF.child("badQualities").setValue(badChar);
+        userInfoREF.child("goodQualities").setValue(goodChar);
+        contactInfoRef.child("contactInfo").setValue(contact);
+    }
+
+    private void loadData() {
         userInfoREF = new Firebase(Constants.FIREBASE_URL_USERS).child(username).child(Constants.FIREBASE_LOC_USER_QUALITIES);
         InfoListener = userInfoREF.addValueEventListener(new ValueEventListener() {
             @Override
@@ -126,24 +177,6 @@ public class editProfile extends Fragment {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-        Submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String BioData = biographyEdit.getText().toString();
-                String badChar = badEdit.getText().toString();
-                String goodChar = goodEdit.getText().toString();
-                String contact = contactInfoEdit.getText().toString();
-
-                userInfoREF.child("biography").setValue(BioData);
-                userInfoREF.child("badQualities").setValue(badChar);
-                userInfoREF.child("goodQualities").setValue(goodChar);
-                contactInfoRef.child("contactInfo").setValue(contact);
-
-                Toast.makeText(getContext(), "Submitted", Toast.LENGTH_SHORT).show();
 
             }
         });

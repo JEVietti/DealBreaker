@@ -39,7 +39,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
+            android:inputType="textCapSentences"
             android:textColor="@color/colorPrimary"
             android:hint="@string/first_name"
             android:ems="10"
@@ -51,7 +51,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
+            android:inputType="textCapSentences"
             android:textColor="@color/colorPrimary"
             android:hint="@string/last_name"
             android:ems="10"
