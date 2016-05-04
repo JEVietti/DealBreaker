@@ -126,7 +126,7 @@ public class InitialUserAttributes extends AppCompatActivity {
     }
 
     // Check if the data is valid. Returns true when valid.
-    public Boolean isDataValid(){
+    public boolean isDataValid(){
         if(TextUtils.isEmpty(mFirstName) || mFirstName == null){
             firstNameUserText.setError("First name cannot be empty!");
             return false;

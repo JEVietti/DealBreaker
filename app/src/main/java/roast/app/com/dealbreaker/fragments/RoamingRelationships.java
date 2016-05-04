@@ -98,8 +98,8 @@ public class RoamingRelationships extends AppCompatActivity {
                 @Override
                 protected void populateViewHolder(RoamingViewHolder roamingRelationshipViewHolder, final RelationshipAttribute PRA, final int i) {
                     String listedUserName = roamingRecyclerAdapter.getRef(i).getKey();
-                    //currentProfilePic(listedUserName);
-                    //updateUserInfo(listedUserName);
+                    currentProfilePic(listedUserName);
+                    updateUserInfo(listedUserName);
                     DownloadImages imageDownload = new DownloadImages(roamingRelationshipViewHolder.imageView, RoamingRelationships.this);
                     imageDownload.execute(PRA.getProfilePic());
                     roamingRelationshipViewHolder.name.setText(PRA.getFirstName() + " " + PRA.getLastName() + "      Age: " + PRA.getAge());
