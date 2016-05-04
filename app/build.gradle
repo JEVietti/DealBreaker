@@ -45,4 +45,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:8.3.0'
     compile 'com.amazonaws:aws-android-sdk-s3:2.+'
     compile 'com.firebaseui:firebase-ui:0.3.1'
+    androidTestCompile 'junit:junit:4.12'
 }
