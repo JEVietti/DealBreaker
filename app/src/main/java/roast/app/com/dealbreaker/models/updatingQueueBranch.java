@@ -35,7 +35,7 @@ public class UpdatingQueueBranch {
     }
 
     // Grabs the user roaming wants and assigns them to the activity members.
-    public void grabInfo(){
+    private void grabInfo(){
         Firebase roamingInfo = new Firebase(Constants.FIREBASE_URL_ROAMING).child(mUsername);
 
         roamingInfo.addValueEventListener(new ValueEventListener() {
@@ -55,7 +55,7 @@ public class UpdatingQueueBranch {
     }
 
     // Grabs the location from the user info branch.
-    public void grabLocation(){
+    private void grabLocation(){
         Firebase userLoc = new Firebase(Constants.FIREBASE_URL_USERS).child(mUsername).child(Constants.FIREBASE_LOC_USER_INFO).child("location");
 
         userLoc.addValueEventListener(new ValueEventListener() {
@@ -74,7 +74,7 @@ public class UpdatingQueueBranch {
 
     // Child event listener. This will listen to the specific roaming branch for children being added. When a child is added, this listener will be
     // triggered and the onChildAdded function will be ran. This will update the user's queue with the new added child.
-    public void setListener(){
+    private void setListener(){
         Firebase roamingURL = new Firebase(Constants.FIREBASE_URL + "roamingList").child(mLocation).child(mGenderWanted).child(mSexualOrientationWanted);
 
         int userAge = Integer.parseInt(mAgeWanted);
@@ -129,7 +129,7 @@ public class UpdatingQueueBranch {
     }
 
     // Grab all of the users from the corresponding roamingList branch.
-    public void grabUsersFromList(){
+    private void grabUsersFromList(){
         Firebase roamingURL = new Firebase(Constants.FIREBASE_URL + "roamingList").child(mLocation).child(mGenderWanted).child(mSexualOrientationWanted);
 
         int userAge = Integer.parseInt(mAgeWanted);
@@ -176,7 +176,7 @@ public class UpdatingQueueBranch {
     }
 
     // Check to see if the users from the roamingList branch are present in the queue branch. If so, remove them from the hashTable.
-    public void checkQueue(){
+    private void checkQueue(){
         Firebase queueURL = new Firebase(Constants.FIREBASE_URL + "queue").child(mUsername);
 
         queueURL.addValueEventListener(new ValueEventListener() {
@@ -202,7 +202,7 @@ public class UpdatingQueueBranch {
     }
 
     // Check to see if the users from the roamingList branch are present in the pending branch. If so, remove them from the hashTable.
-    public void checkPending(){
+    private void checkPending(){
         Firebase queueURL = new Firebase(Constants.FIREBASE_URL + "pending").child(mUsername);
 
         queueURL.addValueEventListener(new ValueEventListener() {
@@ -228,7 +228,7 @@ public class UpdatingQueueBranch {
     }
 
     // Check to see if the users from the roamingList branch are present in the confirmed branch. If so, remove them from the hashTable.
-    public void checkConfirmed(){
+    private void checkConfirmed(){
         Firebase queueURL = new Firebase(Constants.FIREBASE_URL + "confirmed").child(mUsername);
 
         queueURL.addValueEventListener(new ValueEventListener() {
@@ -254,7 +254,7 @@ public class UpdatingQueueBranch {
     }
 
     // Check to see if the users from the roamingList branch are present in the rejected branch. If so, remove them from the hashTable.
-    public void checkRejected(){
+    private void checkRejected(){
         Firebase queueURL = new Firebase(Constants.FIREBASE_URL + "rejected").child(mUsername);
 
         queueURL.addValueEventListener(new ValueEventListener() {
@@ -280,7 +280,7 @@ public class UpdatingQueueBranch {
     }
 
     // Check to see if the users from the roamingList branch are present in the viewing branch. If so, remove them from the hashTable.
-    public void checkViewing(){
+    private void checkViewing(){
         Firebase queueURL = new Firebase(Constants.FIREBASE_URL + "viewing").child(mUsername);
 
         queueURL.addValueEventListener(new ValueEventListener() {
@@ -294,7 +294,7 @@ public class UpdatingQueueBranch {
                     }
                 }
 
-                setData();
+                checkIfSame();
             }
 
             @Override
@@ -304,8 +304,18 @@ public class UpdatingQueueBranch {
         });
     }
 
+    private void checkIfSame(){
+        boolean isSame = mRoamingUsers.containsKey(mUsername);
+
+        if (isSame){
+            mRoamingUsers.remove(mUsername);
+        }
+
+        setData();
+    }
+
     // Sets the remaining users, the ones that were not present in all of the other branches, to the user's queue branch.
-    public void setData(){
+    private void setData(){
         Firebase queueURL = new Firebase(Constants.FIREBASE_URL + "queue").child(mUsername);
 
         Enumeration key = mRoamingUsers.keys();

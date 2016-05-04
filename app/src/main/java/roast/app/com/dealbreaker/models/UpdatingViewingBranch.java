@@ -11,7 +11,9 @@ import roast.app.com.dealbreaker.util.Constants;
 public class UpdatingViewingBranch {
 
     public String mUsername;
+    private Firebase listener, currentlyViewing;
     private int numOfUsers;
+    private ChildEventListener currentlyViewingListener;
 
     // Constructor takes the user name, assigns it to the activity member. It also sets the child listener.
     public UpdatingViewingBranch(String username){
@@ -19,12 +21,18 @@ public class UpdatingViewingBranch {
         setListener();
     }
 
+    public void removeListener(){
+        if(currentlyViewingListener != null){
+            currentlyViewing.removeEventListener(currentlyViewingListener);
+        }
+    }
+
     // This function set's a listener on the user's viewing branch. When a user is removed, the listener is
     // triggered and a user is moved from the queue list to the view list.
     public void setListener(){
-        final Firebase currentlyViewing = new Firebase(Constants.FIREBASE_URL + "viewing").child(mUsername);
+        currentlyViewing = new Firebase(Constants.FIREBASE_URL + "viewing").child(mUsername);
 
-        currentlyViewing.addChildEventListener(new ChildEventListener() {
+        currentlyViewingListener= currentlyViewing.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
