@@ -129,13 +129,13 @@ public class UpdateImage extends Fragment {
     }
 
     private void uploadImage() {
-        final UploadFile uploadFile = new UploadFile(userName);
+        //final UploadFile uploadFile = new UploadFile(userName);
         uploadImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imagePath != null) {
+                if (imagePath != null ) {
                     newUserProfilePic = new File(imagePath);
-                    uploadFile.execute(newUserProfilePic);
+                   new UploadFile(userName).execute(newUserProfilePic);
                     //Work around until I can figure out how to retrieve resulting URL from the ASYNC TASK
                     //Partially Hardcoded URL
                     newProfilePicURL = "https://s3-us-west-1.amazonaws.com/" + "dealbreaker" + "/" + userName + "/" + newUserProfilePic.getName();
