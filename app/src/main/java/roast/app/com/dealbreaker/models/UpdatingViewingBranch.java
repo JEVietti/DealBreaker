@@ -10,10 +10,11 @@ import roast.app.com.dealbreaker.util.Constants;
 
 public class UpdatingViewingBranch {
 
-    public String mUsername;
-    private Firebase listener, currentlyViewing;
+    private String mUsername;
+    private Firebase currentlyViewing, currentlyRoaming, usersQueue, listedUserInfo, listedUserImagesREF;
     private int numOfUsers;
     private ChildEventListener currentlyViewingListener;
+    private ValueEventListener currentlyRoamingListener, usersQueueListener, listedUserInfoListener, listedUserImagesREFListener;
 
     // Constructor takes the user name, assigns it to the activity member. It also sets the child listener.
     public UpdatingViewingBranch(String username){
@@ -24,6 +25,22 @@ public class UpdatingViewingBranch {
     public void removeListener(){
         if(currentlyViewingListener != null){
             currentlyViewing.removeEventListener(currentlyViewingListener);
+        }
+
+        if (currentlyRoamingListener != null){
+            currentlyRoaming.removeEventListener(currentlyRoamingListener);
+        }
+
+        if (usersQueueListener != null){
+            usersQueue.removeEventListener(usersQueueListener);
+        }
+
+        if (listedUserInfoListener != null){
+            listedUserInfo.removeEventListener(listedUserInfoListener);
+        }
+
+        if (listedUserImagesREFListener != null){
+            listedUserImagesREF.removeEventListener(listedUserImagesREFListener);
         }
     }
 
@@ -62,9 +79,9 @@ public class UpdatingViewingBranch {
 
     // Function that will update the view branch if it has less than 5 users.
     public void updateView(){
-        final Firebase currentlyRoaming = new Firebase(Constants.FIREBASE_URL + "viewing").child(mUsername);
+        currentlyRoaming = new Firebase(Constants.FIREBASE_URL + "viewing").child(mUsername);
 
-        currentlyRoaming.addValueEventListener(new ValueEventListener() {
+        currentlyRoamingListener = currentlyRoaming.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 numOfUsers = 0;
@@ -89,10 +106,10 @@ public class UpdatingViewingBranch {
     }
 
     // Populates the view branch until it contains 5 users or there are no more users in the queue.
-    public void populateCurrentlyBrowsing(final Firebase currentlyRoaming) {
-        final Firebase usersQueue = new Firebase(Constants.FIREBASE_URL + "queue").child(mUsername);
+    private void populateCurrentlyBrowsing(final Firebase currentlyRoaming) {
+        usersQueue = new Firebase(Constants.FIREBASE_URL + "queue").child(mUsername);
 
-        usersQueue.addValueEventListener(new ValueEventListener() {
+        usersQueueListener = usersQueue.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 MovingUsers move = new MovingUsers();
@@ -102,8 +119,8 @@ public class UpdatingViewingBranch {
 
                     String tempName = tempSnapShot.getKey().toString();
                     move.moveUser(currentlyRoaming, usersQueue, tempName);
-                    updateUserInfo(tempName, currentlyRoaming);
-                    currentProfilePic(tempName, currentlyRoaming);
+                    //updateUserInfo(tempName, currentlyRoaming);
+                    //currentProfilePic(tempName, currentlyRoaming);
                     numOfUsers++;
 
                 }
@@ -118,8 +135,8 @@ public class UpdatingViewingBranch {
     }
 
     private void updateUserInfo(final String listedUser, final Firebase userQueue){
-        Firebase listedUserInfo = new Firebase(Constants.FIREBASE_URL_USERS).child(listedUser).child(Constants.FIREBASE_LOC_USER_INFO);
-        listedUserInfo.addValueEventListener(new ValueEventListener() {
+        listedUserInfo = new Firebase(Constants.FIREBASE_URL_USERS).child(listedUser).child(Constants.FIREBASE_LOC_USER_INFO);
+        listedUserInfoListener = listedUserInfo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
@@ -150,8 +167,8 @@ public class UpdatingViewingBranch {
     }
 
     private void currentProfilePic(final String listedUser, final Firebase userQueue){
-        Firebase listedUserImagesREF = new Firebase(Constants.FIREBASE_URL_IMAGES).child(listedUser).child(Constants.FIREBASE_LOC_PROFILE_PIC);
-        listedUserImagesREF.addValueEventListener(new ValueEventListener() {
+        listedUserImagesREF = new Firebase(Constants.FIREBASE_URL_IMAGES).child(listedUser).child(Constants.FIREBASE_LOC_PROFILE_PIC);
+        listedUserImagesREFListener = listedUserImagesREF.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserImages userImages = dataSnapshot.getValue(UserImages.class);
