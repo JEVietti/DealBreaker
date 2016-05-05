@@ -23,8 +23,8 @@
     <string name="sex_attribute_hint">sex (male/female)</string>
     <string name="first_name">First Name:</string>
     <string name="last_name">Last Name:</string>
-    <string name="finished_button">Done!</string>
-    <string name="next_button">Next!</string>
+    <string name="finished_button">Set!</string>
+    <string name="next_button">Set!</string>
     <string name="key_UserEmail">userEmail</string>
     <string name="key_UserName">userName</string>
     <string name="title_activity_user_navigation">UserNavigation</string>
@@ -39,10 +39,33 @@
     <string name="nav_userPreferences">Preferences</string>
     <string name="nav_userAdded">Relationships</string>
     <string name="nav_userHome">Profile</string>
+    <string name="nav_roaming">Roaming</string>
     <string name="nav_commTitle">Communicate</string>
     <string name="nav_Share">Share</string>
     <string name="user_profilePicDescription">user\'s profile picture</string>
     <string name="userNamesDefault">FirstName LastName</string>
+    <string name="FirebaseOnCancelledError">Firebase Read Failed! </string>
 
+    <string name="LogTagUserProfile">UserProfile: </string>
+    <string name="LogTagRoaming">RoamingFragment: </string>
+    <string name="LogTagUserInfo">UserInfoFragment: </string>
+    <string name="LogTagDownload">DownloadImage: </string>
+    <string name="LogTagUpload">UploadFile: </string>
+    <string name="RemoveConfirmedUser">Remove</string>
+
+    <string name="removeUserYes">No!</string>
+    <string name="removeUserNo">Fine, one more chance.</string>
+
+    <string name="ChooseImageButtonLabel">Choose Image</string>
+    <string name="UploadImageButtonLabel">Upload Image</string>
+
+    <string name="ConfirmedRelationshipLabel">Confirmed</string>
+    <string name="PendingRelationshipLabel">Pending</string>
+
+    <string name="ContactInfoLabel">Contact Info</string>
+    <string name="GotItLabel">Got It!</string>
+    <string name="OKAY">Yes!</string>
+    <string name="Inches">"</string>
+    <string name="RoamingScreenLabel">Search for Potential Relationships</string>
 
 </resources>

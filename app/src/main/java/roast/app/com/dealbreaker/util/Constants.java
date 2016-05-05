@@ -14,7 +14,11 @@ public final class Constants {
         public static final String FIREBASE_LOC_USER_QUALITIES = "qualities";
         public static final String FIREBASE_LOC_IMAGES = "images";
         public static final String FIREBASE_LOC_PROFILE_PIC = "profilePic";
-
+        public static final String FIREBASE_LOC_PENDING = "pending";
+        public static final String FIREBASE_LOC_CONFIRMED_RELATIONSHIPS = "confirmed";
+        public static final String FIREBASE_LOC_REJECTED = "rejected";
+        public static final String FIREBASE_LOC_QUEUE = "queue";
+        public static final String FIREBASE_LOC_VIEWING = "viewing";
 
     // Constants for Firebase URL
 
@@ -24,8 +28,13 @@ public final class Constants {
     //May need to concat a "/"
     public static final String FIREBASE_URL_USERS = FIREBASE_URL + FIREBASE_LOC_USERS;
     public static final String FIREBASE_URL_ROAMING = FIREBASE_URL + FIREBASE_LOC_SEEKING;
-    public static final String FIREBASE_URL_USER_INFO = FIREBASE_URL + FIREBASE_LOC_USER_INFO;
+    public static final String FIREBASE_URL_USER_INFO = FIREBASE_URL_USERS + FIREBASE_LOC_USER_INFO;
     public static final String FIREBASE_URL_IMAGES = FIREBASE_URL + FIREBASE_LOC_IMAGES;
+    public static final String FIREBASE_URL_PENDING = FIREBASE_URL +FIREBASE_LOC_PENDING;
+    public static final String FIREBASE_URL_CONFIRMED_RELATIONSHIPS = FIREBASE_URL + FIREBASE_LOC_CONFIRMED_RELATIONSHIPS;
+    public static final String FIREBASE_URL_REJECTED = FIREBASE_URL + FIREBASE_LOC_REJECTED;
+    public static final String FIREBASE_URL_QUEUE = FIREBASE_URL + FIREBASE_LOC_QUEUE;
+    public static final String FIREBASE_URL_VIEWING_QUEUE = FIREBASE_URL +FIREBASE_LOC_VIEWING;
     // Constants for bundles, extras and shared preferences keys
 
 }

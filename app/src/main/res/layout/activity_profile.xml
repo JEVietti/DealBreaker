@@ -9,7 +9,7 @@
         android:layout_width="fill_parent"
         android:focusableInTouchMode="true"
         android:gravity="center_horizontal"
-        tools:context="roast.app.com.dealbreaker.fragments.RoamingAttribute">
+        tools:context="roast.app.com.dealbreaker.fragments.ProfileActivity">
         <!--
         <include
             android:id="@+id/toolbar"
@@ -20,9 +20,12 @@
             android:layout_height="180dp"
             android:id="@+id/imageButton"
             android:adjustViewBounds="true"
+            android:background="@drawable/rounded_corner"
             android:layout_marginTop="15dp"
+            android:scaleType="fitXY"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/user_profilePicDescription" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,9 +33,10 @@
             android:textColor="@color/colorPrimaryDark"
             android:text="@string/biography_label"
             android:id="@+id/bioLabel"
-            android:layout_below="@+id/nameTextView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="7dp" />
+            android:paddingTop="5dp"
+            android:layout_marginTop="18dp"
+            android:layout_below="@+id/locationTextValue"
+            android:layout_centerHorizontal="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -55,8 +59,9 @@
             android:textAlignment="center"
             android:id="@+id/bioText"
             android:textColor="@color/black"
-            android:layout_below="@+id/bioLabel"
-            android:layout_centerHorizontal="true" />
+            android:layout_below="@id/bioLabel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -66,10 +71,11 @@
             android:textColor="@color/colorPrimaryDark"
             android:id="@+id/badQualitiesLabel"
             android:textAlignment="center"
-            android:paddingTop="8dp"
-            android:layout_below="@+id/bioText"
+            android:paddingTop="5dp"
+            android:layout_centerVertical="true"
+            android:layout_below="@id/bioText"
             android:layout_alignStart="@+id/badQualitiesText"
-            android:layout_alignEnd="@+id/badQualitiesText" />
+            android:layout_alignEnd="@+id/badQualitiesText"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -108,6 +114,72 @@
             android:id="@+id/badQualitiesText"
             android:layout_alignTop="@+id/goodQualitiesText"
             android:layout_toStartOf="@+id/bioLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Age:"
+            android:paddingLeft="15dp"
+            android:id="@+id/ageTextLabel"
+            android:layout_below="@+id/nameTextView"
+            android:layout_alignStart="@+id/imageButton" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/ageContent"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/nameTextView"
+            android:layout_toEndOf="@+id/ageTextLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Sex:"
+            android:id="@+id/sexTextLabel"
+            android:paddingRight="0dp"
+            android:paddingLeft="10dp"
+            android:layout_below="@+id/nameTextView"
+            android:layout_toEndOf="@+id/ageContent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/sexContent"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/nameTextView"
+            android:layout_toEndOf="@+id/sexTextLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Location:"
+            android:paddingTop="4dp"
+            android:id="@+id/locationTextLabel"
+            android:layout_below="@+id/ageTextLabel"
+            android:layout_alignStart="@+id/imageButton" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:hint="your location"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp"
+            android:id="@+id/locationTextValue"
+            android:layout_alignBottom="@+id/locationTextLabel"
+            android:layout_below="@+id/ageContent"
+            android:layout_toEndOf="@+id/locationTextLabel"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp" />
+
 
     </RelativeLayout>
 </ScrollView>

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="roast.app.com.dealbreaker.ConfirmedUserProfile">
+
+        <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="180dp"
+            android:id="@+id/confirmedUserImage"
+            android:adjustViewBounds="true"
+            android:background="@drawable/rounded_corner"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/toolbar"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/user_profilePicDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="@string/biography_label"
+            android:id="@+id/confirmedBioLabel"
+            android:paddingTop="5dp"
+            android:layout_marginTop="18dp"
+            android:layout_below="@+id/confirmedLocationTextValue"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/userNamesDefault"
+            android:textAlignment="center"
+            android:textColorHighlight="@color/colorAccent"
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/confirmedNameTextView"
+            android:layout_below="@+id/confirmedUserImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="205dp"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:textAlignment="center"
+            android:id="@+id/confirmedBioText"
+            android:textColor="@color/black"
+            android:layout_below="@id/confirmedBioLabel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/bad_qualities_label"
+            android:textColor="@color/colorPrimaryDark"
+            android:id="@+id/confirmedBadQualitiesLabel"
+            android:textAlignment="center"
+            android:paddingTop="5dp"
+            android:layout_centerVertical="true"
+            android:layout_below="@id/confirmedBioText"
+            android:layout_alignStart="@+id/confirmedBadQualitiesText"
+            android:layout_alignEnd="@+id/confirmedBadQualitiesText"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/good_qualities_label"
+            android:id="@+id/confirmedGoodQualitiesLabel"
+            android:textAlignment="center"
+            android:paddingTop="8dp"
+            android:layout_alignTop="@+id/confirmedBadQualitiesLabel"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginRight="0dp"
+            android:layout_below="@+id/confirmedBioText"
+            android:layout_alignStart="@+id/confirmedGoodQualitiesText"
+            android:layout_alignEnd="@+id/confirmedGoodQualitiesText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:textAlignment="center"
+            android:id="@+id/confirmedGoodQualitiesText"
+            android:textColor="@color/black"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/confirmedGoodQualitiesLabel"
+            android:layout_toEndOf="@+id/confirmedBioLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:ems="10"
+            android:id="@+id/confirmedBadQualitiesText"
+            android:layout_alignTop="@+id/confirmedGoodQualitiesText"
+            android:layout_toStartOf="@+id/confirmedBioLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Age:"
+            android:paddingLeft="15dp"
+            android:id="@+id/confirmedAgeTextLabel"
+            android:layout_below="@+id/confirmedNameTextView"
+            android:layout_alignStart="@+id/confirmedUserImage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/confirmedAgeContent"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/confirmedNameTextView"
+            android:layout_toEndOf="@+id/confirmedAgeTextLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Sex:"
+            android:id="@+id/confirmedSexTextLabel"
+            android:paddingRight="0dp"
+            android:paddingLeft="15dp"
+            android:layout_below="@+id/confirmedNameTextView"
+            android:layout_toEndOf="@+id/confirmedAgeContent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/confirmedSexContent"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/confirmedNameTextView"
+            android:layout_toEndOf="@+id/confirmedSexTextLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Height"
+            android:paddingLeft="10dp"
+            android:paddingTop="4dp"
+            android:id="@+id/confirmedHeightTextLabel"
+            android:layout_below="@+id/confirmedAgeTextLabel"
+            android:layout_alignStart="@+id/confirmedUserImage" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:hint="your height"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp"
+            android:id="@+id/confirmedHeightTextValue"
+            android:layout_alignBottom="@+id/confirmedHeightTextLabel"
+            android:layout_below="@+id/confirmedAgeContent"
+            android:layout_toEndOf="@+id/confirmedHeightTextLabel"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="2dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Sexual OR:"
+            android:id="@+id/confirmedSexORTextLabel"
+            android:paddingRight="0dp"
+            android:paddingLeft="0dp"
+            android:layout_alignBottom="@+id/confirmedHeightTextValue"
+            android:layout_toEndOf="@+id/confirmedAgeContent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:paddingBottom="1dp"
+            android:text="your pref"
+            android:id="@+id/confirmedSexORContent"
+            android:paddingLeft="5dp"
+            android:layout_alignBottom="@+id/confirmedSexORTextLabel"
+            android:layout_toEndOf="@+id/confirmedSexORTextLabel" />
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Location:"
+            android:paddingTop="4dp"
+            android:id="@+id/confirmedLocationTextLabel"
+            android:layout_below="@+id/confirmedHeightTextLabel"
+            android:layout_alignStart="@+id/confirmedUserImage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:hint="your location"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp"
+            android:id="@+id/confirmedLocationTextValue"
+            android:layout_alignBottom="@+id/confirmedLocationTextLabel"
+            android:layout_below="@+id/confirmedHeightTextValue"
+            android:layout_toEndOf="@+id/confirmedLocationTextLabel"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp" />
+
+    </RelativeLayout>
+</ScrollView>

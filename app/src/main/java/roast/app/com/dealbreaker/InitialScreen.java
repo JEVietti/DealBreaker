@@ -1,5 +1,7 @@
 package roast.app.com.dealbreaker;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,21 +21,22 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import java.util.Vector;
-
+import roast.app.com.dealbreaker.models.UpdatingQueueBranch;
+import roast.app.com.dealbreaker.models.UpdatingViewingBranch;
 import roast.app.com.dealbreaker.util.Constants;
 
 public class InitialScreen extends AppCompatActivity {
     private Button registerButton,loginButton;
     private EditText mEmailEditText, mPasswordEditText;
     private TextView mLoginErrorMessage;
-    private Vector<String> mUserEmailUsed = new Vector<>();
-    private Vector<String> mUserNameUsed = new Vector<>();
+    private TextView mForgotPassword;
 
     Firebase userDatabase = new Firebase(Constants.FIREBASE_URL_USERS);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        System.out.println("test");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial_screen);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -45,6 +48,8 @@ public class InitialScreen extends AppCompatActivity {
 
         registerButton = (Button) findViewById(R.id.register_button);
         loginButton = (Button) findViewById(R.id.login_button);
+        mForgotPassword = (TextView) findViewById(R.id.forgotPasswordLink);
+
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +66,7 @@ public class InitialScreen extends AppCompatActivity {
                 mLoginErrorMessage = (TextView) findViewById(R.id.loginErrorMessage);
 
                 mLoginErrorMessage.setVisibility(View.INVISIBLE);
+                mLoginErrorMessage.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
                 final String username = mEmailEditText.getText().toString();
                 final String userPassword = mPasswordEditText.getText().toString();
@@ -71,6 +77,7 @@ public class InitialScreen extends AppCompatActivity {
                 if(username.isEmpty()){
                     mLoginErrorMessage.setText("Username cannot be empty");
                     mLoginErrorMessage.setVisibility(View.VISIBLE);
+
                 }
                 else if(android.util.Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
                     mLoginErrorMessage.setText("Please enter username, not email.");
@@ -94,7 +101,6 @@ public class InitialScreen extends AppCompatActivity {
                                 ref.authWithPassword(userEmail, userPassword, new Firebase.AuthResultHandler() {
                                     @Override
                                     public void onAuthenticated(AuthData authData) {
-
                                         Intent intent = new Intent(InitialScreen.this, UserNavigation.class);
                                         intent.putExtra(getString(R.string.key_UserName), username);
                                         startActivity(intent);
@@ -103,12 +109,12 @@ public class InitialScreen extends AppCompatActivity {
                                     @Override
                                     public void onAuthenticationError(FirebaseError firebaseError) {
                                         // there was an error
-                                        mLoginErrorMessage.setText("Email and password combination do not match. Please try again.");
+                                        mLoginErrorMessage.setText("Username and password combination do not match. Please try again.");
                                         mLoginErrorMessage.setVisibility(View.VISIBLE);
                                     }
                                 });
                             } else {
-                                mLoginErrorMessage.setText("Email and password combination do not match. Please try again.");
+                                mLoginErrorMessage.setText("Username and password combination do not match. Please try again.");
                                 mLoginErrorMessage.setVisibility(View.VISIBLE);
                             }
                         }
@@ -121,6 +127,36 @@ public class InitialScreen extends AppCompatActivity {
                 }
             }
         });
+
+        mForgotPassword.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(InitialScreen.this, ResetPassword.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed(){
+        AlertDialog.Builder exitAlertWindow = new AlertDialog.Builder(InitialScreen.this, R.style.AlertDialogTheme);
+        exitAlertWindow.setTitle("Leave application?");
+        exitAlertWindow.setMessage("Do you want to exit " + getString(R.string.app_name));
+        exitAlertWindow.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //finish();
+                System.exit(0);
+            }
+        });
+        exitAlertWindow.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        exitAlertWindow.show();
     }
 
     public Boolean isProperUserName(String username){
@@ -154,11 +190,16 @@ public class InitialScreen extends AppCompatActivity {
         }
     }
 
+
+
     @Override
     protected void onResume() {
         super.onResume();
-        //mEmailEditText.setText("");
-        //mPasswordEditText.setText("");
+        mEmailEditText = (EditText) findViewById(R.id.LoginUsername);
+        mPasswordEditText = (EditText) findViewById(R.id.LoginPassword);
+
+        mEmailEditText.getText().clear();
+        mPasswordEditText.getText().clear();
     }
 }
 

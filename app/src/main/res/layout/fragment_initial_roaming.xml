@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context="roast.app.com.dealbreaker.fragments.InitialRoaming">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:text="@string/RoamingScreenLabel"
+        android:textAlignment="center"
+        android:textColorHighlight="@color/colorPrimary"
+        android:textColor="@color/colorAccent"
+        android:id="@+id/initialRoamingPageTitle"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:background="@drawable/login_button"
+        android:drawableTop="@drawable/roaming_icon_white"
+        android:id="@+id/beginRoamingButton"
+        android:layout_marginTop="160dp"
+        android:layout_below="@+id/initialRoamingPageTitle"
+        android:layout_centerHorizontal="true" />
+
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold"
+        android:text="Using your Roaming Attributes, User Information, and Location set in Preferences to find matches."
+        android:textAlignment="center"
+        android:textColorHighlight="@color/colorAccent"
+        android:textColor="@color/red"
+        android:id="@+id/textView4"
+        android:layout_marginTop="55dp"
+        android:layout_below="@+id/beginRoamingButton"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

@@ -1,7 +1,10 @@
 package roast.app.com.dealbreaker;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,23 +14,47 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
+
 import roast.app.com.dealbreaker.fragments.AttributeAssignment;
+import roast.app.com.dealbreaker.fragments.InitialRoaming;
 import roast.app.com.dealbreaker.fragments.ProfileActivity;
+import roast.app.com.dealbreaker.fragments.UpdateImage;
+import roast.app.com.dealbreaker.fragments.UserRelationships;
+import roast.app.com.dealbreaker.fragments.editProfile;
+import roast.app.com.dealbreaker.models.User;
+import roast.app.com.dealbreaker.models.UserImages;
+import roast.app.com.dealbreaker.util.Constants;
+import roast.app.com.dealbreaker.util.DownloadImages;
 
 /* The UserNavigation class is meant as the base means of navigation during the app states
 * of which include the User's Home page, Images, Preferences and User Information Tasks (Fragments)
 *
 * */
-public class UserNavigation extends AppCompatActivity{
+public class UserNavigation extends AppCompatActivity {
     private String userName;
     private DrawerLayout mDrawer;
+    Firebase userImageREF;
+    private ValueEventListener profilePicListener;
     private NavigationView nvDrawer;
+    private int state;
     private ImageView headerImageView;
+    private EditText edtPassword, edtEmail;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +66,27 @@ public class UserNavigation extends AppCompatActivity{
             userName = arg.getString(getString(R.string.key_UserName));
             //Initialize the View of the Fragment
             initializeView();
+           // profilePicListener();
+            state = 0;
             //Set the first Fragment to be loaded
             if (savedInstanceState == null) {
                 setFirstItemNavigationView();
+                state = 1;
             }
         }
         else {
             finish();
             Toast.makeText(getApplicationContext(), "Failed to retrieve User's Data", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //Need to handle Orientation changes in the app runtime
+    //as of now if orientation changes in certain fragments it can cause
+    //a restart of the app or worse a crash
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+
+
     }
 
     //Changes the default onBackPressed so that the User can get a warning to whether they would like to exit or not
@@ -57,14 +96,20 @@ public class UserNavigation extends AppCompatActivity{
             mDrawer.closeDrawer(GravityCompat.START);
         } else {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
-            dlg.setTitle("Really Exit!");
-            dlg.setMessage("Are you Sure you want to Exit?");
+            AlertDialog dialog = dlg.create();
+            dlg.setTitle("Logout!");
+            dlg.setMessage("Are you Sure you want to log out?");
             dlg.setNegativeButton(android.R.string.no, null);
             dlg.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface arg0, int arg1) {
-                    UserNavigation.super.onBackPressed();
+
+                    /**We want to end the activity, not move on to a new one.**/
+                    //Intent intent = new Intent(UserNavigation.this,InitialScreen.class);
+                    //startActivity(intent);
+                    finish();
                 }
-            }).create().show();
+            }).create();
+            dlg.show();
         }
     }
 
@@ -81,6 +126,13 @@ public class UserNavigation extends AppCompatActivity{
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.action_navigation_logout:
+                //onBackPressed();
+                finish();
+                return true;
+            case R.id.action_navigation_delete_account:
+               showOnDeleteDialog();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -92,14 +144,49 @@ public class UserNavigation extends AppCompatActivity{
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        NavItemSelected(menuItem);
-                        return true;
+                        if (menuItem.isChecked() && state != 0) {
+                            mDrawer.closeDrawer(nvDrawer);
+                            return true;
+                        } else {
+                            NavItemSelected(menuItem);
+                            return true;
+                        }
+
                     }
                 });
     }
 
-    //
-    @SuppressWarnings("StatementWithEmptyBody")
+    private void deleteAccount(final String userEmail, final String userPassword){
+        final Firebase ref = new Firebase(Constants.FIREBASE_URL);
+        //Delete the account from the email registry, User Profile
+       // Query getUserEmail = new Firebase(Constants.FIREBASE_URL_USERS).child(userName).child("email");
+
+        ref.authWithPassword(userEmail, userPassword, new Firebase.AuthResultHandler() {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+                ref.removeUser(userEmail, userPassword, new Firebase.ResultHandler() {
+                    @Override
+                    public void onSuccess() {
+                        removeUserFromBranch();
+                        Toast.makeText(getApplicationContext(), "Your Account has been deleted", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(FirebaseError firebaseError) {
+                        Toast.makeText(getApplicationContext(), "Your Account has not been deleted, try again later", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onAuthenticationError(FirebaseError firebaseError) {
+                // there was an error
+                Toast.makeText(getApplicationContext(), "Your Account has not been deleted, due to an incorrect password", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private boolean NavItemSelected(MenuItem item) {
         // Create a new fragment and specify the planet to show based on
         // position
@@ -110,8 +197,23 @@ public class UserNavigation extends AppCompatActivity{
             case R.id.nav_preferences:
                 fragment = AttributeAssignment.newInstance(userName);
                 break;
+            case R.id.nav_roam:
+                fragment = InitialRoaming.newInstance(userName);
+                break;
+            case R.id.nav_gallery:
+                fragment = UpdateImage.newInstance(userName);
+                break;
             case R.id.nav_home:
                 fragment = ProfileActivity.newInstance(userName);
+                break;
+            case R.id.profile_edit:
+                fragment = editProfile.newInstance(userName);
+                break;
+            case R.id.nav_relationship:
+                fragment = UserRelationships.newInstance(userName);
+                break;
+            case R.id.nav_share:
+                fragment = editProfile.newInstance(userName);
                 break;
             default:
                 fragment = AttributeAssignment.newInstance(userName);
@@ -128,6 +230,60 @@ public class UserNavigation extends AppCompatActivity{
         setTitle(item.getTitle());
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void removeUserFromBranch(){
+
+        final Firebase userInfo = new Firebase(Constants.FIREBASE_URL_USERS).child(userName);
+
+        userInfo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user = dataSnapshot.child(Constants.FIREBASE_LOC_USER_INFO).getValue(User.class);
+                userInfo.removeValue();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        final Firebase roamingList = new Firebase(Constants.FIREBASE_URL + "roamingList");
+        Firebase roamingInfo = new Firebase(Constants.FIREBASE_URL_ROAMING).child(userName);
+
+        roamingInfo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if(user != null) {
+                    long userAge = user.getAge();
+
+                    if (userAge <= 20) {
+                        roamingList.child(user.getLocation()).child(user.getSex()).child(user.getSexualOrientation()).child("18-20").child(userName).removeValue();
+                    } else if (userAge >= 21 && userAge <= 29) {
+                        roamingList.child(user.getLocation()).child(user.getSex()).child(user.getSexualOrientation()).child("21-29").child(userName).removeValue();
+                    } else if (userAge >= 30 && userAge <= 39) {
+                        roamingList.child(user.getLocation()).child(user.getSex()).child(user.getSexualOrientation()).child("30-39").child(userName).removeValue();
+                    } else if (userAge >= 40 && userAge <= 49) {
+                        roamingList.child(user.getLocation()).child(user.getSex()).child(user.getSexualOrientation()).child("40-49").child(userName).removeValue();
+                    } else if (userAge >= 50 && userAge <= 59) {
+                        roamingList.child(user.getLocation()).child(user.getSex()).child(user.getSexualOrientation()).child("50-59").child(userName).removeValue();
+                    } else {
+                        roamingList.child(user.getLocation()).child(user.getSex()).child(user.getSexualOrientation()).child("60+").child(userName).removeValue();
+                    }
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
     }
 
     //Initializes the view for this Activity
@@ -151,6 +307,76 @@ public class UserNavigation extends AppCompatActivity{
         nvDrawer.setCheckedItem(R.id.nav_home);
         nvDrawer.getMenu().performIdentifierAction(R.id.nav_home, 0);
         nvDrawer.setCheckedItem(R.id.nav_home);
+    }
+  /*
+    private void profilePicListener(){
+        userImageREF = new Firebase(Constants.FIREBASE_URL_IMAGES).child(userName).child(Constants.FIREBASE_LOC_PROFILE_PIC);
+        profilePicListener = userImageREF.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserImages userImages = dataSnapshot.getValue(UserImages.class);
+                String url = userImages.getProfilePic();
+                DownloadImages downloadImages = new DownloadImages(headerImageView, UserNavigation.this);
+                downloadImages.execute(url);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+*/
+
+    public void showOnDeleteDialog() {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.delete_account_dialog, null);
+        dialogBuilder.setView(dialogView);
+        edtPassword = (EditText) dialogView.findViewById(R.id.editDialogPassword);
+        edtEmail = (EditText) dialogView.findViewById(R.id.editDialogEmail);
+        dialogBuilder.setTitle("Delete Account");
+        dialogBuilder.setMessage("Enter your password below");
+        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String email, password;
+                email = edtEmail.getText().toString();
+                password = edtPassword.getText().toString();
+
+                if(!email.isEmpty() && !password.isEmpty()) {
+                    deleteAccount(email, password);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"Make Sure to Enter your email and password",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //profilePicListener();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //if(profilePicListener != null){
+         //   userImageREF.removeEventListener(profilePicListener);
+       // }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
 }

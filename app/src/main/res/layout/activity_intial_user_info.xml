@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true">
+    <RelativeLayout android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        tools:context="roast.app.com.dealbreaker.fragments.UserAttribute">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/first_name"
+            android:textSize="20sp"
+            android:layout_below="@+id/toolbar"
+            android:id="@+id/first_name_label"
+            android:layout_marginTop="25dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/last_name"
+            android:id="@+id/last_name_label"
+            android:textSize="20sp"
+            android:layout_below="@+id/first_name_label"
+            android:layout_alignLeft="@id/first_name_label"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="15dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences"
+            android:textColor="@color/colorPrimary"
+            android:hint="@string/first_name"
+            android:ems="10"
+            android:id="@+id/et_user_first_name"
+            android:layout_alignBottom="@+id/first_name_label"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="-5dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences"
+            android:textColor="@color/colorPrimary"
+            android:hint="@string/last_name"
+            android:ems="10"
+            android:id="@+id/et_user_last_name"
+            android:layout_alignBottom="@+id/last_name_label"
+            android:layout_alignStart="@+id/et_user_first_name"
+            android:layout_marginBottom="-5dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sex_attribute"
+            android:id="@+id/sex_label"
+            android:textSize="20sp"
+            android:layout_below="@+id/birthDateLabel"
+            android:layout_alignLeft="@id/age_label"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sexual_or_attribute"
+            android:id="@+id/sexual_or_label"
+            android:textSize="15sp"
+            android:layout_below="@+id/sex_label"
+            android:layout_alignLeft="@id/sex_label"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/height_attribute"
+            android:id="@+id/height_label"
+            android:textSize="20sp"
+            android:layout_below="@+id/sexual_or_label"
+            android:layout_alignLeft="@id/sexual_or_label"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="15dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="@string/height_attribute_hint"
+            android:textColor="@color/black"
+            android:ems="10"
+            android:id="@+id/et_user_height"
+            android:layout_alignBottom="@+id/height_label"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="-10dp" />
+
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="@string/sexual_or_attribute_hint"
+            android:textColor="@color/black"
+            android:ems="10"
+            android:id="@+id/et_user_sexual_or"
+            android:layout_alignBottom="@+id/sexual_or_label"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="-10dp" />
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next_button"
+            android:id="@+id/user_attribute_finished_button"
+            android:background="@color/red"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginTop="25dp"
+            android:layout_below="@+id/initialLocationTextValue"
+            android:layout_centerHorizontal="true" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/radioGroupSex"
+            android:layout_alignBottom="@+id/sex_label"
+            android:layout_alignStart="@+id/birthDateText"
+            android:layout_marginBottom="-5dp">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="male"
+                android:id="@+id/radioButtonMale"
+                android:checked="false"
+                android:layout_above="@+id/sexual_or_label"
+                android:layout_toEndOf="@+id/radioGroup" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="female"
+                android:id="@+id/radioButtonFemale"
+                android:checked="false"
+                android:layout_alignTop="@+id/radioButtonMale"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="20dp" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Date of Birth"
+            android:id="@+id/birthDateLabel"
+            android:layout_below="@id/last_name_label"
+            android:layout_alignStart="@+id/last_name_label"
+            android:layout_marginTop="25dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textColor="@color/red"
+            android:id="@+id/birthDateText"
+            android:hint="MM/DD/YYYY"
+            android:layout_alignBottom="@id/birthDateLabel"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="-10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Location"
+            android:id="@+id/locationTextLabel"
+            android:layout_marginTop="25dp"
+            android:layout_below="@+id/height_label"
+            android:layout_alignStart="@+id/birthDateLabel" />
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:hint="Your Location ->"
+            android:textColorHint="@color/red"
+            android:id="@+id/initialLocationTextValue"
+            android:layout_alignTop="@+id/locationTextLabel"
+            android:layout_alignStart="@+id/birthDateText" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_location"
+            android:id="@+id/locationButton"
+            android:layout_alignTop="@+id/initialLocationTextValue"
+            android:layout_toEndOf="@+id/initialLocationTextValue"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="-12dp" />
+
+    </RelativeLayout>
+</ScrollView>
