@@ -48,6 +48,9 @@ public class UserAttributeTest extends TestCase {
 
     }
 
+    //THe check and Send Data tests will not work unless the actual function is modified
+    //so during testing I modified the function so it did not set errors on the Edit Text
+    //as they would be null in testing environment
     @Test
     public void testcheckAndSendData() throws Exception{
         Age a = new Age();
@@ -67,6 +70,34 @@ public class UserAttributeTest extends TestCase {
         assert(futureAge<0);
         assertNotNull(dateTest1Age);
         assertNotSame("not same Error", birthDate, "01/23/1996");
+        String firstname = "";
+
+        boolean result = UA.checkAndSendData("password",firstname,"taco", birthDate, "hello","H","st","m");
+        assertSame(false,result);
+        //will show errors due to having to modify the functin to allow for testing by creating extra paramters for the
+        //function to work in JUNIT
+        //checking is the User has a name birthdate Location, etc.
+        // as well as testing if different ages checkout and if the
+        boolean result2 = UA.checkAndSendData("password",firstname,"taco", birthDate, "hello","H","st","m");
+        assertSame(true,UA.checkAndSendData("password","dark","swwap",birthDate,"Fresno, California, United States","74","straight","male"));
+        //18 years old
+        assertSame(true,UA.checkAndSendData("password","1","swwap","11/16/1993","Fresno, California, United States","74","straight","male"));
+        assertSame(true,UA.checkAndSendData("password","PO","swwap",birthDate,"Fresno, California, United States","74","gay","male"));
+        assertSame(true,UA.checkAndSendData("password","dark","2",birthDate,"Fresno, California, United States","74","bisexual","female"));
+        assertSame(true,UA.checkAndSendData("password","dark","c",birthDate,"Fresno, California, United States","74","straight","male"));
+        assertSame(true,UA.checkAndSendData("password","c","swwap",birthDate,"Fresno, California, United States","74","straight","male"));
+
+
+        assertSame(false,UA.checkAndSendData("","","swwap",birthDate,"Fresno, California, United States","74","straight","male"));
+        assertSame(false,UA.checkAndSendData("","dark","",birthDate,"Fresno, California, United States","74","straight","female"));
+        assertSame(false,UA.checkAndSendData("","dark","swwap",birthDate,"","74","straight","female"));
+        assertSame(false,UA.checkAndSendData("","dark","swwap","","","Fresno, California, United States","stpaight","female"));
+        assertSame(false,UA.checkAndSendData("","dark","swwap","11/2/2020","Fresno, California, United States","74","straight","male"));
+        assertSame(false,UA.checkAndSendData("","dark","swwap",birthDate,"","Fresno, California, United States","straight","females"));
+        assertSame(false,UA.checkAndSendData("","dark","swwap",birthDate,"Fresno, California, United States","74","straight","males"));
+        assertSame(false,UA.checkAndSendData("","dark","swwap",birthDate,"","74","straight","female"));
+        assertSame(false,UA.checkAndSendData("","dark","swwap","11/4/1212","Fresno, California, United States","74","straight","female"));
+
 
     }
 

@@ -68,7 +68,7 @@ public class DownloadImages extends AsyncTask<String, Void, Bitmap> {
         }
 
         // Creates Bitmap from InputStream and returns it
-        private Bitmap downloadImage(String url) {
+        public Bitmap downloadImage(String url) {
             Bitmap bitmap = null;
             ImageView imageView = imageViewWeakReference.get();
             InputStream stream = null;

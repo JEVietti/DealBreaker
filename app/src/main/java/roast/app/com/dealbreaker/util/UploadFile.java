@@ -24,7 +24,7 @@ public class UploadFile extends AsyncTask<File, Void, String> {
                     SECRET_KEY = "yR2EH8/A2ji17A5ZiF4fTwKxll6wqb9Rq37hpW9e",
                     MY_BUCKET = "dealbreaker";
 
-    private String username = "password";
+    private String username;
     private File fileToUpload;
     private String uploadedFileURL;
     public UploadFile(String username){
@@ -35,10 +35,13 @@ public class UploadFile extends AsyncTask<File, Void, String> {
 
     @Override
     protected String doInBackground(File... params) {
-        for (File f : params) {
-            uploadFile(f);
+        if (params != null) {
+            for (File f : params) {
+                uploadFile(f);
+            }
+            return uploadedFileURL;
         }
-        return uploadedFileURL;
+        return null;
     }
 
     @Override
@@ -71,6 +74,7 @@ public class UploadFile extends AsyncTask<File, Void, String> {
         }
         catch (Exception e){
             Log.e("Upload ERROR:", e.getMessage());
+            return false;
         }
         uploadedFileURL = "https://s3-us-west-1.amazonaws.com/" +  MY_BUCKET +username+ "/" + f.getName();
         return true;
