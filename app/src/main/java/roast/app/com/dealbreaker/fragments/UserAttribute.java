@@ -30,6 +30,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.server.converter.StringToIntConverter;
 
 import roast.app.com.dealbreaker.models.Age;
 import roast.app.com.dealbreaker.models.UserLocation;
@@ -123,8 +124,8 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
                 // Perform action on click
                 grabEditText();
                 grabButtonValues();
-                checkSendStatus = checkAndSendData();
-                if (checkAndSendData()) {
+                checkSendStatus = checkAndSendData(username, firstNameUserValue, lastNameUserValue, birthDate, locationUserValue, heightUserValue, sexualOrientationUserValue, sexUserValue);
+                if (checkSendStatus) {
                     if (checkIfChange()) {      // Checks to see if the user changed any data.
                         deleteUserFromBranch(); // If changes occured, delete the old branch
                     }
@@ -287,36 +288,36 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
 
 
     //Check to see if the data entered is in the set of inputs needed or that it is not empty
-    private boolean checkAndSendData(){
+    public boolean checkAndSendData(String username, String firstNameUserValue, String lastNameUserValue, String birthDate, String locationUserValue, String heightUserValue, String sexualOrientationUserValue, String sexUserValue){
 
         if(TextUtils.isEmpty(firstNameUserValue)){
-            firstNameUserText.setError("This field cannot be empty!");
+            //firstNameUserText.setError("This field cannot be empty!");
             return false;
         }
         else if(TextUtils.isEmpty(lastNameUserValue)){
-            lastNameUserText.setError("This field cannot be empty!");
+            //lastNameUserText.setError("This field cannot be empty!");
             return false;
         }
         //need to add more handling for checking if the date is entered in a proper format
         else if(!isThisDateValid(birthDate,"MM/dd/yyyy")){
-            birthDateText.setError("Invalid!");
+            //birthDateText.setError("Invalid!");
             return false;
         }
 
         else if( TextUtils.isEmpty(locationUserValue) || locationUserValue == null){
-            locationText.setError("Location Empty");
+            //locationText.setError("Location Empty");
             return false;
         }
         else if (TextUtils.isEmpty(heightUserValue) | heightUserValue == null || !TextUtils.isDigitsOnly(heightUserValue)) {
-            heightUserText.setError("This field cannot be empty and must be in digits in terms of inches!");
+            //heightUserText.setError("This field cannot be empty and must be in digits in terms of inches!");
             return false;
         }
         else if(TextUtils.isEmpty(sexualOrientationUserValue)||((!sexualOrientationUserValue.equals("straight")&&(!sexualOrientationUserValue.equals("bisexual"))&&(!sexualOrientationUserValue.equals("gay"))))){
-            sexualOrientationUserText.setError("Invalid!, Inputs can be straight, gay, or bisexual");
+            //sexualOrientationUserText.setError("Invalid!, Inputs can be straight, gay, or bisexual");
             return false;
         }
-        else if(sexUserValue == null || (!setFemale.isChecked() && !setMale.isChecked()) || (!sexUserValue.equals("male") && !sexUserValue.equals("female"))){
-            setFemale.setError("Invalid!, Inputs can be either male or female");
+        else if(sexUserValue == null || /*(!setFemale.isChecked() && !setMale.isChecked())*/  (!sexUserValue.equals("male") && !sexUserValue.equals("female"))){
+            //setFemale.setError("Invalid!, Inputs can be either male or female");
             return false;
         } else {
             Age a = new Age();
@@ -324,11 +325,11 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             Long age = Long.valueOf(a.calculateAge(birth));
 
             if(age < 18 ){
-                birthDateText.setText("Must be 18 years or older!");
+               // birthDateText.setText("Must be 18 years or older!");
                 return false;
             }
             else if(age >= 130){
-                birthDateText.setText("Must be less than 130 years old!");
+                //birthDateText.setText("Must be less than 130 years old!");
                 return false;
             }
             Log.d("Age of User", age.toString());
@@ -340,16 +341,16 @@ public class UserAttribute extends Fragment implements DatePickerFragment.DateLi
             String birthday = birthDate;
             String sexual_orientation = sexualOrientationUserValue;
             User user = new User(username, firstName, lastName, sex, birthday ,age, sexual_orientation, height, locationUserValue);
-            addUserAttributes(user);
+                addUserAttributes(user);
 
-            return true;
         }
-
+        return true;
     }
 
     //Add the entered data to the database in the specified location
     private void addUserAttributes(User user){
         //Set Reference to Firebase node
+        String username = user.getUserName();
         Firebase ref = new Firebase(Constants.FIREBASE_URL_USERS);
         HashMap<String, Object> updates = new HashMap<String, Object>();
         Map<String,Object> map = new ObjectMapper().convertValue(user, Map.class);

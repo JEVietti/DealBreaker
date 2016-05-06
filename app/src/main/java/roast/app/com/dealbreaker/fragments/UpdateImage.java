@@ -135,13 +135,19 @@ public class UpdateImage extends Fragment {
             public void onClick(View v) {
                 if (imagePath != null ) {
                     newUserProfilePic = new File(imagePath);
-                   new UploadFile(userName).execute(newUserProfilePic);
+                    new UploadFile(userName).execute(newUserProfilePic);
                     //Work around until I can figure out how to retrieve resulting URL from the ASYNC TASK
                     //Partially Hardcoded URL
-                    newProfilePicURL = "https://s3-us-west-1.amazonaws.com/" + "dealbreaker" + "/" + userName + "/" + newUserProfilePic.getName();
-                    setNewUserProfilePic();
-                    Toast.makeText(getContext(), "Successfully Uploaded your File", Toast.LENGTH_LONG).show();
-                    listenUSER_PROFILE_PIC();
+                    if (newUserProfilePic != null) {
+                        newProfilePicURL = "https://s3-us-west-1.amazonaws.com/" + "dealbreaker" + "/" + userName + "/" + newUserProfilePic.getName();
+                        setNewUserProfilePic();
+                        Toast.makeText(getContext(), "Successfully Uploaded your File", Toast.LENGTH_LONG).show();
+                        listenUSER_PROFILE_PIC();
+                    }
+                    else{
+                        Toast.makeText(getContext(), "Please select a valid Image First", Toast.LENGTH_LONG).show();
+                        listenUSER_PROFILE_PIC();
+                    }
                 }
                 else{
                     Toast.makeText(getContext(), "Please select an Image First", Toast.LENGTH_LONG).show();
