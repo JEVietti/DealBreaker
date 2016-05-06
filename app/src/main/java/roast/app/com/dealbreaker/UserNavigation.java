@@ -36,6 +36,7 @@ import roast.app.com.dealbreaker.fragments.ProfileActivity;
 import roast.app.com.dealbreaker.fragments.UpdateImage;
 import roast.app.com.dealbreaker.fragments.UserRelationships;
 import roast.app.com.dealbreaker.fragments.editProfile;
+import roast.app.com.dealbreaker.models.User;
 import roast.app.com.dealbreaker.models.UserImages;
 import roast.app.com.dealbreaker.util.Constants;
 import roast.app.com.dealbreaker.util.DownloadImages;
@@ -53,6 +54,7 @@ public class UserNavigation extends AppCompatActivity {
     private int state;
     private ImageView headerImageView;
     private EditText edtPassword, edtEmail;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,13 +144,13 @@ public class UserNavigation extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        if(menuItem.isChecked() && state != 0){
+                        if (menuItem.isChecked() && state != 0) {
                             mDrawer.closeDrawer(nvDrawer);
                             return true;
+                        } else {
+                            NavItemSelected(menuItem);
+                            return true;
                         }
-                        else{
-                             NavItemSelected(menuItem);
-                             return true;}
 
                     }
                 });
@@ -165,13 +167,14 @@ public class UserNavigation extends AppCompatActivity {
                 ref.removeUser(userEmail, userPassword, new Firebase.ResultHandler() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(getApplicationContext(),"Your Account has been deleted",Toast.LENGTH_LONG);
+                        removeUserFromBranch();
+                        Toast.makeText(getApplicationContext(), "Your Account has been deleted", Toast.LENGTH_LONG).show();
                         finish();
                     }
 
                     @Override
                     public void onError(FirebaseError firebaseError) {
-                        Toast.makeText(getApplicationContext(),"Your Account has not been deleted, try again later",Toast.LENGTH_LONG);
+                        Toast.makeText(getApplicationContext(), "Your Account has not been deleted, try again later", Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -179,10 +182,9 @@ public class UserNavigation extends AppCompatActivity {
             @Override
             public void onAuthenticationError(FirebaseError firebaseError) {
                 // there was an error
-                Toast.makeText(getApplicationContext(),"Your Account has not been deleted, due to an incorrect password",Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(), "Your Account has not been deleted, due to an incorrect password", Toast.LENGTH_LONG).show();
             }
         });
-        finish();
     }
 
     private boolean NavItemSelected(MenuItem item) {
@@ -228,6 +230,60 @@ public class UserNavigation extends AppCompatActivity {
         setTitle(item.getTitle());
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void removeUserFromBranch(){
+
+        final Firebase userInfo = new Firebase(Constants.FIREBASE_URL_USERS).child(userName);
+
+        userInfo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user = dataSnapshot.child(Constants.FIREBASE_LOC_USER_INFO).getValue(User.class);
+                userInfo.removeValue();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        final Firebase roamingList = new Firebase(Constants.FIREBASE_URL + "roamingList");
+        Firebase roamingInfo = new Firebase(Constants.FIREBASE_URL_ROAMING).child(userName);
+
+        roamingInfo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if(user != null) {
+                    long userAge = user.getAge();
+
+                    if (userAge <= 20) {
+                        roamingList.child(user.getLocation()).child(user.getSex()).child(user.getSexualOrientation()).child("18-20").child(userName).removeValue();
+                    } else if (userAge >= 21 && userAge <= 29) {
+                        roamingList.child(user.getLocation()).child(user.getSex()).child(user.getSexualOrientation()).child("21-29").child(userName).removeValue();
+                    } else if (userAge >= 30 && userAge <= 39) {
+                        roamingList.child(user.getLocation()).child(user.getSex()).child(user.getSexualOrientation()).child("30-39").child(userName).removeValue();
+                    } else if (userAge >= 40 && userAge <= 49) {
+                        roamingList.child(user.getLocation()).child(user.getSex()).child(user.getSexualOrientation()).child("40-49").child(userName).removeValue();
+                    } else if (userAge >= 50 && userAge <= 59) {
+                        roamingList.child(user.getLocation()).child(user.getSex()).child(user.getSexualOrientation()).child("50-59").child(userName).removeValue();
+                    } else {
+                        roamingList.child(user.getLocation()).child(user.getSex()).child(user.getSexualOrientation()).child("60+").child(userName).removeValue();
+                    }
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
     }
 
     //Initializes the view for this Activity
@@ -288,11 +344,11 @@ public class UserNavigation extends AppCompatActivity {
                 email = edtEmail.getText().toString();
                 password = edtPassword.getText().toString();
 
-                if(email != null && password != null) {
+                if(!email.isEmpty() && !password.isEmpty()) {
                     deleteAccount(email, password);
                 }
                 else{
-                    Toast.makeText(getApplicationContext(),"Make Sure to Enter your email and password",Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(),"Make Sure to Enter your email and password",Toast.LENGTH_LONG).show();
                 }
             }
         });

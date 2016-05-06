@@ -22,6 +22,7 @@ public class InitialRoaming extends Fragment {
     private String userName;
     private TextView roamingTitle;
     private Button beginRoaming;
+    private UpdatingViewingBranch viewingBranch;
 
     public static InitialRoaming newInstance(String param1) {
         InitialRoaming fragment = new InitialRoaming();
@@ -59,7 +60,7 @@ public class InitialRoaming extends Fragment {
         beginRoaming.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdatingViewingBranch viewingBranch = new UpdatingViewingBranch(userName);
+                viewingBranch = new UpdatingViewingBranch(userName);
                 viewingBranch.updateView();
 
                 Intent intent = new Intent(getActivity(),RoamingRelationships.class);

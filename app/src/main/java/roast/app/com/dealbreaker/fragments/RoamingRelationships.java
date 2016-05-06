@@ -65,6 +65,8 @@ public class RoamingRelationships extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_roaming_relationships);
        // initializeView();
+
+
         if(getIntent().getExtras() != null) {
             Bundle arg = getIntent().getExtras();
             userName = arg.getString(getString(R.string.key_UserName));
