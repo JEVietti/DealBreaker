@@ -20,8 +20,10 @@ import java.util.List;
 
 
 public class UploadFile extends AsyncTask<File, Void, String> {
-    private static final String ACCESS_KEY = "AKIAI7GGLZSDDTTKVOXQ",
-                    SECRET_KEY = "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",
+
+    //Account has been closed
+    private static final String ACCESS_KEY = "NO LONGER AVAILABLE",
+                    SECRET_KEY = "NO LONGER AVAILABLE",
                     MY_BUCKET = "dealbreaker";
 
     private String username;
