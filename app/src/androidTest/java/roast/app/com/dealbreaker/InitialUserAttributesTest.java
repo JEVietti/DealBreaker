@@ -21,10 +21,8 @@ public class InitialUserAttributesTest extends TestCase{
     public void testOnCreate() throws Exception {
 
     }
-
+/*
     @Test
-    public void testIsDataValid() throws Exception {
-        @Test
         public void testcheckAndSendData() throws Exception{
             Age a = new Age();
             String birthDate = "11/16/1995";
@@ -74,6 +72,7 @@ public class InitialUserAttributesTest extends TestCase{
         }
 
     }
+    */
 
     @Test
     public void testIsThisDateValid() throws Exception {
