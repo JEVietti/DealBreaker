@@ -22,13 +22,12 @@ public class InitialUserAttributesTest extends TestCase{
 
     }
 
+    /*
     @Test
-    public void testIsDataValid() throws Exception {
-        @Test
-        public void testcheckAndSendData() throws Exception{
+    public void testcheckAndSendData() throws Exception{
             Age a = new Age();
             String birthDate = "11/16/1995";
-            String futureBirthDate = "11/30/2100";
+            String futureBirthDate = "11/30/2100";`
 
             Date birth = a.ConvertToDate(birthDate);
             Date birthFutureCase = a.ConvertToDate(futureBirthDate);
@@ -72,8 +71,7 @@ public class InitialUserAttributesTest extends TestCase{
 
 
         }
-
-    }
+        */
 
     @Test
     public void testIsThisDateValid() throws Exception {
