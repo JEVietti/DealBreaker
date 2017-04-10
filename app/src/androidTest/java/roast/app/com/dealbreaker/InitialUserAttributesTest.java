@@ -7,8 +7,10 @@ import org.junit.Test;
 import java.util.Date;
 
 import roast.app.com.dealbreaker.models.Age;
+import roast.app.com.dealbreaker.models.User;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertSame;
 
 /**
  * Created by DovaJoe on 5/3/2016.
@@ -73,6 +75,24 @@ public class InitialUserAttributesTest extends TestCase{
 
     }
     */
+
+    @Test
+    public void userCreation() throws Exception
+    {
+        String birthdate = "04/23/1995";
+        Age age  = new Age();
+        age.ConvertToDate(birthdate);
+        int ageValue = age.calculateAge( age.ConvertToDate(birthdate));
+
+        User user = new User("JamMan", "James", "Howard", "male", birthdate ,Long.valueOf(ageValue) , "straight", Long.valueOf(76), "Clovis, California");
+        assertSame("JamMan", user.getUserName());
+        assertSame("James", user.getFirstName());
+        assertSame("Howard", user.getLastName());
+        assertSame("male", user.getSex());
+        assertSame(21, ageValue);
+        assertSame(Long.valueOf(21), user.getAge());
+
+    }
 
     @Test
     public void testIsThisDateValid() throws Exception {
